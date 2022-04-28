@@ -74,3 +74,8 @@ The creation of these API standards was not driven from scratch or unique by any
 - [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cc-api-v3-style-guide)
 - [Cisco REST API Design Guide](https://github.com/CiscoDevNet/api-design-guide)
 - [Atlassian REST Guidelines](https://developer.atlassian.com/server/framework/atlassian-sdk/atlassian-rest-api-design-guidelines-version-1/)
+
+TODO:
+- add content on backwards compatibility
+- how to use branches
+- overview of existing major version (i.e. v1 = initial, whats missing?)
