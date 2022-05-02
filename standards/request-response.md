@@ -64,3 +64,528 @@ When responding to API requests, the following status code ranges **MUST** be us
 - All REST APIs **MUST** use only the following status codes. APIs **MUST NOT** return a status code that is not defined here to express contractual or defined output of the endpoint. API Consumers may receive other status codes not presented because other infrastructure and proxies live in between the API and the consumer or other operational and platform constraints may return certain status codes. 
 - APIs may not use all status codes defined, or only require a subset for their operations.
 - When an API must respond to a request that has potentially multiple valid status code responses, the API **SHOULD** respond with the "more-specific" status code. The "more-specific" status code is generally the highest number in the associated range.
+
+<hr />
+
+#### 200 OK
+
+**Description**: Generic successful execution. Default successful response code to read requests.
+
+**Example Usage**: Any type of request, unless more specific code fits better.
+
+<hr />
+
+#### 201 Created
+
+**Description**: Used as a response to `POST` method execution to indicate the successful creation of a resource. If the resource was already created (by a previous execution of the same method, for example), then the server should return the status code `200 OK`.
+
+**Example Usage**: Used as response code to `POST` requests and indicates successful creation of the resource. This request is NOT IDEMPOTENT, meaning each request with the same body will create a new entity on the server (exception is when entity identifier specified by client-side, then a `409` response code should be used for subsequent requests).
+
+<hr />
+
+#### 202 Accepted
+
+**Description**: Used for asynchronous method execution to specify the server has accepted the request and will execute it at a later time.
+
+**Example Usage**: Used as a response request that initiates an asynchronous request.
+
+<hr />
+
+#### 204 No Content
+
+**Description**: The server has successfully executed the method, but there is no entity-body to return.
+
+**Example Usage**: Indicates where there is no payload returned as part of the response. Usually, `PUT` and `DELETE` requests don't have the payload body returned.
+
+<hr />
+
+#### 400 Bad Request
+
+**Description**: The request could not be understood by the server. Use this status code to specify:
+- The data as part of the payload cannot be converted to the underlying data type.
+- The data or parameters is not in the expected data format.
+- The required field is not available.
+- Simple data validation type of error..
+
+**Example Usage**: Used to inform errors with accepting incoming requests that:
+- Incorrectly formatted
+- Does not correspond to the expected schema
+- Has invalid values that do not correspond to defined data types of the field
+
+<hr />
+
+#### 401 Unauthorized
+
+**Description**: The request requires valid authentication and none was provided or expired. Note the difference between this and `403 Forbidden`.
+
+<hr />
+
+#### 403 Forbidden
+
+**Description**: The client is not authorized to access the resource, although it may have valid credentials. API could use this code in case business-level authorization fails. For example, the requestor does not have permission to talk request the organization's information.
+
+<hr />
+
+#### 404 Not Found
+
+**Description**: The server has not found anything matching the request URI. This either means that the URI is incorrect OR the resource is not available. For example, it may be that no data exists in the database at that key.
+
+<hr />
+
+#### 405 Method Not Allowed
+
+**Description**: The server has not implemented the requested HTTP method. This is typically the default behavior for API frameworks.
+
+<hr />
+
+#### 406 Not Acceptable
+
+**Description**: The server **MUST** return this status code when it cannot return the payload of the response using the media type requested by the client. For example, if the client sends an Accept: application/xml header and the API can only generate `application/json`, the server **MUST** return `406`.
+
+<hr />
+
+#### 409 Conflict
+
+**Description**: This response is sent when a request conflicts with the current state of the server.
+
+**Example Usage**: Used to indicate conflicting situations:
+- `PUT` with a payload that violates the uniqueness of the attribute that requires unique values. Example: "Unique name of the organization"
+- `POST` of the entity with predefined "Id" attribute value which already exists in the system.
+
+<hr />
+
+#### 412 Precondition Failed
+
+**Description**: The client has indicated preconditions in its headers which the server does not meet.
+
+**Example Usage**: Used to indicate when conditional requests on methods not fulfilled with one of the preconditions:
+- `If-Unmodified-Since` specified, modification date earlier than specified.
+- `If-Match specified`, but its value on the server is different.
+- `If-None-Match` specified, but the server has matching data.
+
+<hr />
+
+#### 415 Unsupported Media Type
+
+**Description**: The server **MUST** return this status code when the media type of the request's payload cannot be processed. For example, if the client sends a `Content-Type: application/xml header`, but the API can only accept `application/json`, the server **MUST** return a `415`.
+
+<hr />
+
+#### 428 Precondition Required
+
+**Description**: The origin server requires the request to be conditional. This response is intended to prevent the 'lost update' problem, where a client `GETs` a resource's state, modifies it, and `PUTs` it back to the server, when meanwhile a third party has modified the state on the server, leading to a conflict.
+
+**Example Usage**: Used to indicate when requests required to be conditional:
+- `If-Unmodified-Since` is missing when expected.
+- `If-Match` is missing when expected.
+- `If-None-Match` is missing when expected.
+
+<hr />
+
+#### 429 Too Many Requests
+
+**Description**: The server must return this status code if the rate limit for the user, the application, or the token has exceeded a predefined value. Defined in Additional HTTP Status Codes [RFC 6585](https://datatracker.ietf.org/doc/html/rfc6585).
+
+**Retriable**: Yes
+
+#### 500 Internal Server Errors
+
+**Description**: This is either a system or application error and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server. A `500` the response indicates a server-side software defect or site outage. 
+- `500` **MUST NOT** be used for client validation or logic error handling.
+
+**Retriable**: Yes
+
+## HTTP Headers
+
+### Standard Headers
+
+The purpose of HTTP headers is to provide metadata information about the body or the sender of the message and provide instructions to help negotiation between client and server in a uniform, standardized, and isolated way.
+
+- HTTP header names **MUST NOT** be case sensitive.
+- HTTP headers **SHOULD** only be used for the purpose of handling cross-cutting concerns, such as security, traceability, monitoring, cachability, and state validation.
+- Headers **MUST NOT** include API or domain-specific values data. For example, location, content type are headers that imply instructions between client and server but do not include domain-specific data in the header, that is content often communicated through the body of a request or a response.
+- Service Consumers and Service Providers **SHOULD NOT** expect that a particular HTTP header is available. It is possible that an intermediary component in the call chain can drop an HTTP header. This is the reason business logic **SHOULD NOT** be based on HTTP headers.
+- Service Consumers and Service Providers **SHOULD NOT** assume the value of a header has not been changed as part of HTTP message transmission.
+
+```note
+**CLARIFICATION**: The following list of headers IS NOT meant as a complete list of headers that you as an API Consumer may send and/or receive. Rather it is intended as general guidelines of headers API Implementations are specifically meant to support for RESTful purposes.
+```
+
+<hr />
+
+#### [Accept](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept)
+
+**Type**: Request
+
+**Support**: MUST
+
+**Description**: This request header specifies the media types that the API client is capable of handling in the response.
+- Systems issuing the HTTP request **SHOULD** send this header.
+- Systems handling the request **SHOULD NOT** assume it is available.
+- The header may **OPTIONALLY** be used to indicate a custom serialization model using the "vnd" specific format along with the Content-Type (See MIME Types below).
+- The header **MUST NOT** indicate the version of the API contract and apply to content serialization formatting only.
+
+**Example(s)**:
+```
+// CORRECT
+Accept: application/json
+Accept: text/html, application/xhtml+xml
+```
+
+<hr />
+
+#### [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
+
+**Type**: Request/Response
+
+**Support**: MUST
+
+**Description**: This request/response header indicates the media type of the request or response body.
+- API client **MUST** include with the request if the request contains a body, e.g. it is a POST, PUT, or PATCH request.
+- API developer **MUST** include it with a response if a response body is included (not used with 204 responses).
+- If the content is a text-based type, such as JSON, the Content-Type **MAY** include a character-set parameter. The character-set **MUST** be UTF-8 if provided. 
+
+Refer further to MIME-Types below for additional details and supported types.
+
+**Example(s)**:
+```
+// CORRECT
+Content-Type: application/json
+Content-Type: application/json; charset=UTF-8
+```
+
+<hr />
+
+#### [Location](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location)
+
+**Type**: Response
+
+**Support**: MUST
+
+**Description**: This response-header field is used to redirect the recipient to a location other than the Request-URI for completion of the request or identification of a new resource.
+- Usage of the `Location` header is **MUST** only be used with response codes 201 or 3xx.
+
+**Example(s)**:
+```
+// CORRECT
+Location: /blog/articles/1
+Location: https://api.spscommerce.com/v1/blog/articles/1
+```
+
+<hr />
+
+#### [User-Agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent)
+
+**Type**: Request
+
+**Support**: MUST
+
+**Description**: The User-Agent header helps API implementations to identify certain groups of consumers of their API.
+- `User-Agent` **MUST** be provided for all API requests for identification purposes. Requests without a valid User-Agent MUST return a 403 response status code.
+- `User-Agent` **SHOULD** contain product information, product version, and other comments as necessary to identify an API Consumer. Provided product versions should indicate major version numbers only in accordance with `User-Agent Client Hints`. Common syntax: 
+```
+User-Agent: <product>/<product-major-version> <comment>
+User-Agent: my-calling-service/2
+```
+
+```note
+It would be appropriate to supply a general `403` at the platform or central ingress if no `User-Agent` header is provided.
+```
+
+**Example(s)**:
+```
+// CORRECT
+User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion
+```
+
+<hr />
+
+#### [Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+
+**Type**: Request
+
+**Support**: MUST
+
+**Description**: More information at [Authentication](authentication.md).
+
+**Example(s)**:
+```
+// CORRECT
+Authorization: Bearer <token>
+ 
+// INCORRECT
+Authorization: <token>
+Authorization: bearer <token>
+Authorization: Basic <token>
+```
+
+<hr />
+
+#### [Content-Language](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language)
+
+**Type**: Both
+
+**Support**: OPTIONAL
+
+**Description**: This request/response header is used to specify the language of the content.
+- This header **MUST** be optional, and the default locale **MUST** be `en-US` when none is provided.
+- API clients **SHOULD** identify the language of the data using the `Content-Language` header.
+- APIs **SHOULD** provide this header in the response.
+
+**Example(s)**:
+```
+// CORRECT
+Content-Language: en-US
+Content-Language: en-US, de-DE, en-CA
+```
+
+<hr />
+
+#### [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
+
+**Type**: Response
+
+**Support**: OPTIONAL
+
+**Description**: The `ETag` response-header field provides the current value of the entity tag for the requested variant. Used with `If-Match`, `If-None-Match` and `If-Range` to implement optimistic concurrency control. Refer to `GET` request below.
+- `ETag` **SHOULD** be returned for `GET` requests where the individual resource has a specific version.
+
+**Example(s)**:
+```
+// CORRECT
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+```
+
+<hr />
+
+#### [If-Match/If-None-Match](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Match)
+
+**Type**: Request
+
+**Support**: OPTIONAL
+
+**Description**: Used in association to the response value within an `ETag` header. It can be a CSV list containing multiple values if needed.
+- Values of the header **SHOULD** always be derived from the value returned from a response with an `ETag` header.
+
+**Example(s)**:
+```
+// CORRECT
+If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+```
+
+<hr />
+
+#### [Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
+
+**Type**: Response
+
+**Support**: OPTIONAL
+
+**Description**: Responses **MUST** return no-store header value when sensitive data is present.
+
+**Example(s)**:
+```
+// CORRECT
+Cache-Control: max-age=<seconds>
+Cache-Control: max-stale[=<seconds>]
+Cache-Control: min-fresh=<seconds>
+Cache-Control: no-cache
+Cache-Control: no-store
+Cache-Control: no-transform
+Cache-Control: only-if-cached
+```
+
+<hr />
+
+#### [Access-Control-*](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin)
+
+**Type**: Response
+
+**Support**: OPTIONAL
+
+**Description**: The headers for Access-Control are intended for usage with CORS-enablement.
+- `Access-Control-Allow-Origin` **SHOULD NOT** specify a wildcard ("*") for any API used by internal or external consumers.
+- `Access-Control-Allow-Methods` **MUST NOT** use a wildcard ("*").
+- `Access-Control-Allow-Headers` **MUST NOT** use a wildcard ("*") and **MUST** only be used to specify custom headers or headers used outside of the CORS-safelisted request headers.
+- `Access-Control-Expose-Headers` **MUST NOT** use a wildcard("*") and **MUST** only be used to specify custom headers or headers used outside of the CORS-safelisted response headers.
+- `Access-Control-Allow-Credentials` **MUST NOT** be set to `true` if `Access-Control-Allow-Origin` is wildcarded ("*").
+- `Access-Control-Max-Age` **SHOULD NOT** exceed 7200 seconds (2 hours) due to browser caps and limitations.
+
+
+**Example(s)**:
+```
+// CORRECT
+Access-Control-Allow-Origin: https://cdn.spsc.io/
+Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+ 
+// INCORRECT
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+```
+
+<hr />
+
+```note
+**KEEP AN EYE ON IT**: The [Idempotency-Key Request header](https://tools.ietf.org/id/draft-idempotency-header-01.html) is in an experimental state but getting lots of attention as a pattern of making fault-tolerant resilient requests for traditionally non-idempotent methods like `POST`.
+```
+
+### Custom Headers
+
+- Custom Headers **MAY** be used and created as necessary.
+- Custom Headers **MUST** only be used if not in conflict by a similar name or similar function to the standard headers or other widely used custom headers.
+- Custom Headers **MUST** abide by the same rules and guidelines as standard headers.
+- Custom Header names **MUST NOT** be longer than 50 characters.
+- Custom Header names **MUST** only contain alpha, numeric, and dash characters: [a-zA-Z0-9-]
+- Custom Headers **MUST** start with the prefix `SPS-` (Note: do not prefix with `X-`). 
+- Custom Headers **SHOULD NOT** include sensitive data that applies to customers/employees or is subject to legal, regulatory, contractual, and business requirements.
+
+```
+// CORRECT
+SPS-Claims: { "Custom": "Value" }
+SPS-User: 123456789012345678901234567890
+SPS-Meta-Information: YourInformation/Goes/Here
+ 
+// INCORRECT
+X-SPS-User: 123456789012345678901234567890
+```
+
+```note
+The usage of non-standard headers is not considered custom headers. For example, your API may consume or interact with other infrastructure outside of the contract specification for your service, such as `X-Forwarded-Host` or `X-Request-ID`, these are appropriate to continue using, but would not expect to identify them in your Open API spec for example. As such these types of headers not relevant to REST are intentionally left out of this documentation.
+```
+
+## MIME Types
+
+### Standard MIME Types
+
+[MIME](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) (or Media) types indicate the nature and format of a request or response body when supplied as a Content-Type header in an HTTP request.
+
+- MIME types **MUST** be supplied in the `Content-Type` header for any request or response that includes a body.
+- MIME types **SHOULD** be provided by API consumers as an `Accept` header to indicate formats supported by the client when content negotiation is required.
+    - `application/json` **SHOULD** be the default return MIME type when an `Accept` header includes `application/json` and other possible types for content negotiation.
+- Resource endpoints **MUST** support `application/json` as the content type for both request/response bodies (refer to "Standard Headers").
+    - API endpoints that are responsible for returning data in different formats **MUST** support other content types depending on the requirements, in addition to `application/json`.
+- MIME types provided **MUST** follow customization standards or be a common MIME type.
+- Requests made with unsupported `Content-Types` (and MIME types) **MUST** result in a standard error response with a `415` status code following the standard error response format.
+- Request and Response media type formats **MUST NOT** be implied using extensions on resources (i.e. `.json` or `.xml`). Instead, use the standard resource path with the appropriate `Content-Type` header.
+
+```
+// JSON SCENARIO                            // JSON media type MUST always be supported
+// REQUEST
+POST /articles                              // creating an article
+Accept: application/json                    // this client making the request can only accept content back as JSON
+Content-Type: application/json              // the serialization type of the request body
+{
+    "name": "New Article",
+    "content": "The Best article because..."
+}
+ 
+// RESPONSE
+201 OK
+Content-Type: application/json              // the serialization type of the response body (negotiated based on common Accept header list).
+Location: /articles/3
+{
+    "id": 3
+}
+ 
+// XML SCENARIO                             // other media types can be supported if needed, such as XML
+// REQUEST
+POST /articles                              // creating an article
+Accept: application/xml                     // this client making the request can only accept content back as JSON or XML
+Content-Type: application/json              // the serialization type of the request body can be different than the response, but likely rare.
+{                                           // if the content-type provided for the request is not known or supported then this should result in a 415 status code.
+    "name": "New Article",
+    "content": "The Best article because..."
+}
+ 
+// RESPONSE
+201 OK
+Content-Type: application/xml       // the serialization type of the response body (negotiated based on common Accept header list, defaults to JSON if available).
+Location: /articles/3
+<response>
+    <id>3</id>
+</response>
+```
+
+### Custom MIME Types
+
+- Custom MIME types **MUST** only be used to define the formatting or schema for the version of data that it is associated with. It is not a mechanism for versioning the contract of the Request, Response, URL, Headers, Query Parameters, etc.
+    - Custom MIME types **MUST** use the following format: `application/vnd.sps-*+(json|xml)` (i.e. `application/vnd.sps-model+json`), where `*` can be adjusted accordingly. 
+    - Custom MIME types **SHOULD** be limited in their usage as it provides an extra layer of complexity beyond the default `application/json` media type.
+    - Documentation of your API **MUST** be clearly updated to indicate the purpose and usage of different MIME types on an endpoint.
+    - Version information can be included in custom MIME types following the wildcard (i.e. `application/vnd.sps-model.v1+json`). The version number must follow the `v` indicator.
+
+```
+// INCORRECT
+Content-Type: application/whatever                  // "whatever" does not follow the custom MIME type rules.
+Content-Type: sps/vnd.whatever+json                 // Custom content type MUST be specified as an "application" type of content.
+Content-Type: application/vnd.whatever              // MUST include "sps" as vendor prefix name, along with the format type of xml or json.
+ 
+// CORECT
+Content-Type: application/vnd.sps-model+json        // Custom type indicates request or response has a body with model information specified in JSON format.
+Content-Type: application/vnd.sps-model+xml         // Custom type indicates request or response has a body with model information specified in XMLformat.
+Content-Type: application/vnd.sps-model.v1+json     // Version can be included in the custom Content Type if needed.
+Content-Type: application/json                      // Default standard for all APIs to use.
+```
+
+```
+
+// STANDARD JSON SCENARIO                   // JSON media type MUST always be supported
+// REQUEST
+POST /articles                              // creating an article
+...
+Content-Type: application/json              // the serialization type of the request body
+{
+    "name": "New Article",
+    "content": "The Best article because..."
+}
+ 
+// RESPONSE
+201 OK
+Content-Type: application/json              // the serialization type of the response body (negotiated based on common Accept header list).
+Location: /articles/3
+{
+    "id": 3
+}
+ 
+// ALTERNATIVE CUSTOM MIME TYPE             // a custom MIME type is used to indicate another JSON schema for creating articles // REQUEST
+POST /articles                              // creating an article
+Accept: application/json
+Content-Type: application/vnd.sps-article-import.v1+json    // custom content-type indicates a standards method for importing articles from another source location
+{                                                           // in this example that might be a third party provider or another system.
+    "system": "third-party",
+    "url": "https://example.com/old-system/article/10
+}
+ 
+// RESPONSE
+201 OK
+Content-Type: application/json              // the serialization type of the response body is unchanged, as it returns regular JSON still.
+Location: /articles/3
+{
+    "id": 3
+}
+```
+
+## HTTP Methods
+
+### Overview
+
+- Operations **MUST** use only the HTTP methods as outlined.
+- Custom HTTP Methods **MUST NOT** be used.
+- Operations **MUST** respect the identified idempotency and body for each method.
+- Operations **SHOULD** use consistent schema's across different HTTP Methods when specifying the same addressable resource.
+
+| Method | Description  | Request Body  | Response Body  | Idempotency  |
+|--------|---|---|---|---|
+| GET    | Return the current value of an object. | **MUST NOT**  | **MUST**  | **MUST** be Idempotent - requesting the same URL repeatedly results in the same response assuming the state is unmodified by separate requests.    |
+| POST   | Create a new object based on the data provided, or submit a command. | **SHOULD**  | **SHOULD**  | **SHOULD NOT** be Idempotent - requesting the creation of a new object on a collection results in a different response and/or Location header each time. Exceptions might be when POST Method is used more as an Action as opposed to a RESTful Verb.  |
+| PUT    | Replace an object, or create a named object, when applicable. | **MUST**  | **MUST NOT**  | **MUST** be Idempotent - requesting the replacement of an object in its entirety should execute repeatedly resulting in the exact same response.  |
+| DELETE | Delete an object. | **MUST NOT**  | **MUST NOT**  | **SHOULD** be Idempotent - requesting the delete of an object should result in the same response even if deleted twice. It is desirable, when the application state allows for it, that a successful response should not be indicated for objects that never existed. This may only be possible if your API is tracking deletions or using soft-deletes.  |
+| PATCH  | Apply a partial update to an object. | **MUST**  | **MUST NOT**  | **SHOULD** be Idempotent - requesting a partial update to an object often results in idempotent results. However since a partial update, unlike a PUT, may result in additional counters or behaviors in an object, it is not always idempotent in some cases.  |
+| HEAD   | Return metadata (HTTP Headers) of an object for a `GET` response. Resources that support the `GET` method **MAY** support the `HEAD` method as well. | **MUST NOT** | **MUST NOT**  | **MUST** be Idempotent  |
+| OPTIONS| Get information about a request. | **MUST NOT**  | **MUST NOT**  | **MUST** be Idempotent  |
+
+```note
+**Idempotency**: An idempotent method means that the result of a successfully performed request is independent of the number of times it is executed.
+```
+
+### HTTP Method to Status Code Mapping
