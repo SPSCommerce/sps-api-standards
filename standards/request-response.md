@@ -199,11 +199,11 @@ When responding to API requests, the following status code ranges **MUST** be us
 
 ### Standard Headers
 
-The purpose of HTTP headers is to provide metadata information about the body or the sender of the message and provide instructions to help negotiation between client and server in a uniform, standardized, and isolated way.
+The purpose of HTTP headers is to provide metadata information about the body or the sender of the message and provide instructions to help negotiate between client and server in a uniform, standardized, and isolated way.
 
 - HTTP header names **MUST NOT** be case sensitive.
 - HTTP headers **SHOULD** only be used for the purpose of handling cross-cutting concerns, such as security, traceability, monitoring, cachability, and state validation.
-- Headers **MUST NOT** include API or domain-specific values data. For example, location, content type are headers that imply instructions between client and server but do not include domain-specific data in the header, that is content often communicated through the body of a request or a response.
+- Headers **MUST NOT** include API or domain-specific values data. For example, `Location`, `Content-Type` are headers that imply instructions between client and server but do not include domain-specific data in the header, that is content often communicated through the body of a request or a response.
 - Service Consumers and Service Providers **SHOULD NOT** expect that a particular HTTP header is available. It is possible that an intermediary component in the call chain can drop an HTTP header. This is the reason business logic **SHOULD NOT** be based on HTTP headers.
 - Service Consumers and Service Providers **SHOULD NOT** assume the value of a header has not been changed as part of HTTP message transmission.
 
@@ -222,7 +222,7 @@ The purpose of HTTP headers is to provide metadata information about the body or
 **Description**: This request header specifies the media types that the API client is capable of handling in the response.
 - Systems issuing the HTTP request **SHOULD** send this header.
 - Systems handling the request **SHOULD NOT** assume it is available.
-- The header may **OPTIONALLY** be used to indicate a custom serialization model using the "vnd" specific format along with the Content-Type (See MIME Types below).
+- The header may **OPTIONALLY** be used to indicate a custom serialization model using the `vnd` specific format along with the Content-Type (See MIME Types below).
 - The header **MUST NOT** indicate the version of the API contract and apply to content serialization formatting only.
 
 **Example(s)**:
@@ -264,12 +264,17 @@ Content-Type: application/json; charset=UTF-8
 
 **Description**: This response-header field is used to redirect the recipient to a location other than the Request-URI for completion of the request or identification of a new resource.
 - Usage of the `Location` header is **MUST** only be used with response codes 201 or 3xx.
+- Relative URLs **MUST** be made relative to the URL host.
 
 **Example(s)**:
 ```
+	
 // CORRECT
-Location: /blog/articles/1
-Location: https://api.spscommerce.com/v1/blog/articles/1
+Location: /users/profiles/1
+Location: https://api.spscommerce.com/users/profiles/1
+ 
+// INCORRECT
+Location: /profiles/1 // missing "users" root resource, after host
 ```
 
 <hr />
@@ -589,3 +594,277 @@ Location: /articles/3
 ```
 
 ### HTTP Method to Status Code Mapping
+
+For each HTTP method with only the status codes specified below, API developers **SHOULD** use only status codes marked as "X" in this table. Status codes not present in the table maybe be used across any HTTP Method under the correct behaviors identified for that status code above.
+
+| Status Code               | GET | POST | PUT | PATCH | DELETE | HEAD | OPTIONS |
+|---------------------------|-----|------|-----|-------|--------|------|---------|
+| 200 OK                    |  X  |  X   |     |       |        |  X   |   X     |
+| 201 Created               |     |  X   |     |       |        |      |         |
+| 202 Accepted              |     |  X   |  X  |   X   |   X    |      |         |
+| 204 No Content            |     |      |  X  |   X   |   X    |      |   X     |
+| 409 Conflict              |     |  X   |  X  |   X   |   X    |      |         |
+| 412 Precondition Failed   |     |      |  X  |   X   |   X    |      |         |
+
+### GET
+
+The purpose of the `GET` method is to retrieve a resource.
+
+- HTTP `GET` Method **MUST NOT** accept a request body.
+- HTTP `GET` Method **MUST** return a response body.
+    - The response body **SHOULD NO**T produce a complex response that requires unreasonable hierarchy traversal. Beyond three levels of an object reference becomes unwieldy and **SHOULD** be avoided for API designs in favor of additional resources.
+- HTTP `GET` Method **MUST NOT** modify the state of the API resources as it is for retrieval purposes only.
+- HTTP `GET` Method **MUST** be idempotent.
+- HTTP `GET` Method **MUST** return a `404` status code when a resource is not present by a specified identifier unless there is intent to expose a soft-delete status.
+- HTTP `GET` Method may return ETag Header and support conditional headers such as `If-None-Match` for targeted caching of resources based on state.
+- HTTP `GET` Method returning a collection:
+    - **MUST** return a `200` status code when returning the results of an empty collection (not a `404` or `204`).
+    - **MUST** return a complex object following the [collection](collections.md) standards, and not an array as the root body object.
+
+```
+// REQUEST
+GET /articles/2
+ 
+// RESPONSE
+200 OK
+Content-Type: application/json
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+{
+    "id": 2,
+    "name": "Article 2",
+    "content": "My nice content for the article"
+}
+```
+
+```warning
+Consider the size of your `GET` request parameters. Without the ability to include parameters in a request body, the size of your query parameters may become unwieldy and highly inconvenient. In certain situations, it may be appropriate to use a `POST` Method to pass along request parameters as the body. Also, refer to size considerations on the URL as a whole in [URL Structure](url-structure.md). 
+```
+
+### POST
+
+The primary purpose of `POST` is to create a resource. It may also be used for non-RESTful actions when no other HTTP Method makes sense (see Actions in [URL Structure](url-structure.md)).
+
+- HTTP `POST` Method that results in the successful creation of the resource:
+    - **MUST** indicate so with a `201` status code.
+    - **MUST** return a reference to the resource created either as a link or a resource identifier in the response body or Location header or both.
+    - may **OPTIONALLY** return the newly created entity as a whole reference if it is different or resolved in comparison to the request body, understanding that it may not contain an `ETag` or appropriate cache-control headers the same as a GET request..
+- HTTP `POST` Method **MUST** return a `200` status code when successful with non-RESTful-based actions (see Actions in [URL Structure](url-structure.md)).
+- HTTP `POST` Method response body, if returned, **MUST NOT** be a primitive, but rather a complex object with the identifier or other response information.
+- HTTP `POST` Method **MUST** indicate asynchronous acceptance of the request that is without resolution as a `202` status code.
+- HTTP `POST` Method **MUST** return a `404` if other addressable resources in the URL do not exist as parents to the existing collection.
+- HTTP `POST` Method **SHOULD** return a `409` when a resource cannot be created because it would result in an invalid state for a parent resource or be in violation of any constraints, including any database or persistent storage constraints.
+
+```
+// REQUEST
+POST /articles
+Content-Type: application/json
+{
+    "name": "New Article",
+    "content": "The Best article because..."
+}
+ 
+// RESPONSE
+201 OK
+Content-Type: application/json
+Location: /articles/3
+{
+    "id": 3
+}
+```
+
+### PUT
+
+The primary purpose of `PUT` is to replace or update an entity as a whole.
+
+- HTTP `PUT` Method **MUST** replace an entity in its entirety, as it relates to the preceding collection specified in the URL. 
+- HTTP `PUT` Method **MUST NOT** be used to create a new entity on a collection unless the collection as a whole is being replaced with new child entities on it.
+- HTTP `PUT` Method **MUST** be idempotent.
+- HTTP `PUT` Method **SHOULD** return a `204` status code for any success responses (implying no response body is appropriate), other than asynchronous acceptance with a `202` status code.
+- HTTP `PUT` Method **SHOULD NOT** return a response body that is an echo of the request body.
+- HTTP `PUT` Method **SHOULD** return a `409` when a resource cannot be updated because it would result in an invalid state for the resource, or be in opposition to any constraints, including any database or persistent storage constraints.
+
+```
+// REQUEST
+PUT /articles/3
+Content-Type: application/json
+{
+    "id": 3,
+    "name": "New Article",
+    "content": "Updated content for the article..."
+}
+ 
+// RESPONSE
+204 OK
+```
+
+- HTTP `PUT` Method **SHOULD** be used on a resource collection when you intend to replace the entire collection with a new one, such as a bulk update scenario.
+- HTTP `PUT` Method **SHOULD** be used to create a new resource when all aspects of the creation, including its primary identifier, are known by the client, and a fully addressable URL can be referenced with it. 
+
+```
+//// INCORRECT!!!
+// REQUEST
+PUT /articles
+Content-Type: application/json                      // THE ID IS NOT KNOWN AT TIME OF CREATION
+{                                                   // THE IDS IS RETURNED IN THE RESPONSE
+    "name": "New Article",                          // SO CREATION INSTEAD SHOULD OCCUR AS A POST REQUEST
+    "content": "The Best article because..."
+}
+ 
+// RESPONSE
+201 OK
+Content-Type: application/json
+Location: /articles/3
+{
+    "id": 3
+}
+ 
+//// CORRECT
+// REQUEST
+PUT /books/ISBN-10-0199535566                       // CREATION VIA PUT REQUEST IS ALLOWED SINCE THE ISBN IS A WELL-KNOWN PRIMARY KEY
+Content-Type: application/json                      // ITS MORE APPROPRIATE TO PROCESS THIS CREATE SIMILAR TO AN UPDATE OF THE WELL-KNOWN ITEM
+{                                                   // THIS IS VERY COMMON WITH EXISTING WORLD UNIQUE IDENTIFIERS.
+    "isbn": "ISBN-10-0199535566",
+    "name": "My Book",
+    "content": "The Best book because..."
+}
+ 
+// RESPONSE
+201 OK
+```
+
+- HTTP `PUT` Method **SHOULD** use an `ETag` (Entity Tag) for state validation, if required, to ensure that the entity has not been modified since it was last retrieved by a client before replacing or updating it in its entirety.
+    - `ETags` **MUST** always be retrieved from a server HTTP `GET` Request, provided in the `ETag` Response Header.
+    - `ETags` **MUST** always be provided to the HTTP `PUT` Method via the `If-Match` Request Header.
+    - `ETags` **MUST** be treated as opaque values.
+    - State Validation failure in an HTTP `PUT` Method as a result of an invalid `If-Match` `ETag` value should result in a `412` status code (Precondition Failed).
+    - HTTP `PUT` Method may not require the `If-Match` header for state validation, but if it does, and the header is not provided it should return a `428` status code (Precondition Required).
+
+```
+// REQUEST
+PUT /articles/3
+If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+Content-Type: application/json
+{
+    "id": 3,
+    "name": "New Article",
+    "content": "Updated content for the article..."
+}
+ 
+// RESPONSE
+204 OK
+```
+
+```note
+**Consider**: Further information on resource versioning with `ETags` may be helpful, along with understanding the [differences between strong and weak ETags](https://developers.google.com/gdata/docs/2.0/reference#ResourceVersioning).
+```
+
+### DELETE
+
+The primary purpose of `DELETE` is to remove an addressable entity in its entirety.
+
+- HTTP `DELETE` Method **MUST NOT** accept a request body.
+- HTTP `DELETE` Method **MUST** return a status code of `204` when successfully responding with no response body.
+- HTTP `DELETE` Method **SHOULD** be idempotent in repeated deletions when the state is effectively available to identify previous delete requests and may return status code `204` instead of `404` as long as the resource no longer exists with the desired state.
+- HTTP `DELETE` Method **SHOULD** return a `409` when a resource cannot be deleted because that would result in an invalid state for that resource representation, including related children resources that may be required to be deleted first, where cascade deletion is not present.
+- HTTP `DELETE` Method **SHOULD** take advantage of the same `ETag` state validation, if required, for `DELETE` requests as described under HTTP `PUT` Method.
+
+```
+// REQUEST
+DELETE /articles/3
+ 
+// RESPONSE
+204 OK
+```
+
+The [request body of a `DELETE` is not allowed](https://stackoverflow.com/questions/299628/is-an-entity-body-allowed-for-an-http-delete-request). At times an individual may intend to perform a bulk `DELETE` action and want to provide a request body or need information about the response of a `DELETE`. You will find that in this case, a `PATCH` request against the collection is an appropriate alternative.
+
+```
+// REQUEST
+PATCH /articles
+Content-Type: application/json 
+{
+    "op": "delete",   
+    "ids": [1,2,3]
+}
+ 
+// RESPONSE
+204 OK
+```
+
+### PATCH
+
+The primary purpose of `PATCH` is to update parts of an entity and not replace them entirely.
+
+- HTTP `PATCH` Method **MUST** only update parts or certain fields of an entity in compliance with JSON Merge Patch semantics.
+    - Fields that are not intended to be updated **MUST** not be provided in the request body.
+    - Fields that are intended to be removed, **MUS**T be set to `NULL` in the request body.
+    - Arrays that are provided in a `PATCH` request **MUST** replace the entire array on the destination field.
+- HTTP `PATCH` Method **MUST NOT** be used to create a new entity on a collection.
+- HTTP `PATCH` Method **SHOULD** return a `204` status code for any success responses, other than asynchronous acceptance with a `202` status code.
+- HTTP `PATCH` Method **SHOULD** NOT return a response body that is an echo of the request body if they are the same. It is acceptable to return a similar resolved entity as a convenience from calling the GET method.
+- HTTP `PATCH` Method **SHOULD** return a `409` when a resource cannot be updated because it would result in an invalid, or be in opposition to any constraints, including any database or persistent storage constraints.
+- HTTP `PATCH` Method **SHOULD** be used when updating attributes of a resource collection.
+- HTTP `PATCH` Method **SHOULD** take advantage of the same `ETag` state validation, if required, for `PATCH` requests as described under HTTP `PUT` Method.
+
+```
+// REQUEST
+// OTHER FIELDS ARE LEFT OUT OF THE REQUEST THAT WE DO NOT INTEND TO UPDATE
+PATCH /articles/3
+Content-Type: application/json
+{
+    "content": "Updated only this field...",    // THIS FIELD IS UPDATED WITH THE NEW CONTENT
+    "notes": null,                              // THIS FIELD IS SET TO NULL, AND ANY CONTENT IN NOTES IS REMOVED.
+    "categories": [ "pets", "flowers" ]         // THIS ARRAY IS REPLACED WITH THESE 2 ITEMS
+}
+ 
+// RESPONSE
+204 OK
+```
+
+```note
+**Consider**: The JSON `PATCH` format is a standardized format and schema for defining a series of patch-related updates to a single JSON document, or resource: [http://jsonpatch.com](http://jsonpatch.com/). 
+```
+
+### HEAD
+
+The HTTP `HEAD` request is used to check the attributes (e.g. availability, size, last modification date) of a resource without downloading or deserializing all the content. For example, you may use a `HEAD` option to validate that a resource exists, by receiving a `200` status code, without having to stream the entire contents of the resource or article. If the resource did not exist a status code of `400` may be returned by example. Execution of an HTTP HEAD request may result in a workload being completed to determine the idempotent response status code effectively.
+
+- HTTP `HEAD` Method **MUST** be idempotent.
+- HTTP `HEAD` Method **SHOULD** return the same status code as a GET Method would return under the same addressable resource. 
+- HTTP `HEAD` Method **SHOULD** return a `200` even though there is no response body if that matches the typical status code returned by the `GET` Method request.
+- HTTP `HEAD` Method **MUST NOT** contain a request or response body.
+- HTTP `HEAD` Method **MUST NOT** be used to update the state of any resource or to retrieve the actual resource itself.
+- HTTP `HEAD` Method **MUST NOT** be used with any sensitive data.
+- HTTP `HEAD` Method responses **MUST** be cacheable.
+
+```
+// REQUEST
+HEAD /articles/2
+ 
+// RESPONSE
+200 OK
+```
+
+### OPTIONS
+
+The `OPTIONS` method is used to describe communication options for the target resource.
+
+- HTTP `OPTIONS` Method **MUST** be idempotent.
+- HTTP `OPTIONS` Method **MUST** only provide information on how to interact with a resource.
+- HTTP `OPTIONS` Method **MUST NOT** contain a request or response body.
+- HTTP `OPTIONS` Method **MUST NOT** be used to update the state of any resource or to retrieve the actual resource itself.
+- HTTP `OPTIONS` Method **MUST NOT** be used with any sensitive data.
+- HTTP `OPTIONS` Method responses **MUST NOT** be intended to be cached.
+- HTTP `OPTIONS` Method used for `CORS` integration **MUST** provide standard `CORS` headers for access control (`Access-Control-Allow-*`).
+
+```
+// REQUEST
+OPTIONS /articles/2
+ 
+// RESPONSE
+200 OK
+Allow: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+Access-Control-Allow-Origin: https://api.spscommerce.com
+Access-Control-Allow-Methods: GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS
+Access-Control-Allow-Headers: Content-Type
+```

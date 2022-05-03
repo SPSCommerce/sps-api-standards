@@ -53,6 +53,8 @@ users.spsc.io/               // (External)
 users.spsprod.in/            // (Internal)
 ```
 
+- When URLs are provided as referenced relative paths in your API they MUST be relative to the host (i.e. `/users/profiles/1` for `https://api.spscommerce.com/users/profiles/1`).
+
 ## Port
 
 - The port **MUST NOT** be provided by any consumers, mentioned in documentation or required to access your API, and is always assumed to be an abstract default of the layered system based on your protocol (i.e. HTTPS, 443).
