@@ -188,12 +188,16 @@ When responding to API requests, the following status code ranges **MUST** be us
 
 **Retriable**: Yes
 
+<hr />
+
 #### 500 Internal Server Errors
 
 **Description**: This is either a system or application error and generally indicates that although the client appeared to provide a correct request, something unexpected has gone wrong on the server. A `500` the response indicates a server-side software defect or site outage. 
 - `500` **MUST NOT** be used for client validation or logic error handling.
 
 **Retriable**: Yes
+
+<hr />
 
 ## HTTP Headers
 
@@ -268,7 +272,6 @@ Content-Type: application/json; charset=UTF-8
 
 **Example(s)**:
 ```
-	
 // CORRECT
 Location: /users/profiles/1
 Location: https://api.spscommerce.com/users/profiles/1
