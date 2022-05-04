@@ -8,7 +8,8 @@ The intent with this information is to clearly and effectively define how HTTP R
 
 1. [URL Structure](standards/url-structure.md) - URLs, Resources, Hierarchies and Query Parameters.
 1. [Request & Response](standards/request-response.md) - Verbs/Methods, Headers and Status Codes.
-1. [Serialization](standards/serialization.md) - Naming, Casing, Types, Quantities, Intervals and Durations.
+1. [Naming](standards/naming.md) - General, Text, Property Names and Standard Properties.
+1. [Serialization](standards/serialization.md) - Casing, Types, Quantities, Intervals and Durations.
 1. [Collections](standards/collections.md) - Results Body, Pagination, Searching, Filtering and Sorting.
 1. [Authentication](standards/authentication.md) - Auth Headers and Standard Responses.
 1. [Errors](standards/errors.md) - Standard Error Schema and Common Responses.
