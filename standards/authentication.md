@@ -17,7 +17,7 @@ Authorization: Bearer <token value>
 ```
 
 - APIs **SHOULD NOT** receive or accept a token via URL in the path or query string, as putting tokens in any of these locations increases the risk of token exposure in logs, referrer headers, etc.
-    - In situations where URLs with embedded credentials cannot be avoided, such as for one-click downloads or other integration, the token in the URL MUST be considered temporary with a short expiration period.
+    - In situations where URLs with embedded credentials cannot be avoided, such as for one-click downloads or other integration, the token in the URL **MUST** be considered temporary with a short expiration period.
 
 ## Errors
 

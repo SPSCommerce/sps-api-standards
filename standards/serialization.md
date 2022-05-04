@@ -178,7 +178,7 @@ PATCH /articles/1
 
 - Resource identifiers **SHOULD NOT** be serialized as numbers or integers (of any precision) as they should be considered opaque values to the API consumer.
 - string **MUST** be used to represent a decimal numeric value to avoid possible JSON interpreter precision loss across different languages. Some languages may interpret a JSON "number" as a fixed point and others as a floating-point.
-- percentage values **SHOULD** be represented as a string of fixed-point decimals. The property name MUST indicate that this is a percentage field.
+- percentage values **SHOULD** be represented as a string of fixed-point decimals. The property name **MUST** indicate that this is a percentage field.
 
 ```
 // INCORRECT
@@ -233,7 +233,7 @@ If there is an industry standard that requires us to do otherwise, enums **MAY**
 
 - All dates posted in requests and returned in response **MUST** conform to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard (format `YYYY-MM-DDTHH:mm:ss.sssZ`).
 - All dates **MUST** include the correct time zone.
-- All date fields SHOULD have the level of specificity and accuracy in their name:
+- All date fields **SHOULD** have the level of specificity and accuracy in their name:
     - `xxxDateTime` for fields with accuracy to time level
     - `xxxDate` for fields with accuracy to date level
 
@@ -309,7 +309,7 @@ Intervals are defined as part of [ISO 8601](http://en.wikipedia.org/wiki/ISO_860
 }
 ```
 
-Repeating Intervals MUST follow `R[n]/<interval>` format where `R[n]` indicates amount of repetitions and interval value itself as specified earlier, separated by slash `/`:
+Repeating Intervals **MUST** follow `R[n]/<interval>` format where `R[n]` indicates amount of repetitions and interval value itself as specified earlier, separated by slash `/`:
 
 ```
 {

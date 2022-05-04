@@ -56,7 +56,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 - All status codes used in the `4xx` or `5xx` range **MUST** return standardized error responses as outlined under [Errors](errors.md).
 - A server returning a status code in the `2xx` range **MUST NOT** return any error models defined in [Errors](errors.md), or any HTTP status code, as part of the response body. 
 - For client errors in the `4xx` code range, the response message **SHOULD** provide enough information for the client to be able to determine what caused the error and how to fix it.
-- For errors in the `4xx/5xx` code range, the response MUST contain an error message following [Errors](errors.md). The message **SHOULD** limit the amount of information to avoid exposing internal service implementation details to clients. This is true for both external-facing and internal APIs. Service developers should use logging and tracking utilities to provide additional information.
+- For errors in the `4xx/5xx` code range, the response **MUST** contain an error message following [Errors](errors.md). The message **SHOULD** limit the amount of information to avoid exposing internal service implementation details to clients. This is true for both external-facing and internal APIs. Service developers should use logging and tracking utilities to provide additional information.
 - By default, `3xx` status codes **SHOULD NOT** be used during API development. Exceptional usage use cases might be considered and require additional design discussion.
 
 ### Supported Status Codes
@@ -184,7 +184,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 
 #### 429 Too Many Requests
 
-**Description**: The server must return this status code if the rate limit for the user, the application, or the token has exceeded a predefined value. Defined in Additional HTTP Status Codes [RFC 6585](https://datatracker.ietf.org/doc/html/rfc6585).
+**Description**: The server **MUST** return this status code if the rate limit for the user, the application, or the token has exceeded a predefined value. Defined in Additional HTTP Status Codes [RFC 6585](https://datatracker.ietf.org/doc/html/rfc6585).
 
 **Retriable**: Yes
 
@@ -221,7 +221,7 @@ The purpose of HTTP headers is to provide metadata information about the body or
 
 **Type**: Request
 
-**Support**: MUST
+**Support**: **MUST**
 
 **Description**: This request header specifies the media types that the API client is capable of handling in the response.
 - Systems issuing the HTTP request **SHOULD** send this header.
@@ -242,7 +242,7 @@ Accept: text/html, application/xhtml+xml
 
 **Type**: Request/Response
 
-**Support**: MUST
+**Support**: **MUST**
 
 **Description**: This request/response header indicates the media type of the request or response body.
 - API client **MUST** include with the request if the request contains a body, e.g. it is a POST, PUT, or PATCH request.
@@ -264,7 +264,7 @@ Content-Type: application/json; charset=UTF-8
 
 **Type**: Response
 
-**Support**: MUST
+**Support**: **MUST**
 
 **Description**: This response-header field is used to redirect the recipient to a location other than the Request-URI for completion of the request or identification of a new resource.
 - Usage of the `Location` header is **MUST** only be used with response codes 201 or 3xx.
@@ -286,10 +286,10 @@ Location: /profiles/1 // missing "users" root resource, after host
 
 **Type**: Request
 
-**Support**: MUST
+**Support**: **MUST**
 
 **Description**: The User-Agent header helps API implementations to identify certain groups of consumers of their API.
-- `User-Agent` **MUST** be provided for all API requests for identification purposes. Requests without a valid User-Agent MUST return a 403 response status code.
+- `User-Agent` **MUST** be provided for all API requests for identification purposes. Requests without a valid User-Agent **MUST** return a 403 response status code.
 - `User-Agent` **SHOULD** contain product information, product version, and other comments as necessary to identify an API Consumer. Provided product versions should indicate major version numbers only in accordance with `User-Agent Client Hints`. Common syntax: 
 ```
 User-Agent: <product>/<product-major-version> <comment>
@@ -312,7 +312,7 @@ User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/fir
 
 **Type**: Request
 
-**Support**: MUST
+**Support**: **MUST**
 
 **Description**: More information at [Authentication](authentication.md).
 
