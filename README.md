@@ -18,9 +18,9 @@ The intent with this information is to clearly and effectively define how HTTP R
 
 The majority of this definition directs and acts as a REST API style guide, with a focus on designing uniform interfaces and contracts. While it addresses certain expected behaviors where necessary, it is not intended as a comprehensive overview or guidance of all the tenants of REST-style APIs. You are still expected to understand the core tenants, including client-server, statelessness, cache-ability, layered systems, etc. The following reading may help you understand the philosophy behind the REST Architectural Style. If you are new to RESTful design, here are some good resources:
 
-[REST on Wikipedia](https://en.wikipedia.org/wiki/Representational_state_transfer) - Overview of common definitions and core ideas behind REST.
-[REST Dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) - The chapter on REST in Roy Fielding's dissertation on Network Architecture, "Architectural Styles and the Design of Network-based Software Architectures".
-[RFC 7231: HTTP Semantics and Content](https://datatracker.ietf.org/doc/html/rfc7231) - Defines the specification for HTTP/1.1 semantics, and is considered the authoritative resource.
+- [REST on Wikipedia](https://en.wikipedia.org/wiki/Representational_state_transfer) - Overview of common definitions and core ideas behind REST.
+- [REST Dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) - The chapter on REST in Roy Fielding's dissertation on Network Architecture, "Architectural Styles and the Design of Network-based Software Architectures".
+- [RFC 7231: HTTP Semantics and Content](https://datatracker.ietf.org/doc/html/rfc7231) - Defines the specification for HTTP/1.1 semantics, and is considered the authoritative resource.
 
 Additionally, these standards intend to be agnostic of API implementation as much as possible. At times, it is necessary to take into account the cost of implementation when it is significant compared to possible alternatives that offer incremental value at a much lower cost. These scenarios are addressed by providing a flexible and/or incremental approach to the API contract as needed.
 
