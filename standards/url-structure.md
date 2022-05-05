@@ -10,7 +10,7 @@ https://api.spscommerce.com/path-1/path-2?queryParam1=value&queryParam2=value2#f
 Protocol      Host              Path                    Query                    Fragement
 ```
 
-- APIs **SHOULD NOT** expand their total URL length beyond a few hundred characters, with the host+path generally being less than 100 characters for readability and useability. While there is no absolute definition of the maximum size of a URL, some rare legacy constraints for older browsers and implementations restrict you to 2,048 characters. For good measure and simplicity keeping the total length less than a few hundred forces better design and usage of request bodies at that size.
+- APIs **SHOULD NOT** expand their total URL length beyond a few hundred characters, with the host+path generally being less than 100 characters for readability and usability. While there is no absolute definition of the maximum size of a URL, some rare legacy constraints for older browsers and implementations restrict you to 2,048 characters. For good measure and simplicity keeping the total length less than a few hundred forces better design and usage of request bodies at that size.
 
 ## Protocol
 
@@ -20,6 +20,7 @@ Protocol      Host              Path                    Query                   
 ## Host
 
 - Distributed APIs **SHOULD** be accessible under a centralized and singular hostname giving the appearance of a single API.
+
 ```
 // CORRECT
 api.spscommerce.com/users
@@ -31,6 +32,7 @@ articles.spsc.io/
 ```
 
 - APIs **MUST** differentiate their deployment environment based on hostnames and **NOT** based on URL Path. 
+
 ```
 // CORRECT
 api.spscommerce.com/users
@@ -42,7 +44,8 @@ api.spscommerce.com/integration/users
 ```
 
 - APIs **MUST** use hostnames (DNS) that reflect the intended usage for internal network access or public access. 
-- APIs **MUST NOT** use a publicly available DNS hostname for a service that is intended for internal access only. 
+- APIs **MUST NOT** use a publicly available DNS hostname for a service that is intended for internal access only.
+
 ```
 // CORRECT
 api.spscommerce.com/users    // (External)
@@ -108,6 +111,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 ```
 
 - Natural hierarchical resources **SHOULD** be structured in a nested path. 
+
 ```
 // CORRECT
 /articles/1/comments        // the comments resource can only exist in association to the article
@@ -121,6 +125,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
     - **MUST** be associated with the preceding name in the path.
     - **MUST** be capable of identifying the specific resource in the addressable context.
     - **MUST** be considered stable and not information that is subject to change on the resource.
+
     ```
     // CORRECT
     /articles/1/comments/2      // ID in the URL after articles "1" refers to the unique identifier for the article.
@@ -136,11 +141,13 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
     /states/us/texas                        // the value for a country and state is well-understood and very stable
     /time/2010/04/12                        // date and time formatting would be appropriate for historical references, but must abide by DateTime format serialization
     ```
+
     ```note
     For Date and Time references to format and serialization in the body or the path refer to [Serialization](serialization.md).
     ```
 
 - The hierarchy of nested resources **SHOULD NOT** exceed more than 3 resources. 
+
 ```
 // INCORRECT
 /articles/1/comments/2/sentences/5/words/4  // this is realistically too long to distill effective context without overloading the consumer.
@@ -148,6 +155,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 ```
 
 - Resources **MUST NOT** incorrectly nest other resources that are only partially related.
+
 ```
 // INCORRECT
 /articles/1/comments/2/authors/5    // accessing an individual author does not make sense at this granularity. 
@@ -159,6 +167,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 ```
 
 - Resources **SHOULD** recognize a difference in standard canonical and historical paths, by representing historical paths with stable resources based on the time when it makes contextual sense to do so.
+
 ```
 // CORRECT
 /articles/2013/category/rest
@@ -171,6 +180,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 It is often not only acceptable but encouraged to add additional shortcuts to your API if portions of the path become superfluous or with the usage of unnecessary IDs based on your implementation. 
 
 - Nested collection resources with globally unique identifiers in their context **MAY NOT** require the specification of all parent unique identifiers in the resource path.
+
 ```
 /articles/1/comments/2/ratings/5    // if the rating identifier is globally unique for all articles and comments, 
                                     // then passing the article identifier and comment identifier is not only annoying for consumers of the API,
@@ -180,6 +190,7 @@ It is often not only acceptable but encouraged to add additional shortcuts to yo
 ```
 
 - Nested collection resources **SHOULD** apply inherit filters of the same object accessible at other convenient nested paths. 
+
 ```
 // Example 1 - Comments are accessible and filtered under articles nested path,
 // but also accessible across all articles (inerhit authorization may filter comments to those created by the requestor by default).
