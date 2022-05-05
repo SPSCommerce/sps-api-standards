@@ -83,6 +83,7 @@ APIs **MUST** be strict in the information they produce, and they **SHOULD** be 
 `null` is a primitive type in JSON. When validating a JSON document against JSON Schema, a property's value can be null only when it is explicitly allowed by the schema, using the type keyword (e.g. `{"type": "null"}`).
 
 - `null` values **SHOULD** be present in a response payload for an attribute value as a whole. 
+
 ```
 
 // CORRECT
@@ -103,6 +104,7 @@ GET /articles/1
 ```
 
 - An entire nested object **SHOULD** be represented as a single `null` instead of an object with all `null` attributes.
+
 ```
 // CORRECT
 GET /articles/1
@@ -125,6 +127,7 @@ GET /articles/1
 ```
 
 - `null` **MUST** be specified in `PATCH` request to indicate that value should be removed from the specified field of the object.
+
 ```
 PATCH /articles/1
 {   
@@ -169,6 +172,7 @@ PATCH /articles/1
     - When an integer type is used as a 32-bit integer it **SHOULD** provide an explicit minimum and a maximum in the associated API schema.
     - When requiring a 64-bit integer (a.k.a "long") it **SHOULD** be serialized as a string and specified as a formatted "int64" to ensure maximum compatibility across programming languages, particularly with JavaScript.
     - In the circumstance where serializing a number as a 64-bit integer is required, you MAY provide the 64-bit value as both a string and a number to ensure its accessibility.
+    
 ```
 {
     "largeValue": 10765432100123656789,

@@ -76,6 +76,7 @@ The Problem Details Working Group and ongoing issues with requests are also avai
 - Any listed response **MAY** also be extended with any field or context.
 
 The following common error examples assume the following request unless indicated otherwise:
+
 ```
 PUT /documents/203
 Authorization: Bearer <token>

@@ -42,6 +42,7 @@ When you consider the names to use for your path, endpoints and other components
 - Abbreviations of properties **MUST NOT** be used unless the abbreviation is clearer and better established than the full spelling.
     - Examples of preferable abbreviations would include `id`, `html`, or `api`.
 - camelCase **MUST** be used for all property names in both request and response payloads:
+
 ```
 // INCORRECT
 OrderNumber
@@ -53,6 +54,7 @@ lineItemNumber
 ```
 
 - All acronyms **MUST** follow camelCase standards if they are part of the property name.
+
 ```
 // INCORRECT
 ID
@@ -67,6 +69,7 @@ imageUrl
 ```
 
 - Property names **SHOULD NOT** include prepositions (e.g. "for", "during", "at"):
+
 ```
 // INCORRECT
 reasonForError
@@ -78,6 +81,7 @@ failureTimeCpuUsage
 ```
 
 - Property names **SHOULD NOT** use postpositive adjectives (modifiers placed after the noun):
+
 ```
 // INCORRECT
 itemsCollected
@@ -91,6 +95,7 @@ importedObjects
 - Boolean properties **SHOULD NOT** use is, has, or another prefix.
 - Boolean properties **SHOULD** describe their associated entity using adjectives and not nouns.
     - Boolean properties **SHOULD NOT** be pluralized (i.e. avoid pluralized nouns acting as adjectives). 
+
 ```
 // INCORRECT
 isActive    // uses prefix
@@ -104,6 +109,7 @@ enabled
 ```
 
 - Fields that indicate repeated values or arrays always **MUST** use proper plural forms.
+
 ```
 // INCORRECT
 collectedItem: []
@@ -113,6 +119,7 @@ collectedItems: []
 ```
 
 - Any identifier of a resource **SHOULD** have Id after the entity name when referenced from another entity.
+
 ```
 // INCORRECT
 documentCode
@@ -122,6 +129,7 @@ documentId
 ```
 
 - Attribute names **MUST** consider the appropriate tense (past, present, future) based on their context and domain model. 
+
 ```
 // CONSIDERATION EXAMPLES
 start, starting, started
@@ -129,6 +137,7 @@ run, running, ran
 ```
 
 - Attribute names **SHOULD** describe their parent entity, otherwise, the attribute name **SHOULD** be prefixed with a domain-specific entity name that it is associated with. 
+
 ```
 // INCORRECT EXAMPLE
 GET /v1/books/2345

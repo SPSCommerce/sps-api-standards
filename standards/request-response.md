@@ -230,6 +230,7 @@ The purpose of HTTP headers is to provide metadata information about the body or
 - The header **MUST NOT** indicate the version of the API contract and apply to content serialization formatting only.
 
 **Example(s)**:
+
 ```
 // CORRECT
 Accept: application/json
@@ -252,6 +253,7 @@ Accept: text/html, application/xhtml+xml
 Refer further to MIME-Types below for additional details and supported types.
 
 **Example(s)**:
+
 ```
 // CORRECT
 Content-Type: application/json
@@ -271,6 +273,7 @@ Content-Type: application/json; charset=UTF-8
 - Relative URLs **MUST** be made relative to the URL host.
 
 **Example(s)**:
+
 ```
 // CORRECT
 Location: /users/profiles/1
@@ -291,6 +294,7 @@ Location: /profiles/1 // missing "users" root resource, after host
 **Description**: The User-Agent header helps API implementations to identify certain groups of consumers of their API.
 - `User-Agent` **MUST** be provided for all API requests for identification purposes. Requests without a valid User-Agent **MUST** return a 403 response status code.
 - `User-Agent` **SHOULD** contain product information, product version, and other comments as necessary to identify an API Consumer. Provided product versions should indicate major version numbers only in accordance with `User-Agent Client Hints`. Common syntax: 
+
 ```
 User-Agent: <product>/<product-major-version> <comment>
 User-Agent: my-calling-service/2
@@ -301,6 +305,7 @@ It would be appropriate to supply a general `403` at the platform or central ing
 ```
 
 **Example(s)**:
+
 ```
 // CORRECT
 User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion
@@ -317,6 +322,7 @@ User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/fir
 **Description**: More information at [Authentication](authentication.md).
 
 **Example(s)**:
+
 ```
 // CORRECT
 Authorization: Bearer <token>
@@ -341,6 +347,7 @@ Authorization: Basic <token>
 - APIs **SHOULD** provide this header in the response.
 
 **Example(s)**:
+
 ```
 // CORRECT
 Content-Language: en-US
@@ -359,6 +366,7 @@ Content-Language: en-US, de-DE, en-CA
 - `ETag` **SHOULD** be returned for `GET` requests where the individual resource has a specific version.
 
 **Example(s)**:
+
 ```
 // CORRECT
 ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
@@ -376,6 +384,7 @@ ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 - Values of the header **SHOULD** always be derived from the value returned from a response with an `ETag` header.
 
 **Example(s)**:
+
 ```
 // CORRECT
 If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
@@ -392,6 +401,7 @@ If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 **Description**: Responses **MUST** return no-store header value when sensitive data is present.
 
 **Example(s)**:
+
 ```
 // CORRECT
 Cache-Control: max-age=<seconds>
@@ -419,8 +429,8 @@ Cache-Control: only-if-cached
 - `Access-Control-Allow-Credentials` **MUST NOT** be set to `true` if `Access-Control-Allow-Origin` is wildcarded ("*").
 - `Access-Control-Max-Age` **SHOULD NOT** exceed 7200 seconds (2 hours) due to browser caps and limitations.
 
-
 **Example(s)**:
+
 ```
 // CORRECT
 Access-Control-Allow-Origin: https://cdn.spsc.io/
@@ -536,7 +546,6 @@ Content-Type: application/json                      // Default standard for all 
 ```
 
 ```
-
 // STANDARD JSON SCENARIO                   // JSON media type MUST always be supported
 // REQUEST
 POST /articles                              // creating an article

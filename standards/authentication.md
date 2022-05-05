@@ -12,6 +12,7 @@
 Once a service receives a token, it must be validated before the data it contains can be used to service the request. Typically these tokens will be [JWTs](https://jwt.io/introduction) and can be cryptographically verified by either [OPA](https://www.openpolicyagent.org/) policy or SPS Commerce's internal Identity Service. Other tokens, such as API keys, are simply opaque secret values and must be validated via storage. API keys can also be verified by Identity Service or OPA policy. As a reminder, all auth tokens are considered a secret and must be handled according to security best practices around usage and logging.
 
 - APIs **SHOULD** expect that the access token is sent as a bearer token using the `Authorization` header on every request.
+
 ```
 Authorization: Bearer <token value>
 ```

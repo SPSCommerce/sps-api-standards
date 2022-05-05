@@ -9,6 +9,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 ## Root Element
 
 - All collection-based endpoint responses **MUST** include the collection under the `results` root element. 
+
 ```
 // CORRECT
 {
@@ -30,6 +31,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 ### General
 
 - All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below. 
+
 ```
 // CORRECT
 GET https://api.spscommerce.com/v1/books
@@ -43,6 +45,7 @@ GET https://api.spscommerce.com/v1/books
 
 - All collection-based endpoints **SHOULD** use `GET` requests for pagination and not `POST` requests unless it is necessary for the action.
 - All collection-based endpoints `POST` request parameters **MUST** be specified as parameters in the body of the request within the `paging` element and the outlined schema below.
+
 ```
 // CORRECT
 POST https://api.spscommerce.com/v1/books
@@ -57,7 +60,8 @@ POST https://api.spscommerce.com/v1/books
 }
 ```
 
-- Pagination request parameters `MUST` never exist as both query parameters and request body parameters. 
+- Pagination request parameters `MUST` never exist as both query parameters and request body parameters.
+
 ```
 // INCORRECT
 POST https://api.spscommerce.com/v1/books
@@ -75,6 +79,7 @@ POST https://api.spscommerce.com/v1/books
 ```
 
 - All collection-based endpoint responses **MUST** include the root element `paging` whenever `results` are used, with the outlined schema from offset-based or cursor-based pagination.
+
 ```
 // RESPONSE
 {
@@ -88,6 +93,7 @@ POST https://api.spscommerce.com/v1/books
 ```
 
 - If using pagination response parameters for "next" and "previous", then they **MUST** be set to `NULL` to indicate there is no next or previous page.
+
 ```
 // generally speaking the first request for the first page of results will have a null previous page
 GET https://api.spscommerce.com/v1/example?limit=25&offset=0
@@ -122,6 +128,7 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 
 - All collection-based endpoints **SHOULD** support offset-based over cursor-based pagination unless technology or performance makes cursor-based pagination more advantageous.
 - Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used. 
+
 ```
 // RESPONSE
 {
@@ -140,6 +147,7 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 ```
 
 - Offset-based collection endpoints may **OPTIONALLY** make use of `next` and `previous` specifications for URLs. 
+
 ```
 // RESPONSE
 {
@@ -231,6 +239,7 @@ The performance advantages may be a larger requirement than the capabilities you
 ### Guidelines
 
 - Cursor-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used. 
+
 ```
 RESPONSE
 {
@@ -258,6 +267,7 @@ RESPONSE
 ```
 
 - When using pagination cursors, the cursor **MUST** be `Base64` encoded to be opaque. 
+
 ```
 // CORRECT
 RESPONSE
@@ -474,6 +484,7 @@ RSQL is based on FIQL and is considered a superset of it, making it and FIQL usa
     - Hybrid filtering **MAY** be offered on multiple attributes, but **MUST** never exist if a root "filter" query parameter is available.
     - Hybrid filtering with multiple attribute filters **MUST** logically "AND" the results of both filters together (unless the attribute name is repeated, in which case repeated attributes names are "OR" for the results as described in simple filtering).
     - Hybrid filtering **MAY** be combined with additional simple filtering query parameters, provided they do not have a suffix of `Filter`.
+
 ```
 // EXAMPLE OBJECT
 GET /articles
