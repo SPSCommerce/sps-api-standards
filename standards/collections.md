@@ -332,7 +332,7 @@ RESPONSE
         "next": {
             "cursor": "bmV4dF91c2VySWQ6Mw==",   # base64.encode("next_userId:3")
                                                 # The format can be anything you like for your API, such as "next_userId_3", or even "3" if the API returns just next pages of users.
-                                                # Cursor can indicate multiple columns and asc/desc if desireable: base64.encode("Username:desc__Userid:asc__UserId:12").
+                                                # Cursor can indicate multiple columns and asc/desc if desirable: base64.encode("Username:desc__Userid:asc__UserId:12").
                                                 # Take a note, that a cursor usually contains additional information to help API understand direction and order.
                                                  
             "url": "https://api.spscommerce.com/v1/example?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
@@ -476,7 +476,7 @@ RSQL is based on FIQL and is considered a superset of it, making it and FIQL usa
     - `filter` **MUST** only be specified once in the URL.
     - `filter` **MUST** only contain the FIQL/RSQL syntax specified in these standards.
 - Each query parameter value or any field value inside FIQL/RSQL expression **MUST** be URL encoded. FIQL/RSQL expression itself generally does not require encoding as there are no unsafe characters.
-- FIQL/RSQL expressions **MUST** use logical AND operators as `;` (semi-colon) and OR operators as `,` (comma), regardless of newer RSQL language alternatives for the same operators, to preserve consistency between APIs.
+- FIQL/RSQL expressions **MUST** use logical AND operators as `;` (semicolon) and OR operators as `,` (comma), regardless of newer RSQL language alternatives for the same operators, to preserve consistency between APIs.
 - Advanced filtering **MAY** be applied to particular query parameters to filter based on a subset of attributes in the format `attributeFilter` (where keyword `attribute` is your attribute name), commonly referred to as hybrid filtering (hybrid between simple and advanced).
     - Using "simple" or "advanced" filtering without the hybrid approach **SHOULD** be the preferred choice. Hybrid filtering is not desirable but may be necessary based on the constraints of your implementation and requirements (including performance). 
         - Hybrid filtering is intended to support scenarios where API producers are unable to provide advanced filtering capability on all aspects of the payload response attributes and want to provide scope clarity in the attribute filter name.
@@ -512,10 +512,10 @@ RESPONSE
  
 // CORRECT
 GET /articles?filter=reviewRating=gt=4                          // articles with a review rating greater than 4
-GET /articles?filter=title==Title;author.lastName==Doe          // articles with the title "title" and authos last name "Doe"
+GET /articles?filter=title==Title;author.lastName==Doe          // articles with the title "title" and author last name "Doe"
 GET /articles?filter=author.age=gt=42;author.firstName==John    // articles with an author of age greater than 42 AND first name "John"
 GET /articles?filter=author.age=gt=42,author.firstName==John    // articles with an author of age greater than 42 OR first name "John"
-GET /articles?authorFilter=lastName==Doe&title=Title            // hybrid filter that offers advanced filtering sytnax ONLY for author object, and simple filtering otherwise.
+GET /articles?authorFilter=lastName==Doe&title=Title            // hybrid filter that offers advanced filtering syntax ONLY for author object, and simple filtering otherwise.
  
 // ADVANCED CORRECT EXAMPLE
 GET /articles?filter=(categories=in=(Fiction,Drama),title==Butterflies*),(categories=out=(NonFiction),author.age=gt=12)
@@ -588,6 +588,6 @@ GET /articles?ordering=author.firstName                     // order articles by
  
 // INCORRECT
 GET /articles?ordering=title,-reviewRating                  // ordering multiple attributes is not applied via CSV
-GET /articles?orderings=title&orderings=-reviewRating       // never use puralized "orderings"
+GET /articles?orderings=title&orderings=-reviewRating       // never use pluralized "orderings"
 DELETE /articles?ordering=title                             // ordering only applies to GET methods.
 ```

@@ -375,7 +375,7 @@ Content-Type: application/problem+json
 ### 500 Internal Server Error
 
 ```
-// EXMAMPLE 1: 500 Error No Details
+// EXAMPLE 1: 500 Error No Details
 // RESPONSE
 HTTP/1.1 500
 Content-Type: application/problem+json

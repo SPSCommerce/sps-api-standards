@@ -80,7 +80,7 @@ errorReason
 failureTimeCpuUsage
 ```
 
-- Property names **SHOULD NOT** use postpositive adjectives (modifiers placed after the noun):
+- Property names **SHOULD NOT** use post-positive adjectives (modifiers placed after the noun):
 
 ```
 // INCORRECT
@@ -170,7 +170,7 @@ RESPONSE
 
 ## Standard Properties
 
-The following properties represent standardized names that are cross-domain transferrable or used in a wide variety of API schemas. As a quick reference, you should prefer to use these names when designing APIs that require some very standard fields, such as those used for auditing or last modification. At times there may be more appropriate domain-specific choices to use instead.
+The following properties represent standardized names that are cross-domain transferable or used in a wide variety of API schemas. As a quick reference, you should prefer to use these names when designing APIs that require some very standard fields, such as those used for auditing or last modification. At times there may be more appropriate domain-specific choices to use instead.
 
 Refer to further information in [Serialization](serialization.md) with regard to specific property naming conventions based on JSON types.
 

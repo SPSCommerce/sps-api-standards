@@ -538,9 +538,9 @@ Content-Type: application/whatever                  // "whatever" does not follo
 Content-Type: sps/vnd.whatever+json                 // Custom content type MUST be specified as an "application" type of content.
 Content-Type: application/vnd.whatever              // MUST include "sps" as vendor prefix name, along with the format type of xml or json.
  
-// CORECT
+// CORRECT
 Content-Type: application/vnd.sps-model+json        // Custom type indicates request or response has a body with model information specified in JSON format.
-Content-Type: application/vnd.sps-model+xml         // Custom type indicates request or response has a body with model information specified in XMLformat.
+Content-Type: application/vnd.sps-model+xml         // Custom type indicates request or response has a body with model information specified in XML format.
 Content-Type: application/vnd.sps-model.v1+json     // Version can be included in the custom Content Type if needed.
 Content-Type: application/json                      // Default standard for all APIs to use.
 ```
