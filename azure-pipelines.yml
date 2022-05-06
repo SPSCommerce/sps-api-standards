@@ -3,8 +3,9 @@ trigger:
     include:
     - main
   paths:
-    exclude:
+    include:
       - standards/*
+
 pr: none
 
 resources:
