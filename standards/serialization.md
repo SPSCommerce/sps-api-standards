@@ -191,7 +191,7 @@ PATCH /articles/1
     number: "10",           // 32-bit integers should be serialized as numbers.
     decimal: 10.2          // floating-point numbers should be serialized as strings to avoid precision loss.
     taxAddition: "8.75%",   // symbols should be left out of the string serialized percentage values.
-    percentage: 8,          // floating-point numbers should be seiralized as stirngs to avoid precision loss.
+    percentage: 8,          // floating-point numbers should be serialized as strings to avoid precision loss.
 }
  
 // CORRECT
@@ -308,7 +308,7 @@ Intervals are defined as part of [ISO 8601](http://en.wikipedia.org/wiki/ISO_860
     interval: "2007-03-01T13:00:00Z/P1Y2M10DT2H30M", // <startDate>/<duration> interval that starts 1pm of March 1st, 2007
                                                      // and ends after specified period of 1 year, 2 months, 10 days, 2 hours and 30 minutes
  
-    interval: "P1Y2M10DT2H30M/2008-05-11T15:30:00Z" // <duration>/<endDate> interval that defined by specifed period
+    interval: "P1Y2M10DT2H30M/2008-05-11T15:30:00Z" // <duration>/<endDate> interval that defined by specified period
                                                     // of 1 year, 2 months, 10 days, 2 hours and 30 minutes and ends 3:30pm of May 11th 2008
 }
 ```

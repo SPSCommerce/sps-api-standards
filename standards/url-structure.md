@@ -5,9 +5,9 @@
 A "Uniform Resource Locator (URL)" is a subset of a URI, and intentionally includes the specified protocol, host, path, hash, and query string. This definition intends to address all aspects of the URL and its structure as it relates to REST API standards.
 
 ```
-https://api.spscommerce.com/path-1/path-2?queryParam1=value&queryParam2=value2#fragements-here
+https://api.spscommerce.com/path-1/path-2?queryParam1=value&queryParam2=value2#fragments-here
 |------|-------------------|-------------|-----------------------------------|----------------|
-Protocol      Host              Path                    Query                    Fragement
+Protocol      Host              Path                    Query                    Fragment
 ```
 
 - APIs **SHOULD NOT** expand their total URL length beyond a few hundred characters, with the host+path generally being less than 100 characters for readability and usability. While there is no absolute definition of the maximum size of a URL, some rare legacy constraints for older browsers and implementations restrict you to 2,048 characters. For good measure and simplicity keeping the total length less than a few hundred forces better design and usage of request bodies at that size.
@@ -104,7 +104,7 @@ Personally identifiable information and other sensitive data **MUST NOT** be use
 
 ### Hierarchy
 
-Resources in the path **SHOULD** be repeated as a representation of a hierarchy for a domain model where possible as part of logical nesting for your endpoints. A hierarchal path is intended to provide context to the consumers of your API about how to use it and some expected behaviors. In many cases, a resource or nested path may directly reflect your Object or Entity Database model. This is often the natural case for brand new micro-services with a highly encapsulated domain-driven design, while other abstracted services that have evolved over time or have many layers of dependencies may represent a simplified or alternate hierarchal model through the REST API contracts than what truly exists. While both of these scenarios are valid, in either case, you'll look to provide consistency in your hierarchy and resource naming.
+Resources in the path **SHOULD** be repeated as a representation of a hierarchy for a domain model where possible as part of logical nesting for your endpoints. A hierarchical path is intended to provide context to the consumers of your API about how to use it and some expected behaviors. In many cases, a resource or nested path may directly reflect your Object or Entity Database model. This is often the natural case for brand new micro-services with a highly encapsulated domain-driven design, while other abstracted services that have evolved over time or have many layers of dependencies may represent a simplified or alternate hierarchical model through the REST API contracts than what truly exists. While both of these scenarios are valid, in either case, you'll look to provide consistency in your hierarchy and resource naming.
 
 ```note
 **Rule of Thumb**: When thinking about whether you intend to nest resource paths, consider if a given resource can exist without the resource above it (i.e. if you were to cascade delete a top-level resource, the implication is that all resources under that path are also removed). If the answer is "no", then that is generally a positive logical nest. If the answer is "yes", you might have to consider other aspects of usage and the domain model with the decision or right answer being a bit more ambiguous. 
@@ -186,15 +186,15 @@ It is often not only acceptable but encouraged to add additional shortcuts to yo
                                     // then passing the article identifier and comment identifier is not only annoying for consumers of the API,
                                     // but does also require validation of those identifiers within the context on the server.
  
-/articles/comments/ratings/5        // shortcuting the superfluous identifiers when possible is acceptable.
+/articles/comments/ratings/5        // shortcutting the superfluous identifiers when possible is acceptable.
 ```
 
 - Nested collection resources **SHOULD** apply inherit filters of the same object accessible at other convenient nested paths. 
 
 ```
 // Example 1 - Comments are accessible and filtered under articles nested path,
-// but also accessible across all articles (inerhit authorization may filter comments to those created by the requestor by default).
-/articles/1/comments            // Path may work for both retrieving as well as creating new commments for specific articles.
+// but also accessible across all articles (inherit authorization may filter comments to those created by the requestor by default).
+/articles/1/comments            // Path may work for both retrieving as well as creating new comments for specific articles.
 /comments                      
  
 // Example 2 - Authors are accessible and filtered under all comments for the article.
