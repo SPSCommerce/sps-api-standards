@@ -255,6 +255,27 @@ Content-Type: application/problem+json
 ### 404 Not Found
 
 ```
+// REQUEST
+GET /documents/203
+
+// RESPONSE
+HTTP/1.1 404
+Content-Type: application/problem+json
+{
+    "title": "Not Found",
+    "status": 404,
+    "detail": "Requested resource '/documents/203' not found.",    
+    "instance": "/documents/203",    
+    "requestId": "b6d9a290-9f20-465b-bcd3-4a5166eeb3d7"
+}
+```
+
+- Assuming the endpoint exists, when a resource identifier in the URL path is not found while addressing a child, the resource not found **SHOULD** be indicated in the `detail` message and the `instance` accordingly:
+
+```
+// REQUEST
+GET /documents/203/instances
+
 // RESPONSE
 HTTP/1.1 404
 Content-Type: application/problem+json
