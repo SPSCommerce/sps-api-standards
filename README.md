@@ -42,7 +42,7 @@ The following guidance is provided to help drive the decision making process on 
 
 <sub>References Principles Sourced From: [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cc-api-v3-style-guide#guiding-principles).</sub>
 
-## Creation Guidelines
+## API Standards Creation
 
 - "MUST", "MUST NOT", "SHOULD" and "SHOULD NOT" are used in the context as [defined in RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 - Provide links to other parts of the standards where associations need to be made but at all costs reduce duplication as it is detrimental to maintenance and accuracy.
@@ -53,7 +53,7 @@ The following guidance is provided to help drive the decision making process on 
 - No differences between internal or external APIs should be called out, as all APIs should be crafted in preparation for externalization.
 - Compose and reuse other API Guidelines, standards and schemas where possible including the use of existing industry standard RFCs.
 
-## Versioning Guidelines
+## API Standards Versioning
 
 The API standards are versioned similarly to the [Semantic Versioning](https://semver.org/) specification where possible to help indicate the types of ongoing changes and modifications that will be introduced over time. While having a set of standards that is a moving target is not ideal, in reality we expect to continually evolve and make backwards compatible changes over time. There are many aspects of API design and contracts still missing from the existing guidelines that will need to be added to the initial draft. Using semantic versioning format means you can identify that changes are large or contract-breaking with a large version bump. Every intention and effort will be made to avoid major version bumps of these standards that may contain any contract breaking modifications. Simple modifications to examples or clarifications added would materialize as a patch version bump. This also enables future work to provide supporting material on the standards, such as automated linting rules. 
 
@@ -64,6 +64,8 @@ Examples:
 - Addition of a "SHOULD" line item for an entirely new header results in a minor version bump.
 - Text updates for clarification or wording modification within the same scope results in a patch version bump.
 - As modifications, updates, and brand new additions to the standards are developed, it will be done in GitHub, with full transparency. Certain versions may warrant pre-release indicators with semantic versioning to help with the adoption and curation of feedback for those updates.
+
+Semantic versioning, GitHub Releases and automated release notes are provisioned using the [Semantic Release CLI tool](https://github.com/semantic-release/semantic-release#commit-message-format). Commits and Pull Requests should be pushed by indicating a `fix`, `feat` or `BREAKING CHANGE` in the commit messages appropriately.
 
 ## References
 
