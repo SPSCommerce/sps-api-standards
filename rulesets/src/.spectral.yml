@@ -1,0 +1,4 @@
+extends: 
+  - spectral:oas
+  - general.ruleset.yml
+ 

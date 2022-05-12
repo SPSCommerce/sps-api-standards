@@ -1,4 +1,4 @@
-# SPS REST API Standards
+# REST API Standards
 
 This documentation represents the REST API standards to be used by all teams at SPS Commerce creating RESTful style internal or external APIs of any size or form. These guidelines supersede any and all existing or alternative sources of standards for REST APIs at SPS Commerce.
 

@@ -1,0 +1,9 @@
+rules:
+  semver:
+    severity: warn
+    message: Version should use semantic versioning. {{value}} is not a valid version.
+    given: $.info.version
+    then:
+      function: pattern
+      functionOptions:
+        match: "^([0-9]+.[0-9]+.[0-9]+)$"
