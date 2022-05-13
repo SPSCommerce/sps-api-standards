@@ -3,14 +3,14 @@ openapi: 3.0.1
 info:
   title: Template Example API
   description: "This is an example API that uses the OpenAPI 3.0.1 specification to demonstrate a healthy and broad expectation of putting together an API Design First document.\nThis document will be used for contractual definition and collaboration with initial stakeholders. When creating new APIs you should fork/copy this template as a starting point.\nIt can also be used as a reference for schema, domain and expected properties you should include in updates to your specs.\n\n*Note: All description fields in Open API spec can contain CommonMark markdown, with no limit on length. \nSpending time on your descriptions and documentation inside your API spec is essential and valuable.\n\nUsing this template, you should ensure to replace anything inside <--Templated Text--> with your own content (this will be enforced by standards validation in SwaggerHub).\n"
-  version: v1
+  version: 1.0.0
 externalDocs:
   description: <--External Documentation-->
   url: https://url.here
 servers:
-- url: https://integration.api.spscommerce.com/
+- url: https://integration.api.spscommerce.com
   description: integration
-- url: https://api.spscommerce.com/
+- url: https://api.spscommerce.com
   description: prod
 security:
 - MyBearer: []
@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                $ref: '#/components/schemas/UserList'
         "400":
           description: Invalid Data
           content:
@@ -598,7 +598,7 @@ components:
       description: The total count of all unique available records (results) across all paginated queries of the endpoint.
       format: int32
       example: 124
-    inline_response_200:
+    UserList:
       properties:
         results:
           type: array

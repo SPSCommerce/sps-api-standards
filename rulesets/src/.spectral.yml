@@ -6,4 +6,8 @@ extends:
   - request-response.ruleset.yml
   - serialization.ruleset.yml
   - url-structure.ruleset.yml
+
+rules:
+  info-contact: off
+  oas3-unused-component: off
  
