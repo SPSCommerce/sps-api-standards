@@ -1,0 +1,12 @@
+rules:
+  # Author: Phil Sturgeon (https://github.com/philsturgeon)
+  unknown-error-format:
+    description: "Every error response SHOULD support RFC 7807."
+    severity: error
+    given: $.paths...responses[?(@property.match(/^(4|5)/))].content.*~
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+        - application/problem+xml
+        - application/problem+json

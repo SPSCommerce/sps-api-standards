@@ -1,4 +1,9 @@
 extends: 
   - spectral:oas
   - general.ruleset.yml
+  - authentication.ruleset.yml
+  - errors.ruleset.yml
+  - request-response.ruleset.yml
+  - serialization.ruleset.yml
+  - url-structure.ruleset.yml
  
