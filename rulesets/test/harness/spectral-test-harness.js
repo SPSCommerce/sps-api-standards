@@ -24,12 +24,31 @@ class SpectralTestHarness {
         this.results = await this.spectral.run(document);
 
         return this;
-    };
+    };   
 
     validateFile = async function(documentPath) {
         const resolved = path.resolve(documentPath);
         const body = fs.readFileSync(resolved, 'utf8');
         return await this.validate(body);
+    };
+
+    validateSuccess = async function(spec, code) {
+        await this.validate(spec);
+        await this.assert(code, true, null, null);
+    };
+
+    validateFailure = async function(spec, code, severity, severityCount = 1) {
+        await this.validate(spec);
+        await this.assert(code, false, severity, severityCount);
+    };
+
+    assert = async function(code, isSuccessful, severity, severityCount = 1) {
+        if (isSuccessful){
+            expect(this.getResults(code)).toHaveLength(0);
+        } else {
+            var results = this.getResults(code, severity);
+            expect(results).toHaveLength(severityCount);
+        }
     };
 
     getResults = function(code = null, severity = null) {
@@ -46,13 +65,10 @@ class SpectralTestHarness {
 
         if (severity)
         {
-            console.log(filteredResults);
-            console.log(severity);
             filteredResults = filteredResults.filter(r => DiagnosticSeverity[r.severity] === severity).map(r => {
                 r.severity = DiagnosticSeverity[r.severity].toUpperCase();
                 return r;
             });
-            console.log(filteredResults);
         }
         
         return filteredResults;
