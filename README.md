@@ -67,6 +67,8 @@ Examples:
 
 Semantic versioning, GitHub Releases and automated release notes are provisioned using the [Semantic Release CLI tool](https://github.com/semantic-release/semantic-release#commit-message-format). Commits and Pull Requests should be pushed by indicating a `fix`, `feat` or `BREAKING CHANGE` in the commit messages appropriately.
 
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 ## References
 
 The creation of these API standards was not driven from scratch or unique by any means. It is a composition of SPS Commerce internal experience alongside heavily borrowed text and concepts from other API Guideline documentation that are immensely valuable in and of themselves:
