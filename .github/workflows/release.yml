@@ -18,6 +18,7 @@ jobs:
         with:
           cache: npm
           node-version: 16
+        working-directory: rulesets
       - run: |
           npm install
           npm test
