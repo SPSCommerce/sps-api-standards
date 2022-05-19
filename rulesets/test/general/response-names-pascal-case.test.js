@@ -15,7 +15,7 @@ describe("response-names-pascal-case", () => {
             paths: {}
             components:
                 responses:
-                    fooBar:
+                    FooBar:
                         description: "Description"
         `;
     
