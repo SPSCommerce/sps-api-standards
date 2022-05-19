@@ -1,4 +1,4 @@
-name: Release
+name: api-standards-release
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: test
+    name: validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +18,7 @@ jobs:
         with:
           cache: npm
           node-version: 16
-        working-directory: rulesets
+          cache-dependency-path: rulesets/package-lock.json
       - run: |
           npm install
           npm test
