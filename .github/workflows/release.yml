@@ -21,8 +21,12 @@ jobs:
           cache-dependency-path: rulesets/package-lock.json
       - run: |
           npm install
+        working-directory: rulesets
+        name: install dependencies
+      - run: |
           npm test
         working-directory: rulesets
+        name: unit test validation
       
   release:
     name: release
