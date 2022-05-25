@@ -54,3 +54,9 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Azure Pipelines Action
+        uses: Azure/pipelines@v1
+        with:
+          azure-devops-project-url: https://dev.azure.com/spscommerce/sps-shared
+          azure-pipeline-name: 'sps-api-standards-cdn-publish'
+          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
