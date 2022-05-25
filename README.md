@@ -1,4 +1,4 @@
-# SPS REST API Standards
+# REST API Standards
 
 This documentation represents the REST API standards to be used by all teams at SPS Commerce creating RESTful style internal or external APIs of any size or form. These guidelines supersede any and all existing or alternative sources of standards for REST APIs at SPS Commerce.
 
@@ -66,6 +66,8 @@ Examples:
 - As modifications, updates, and brand new additions to the standards are developed, it will be done in GitHub, with full transparency. Certain versions may warrant pre-release indicators with semantic versioning to help with the adoption and curation of feedback for those updates.
 
 Semantic versioning, GitHub Releases and automated release notes are provisioned using the [Semantic Release CLI tool](https://github.com/semantic-release/semantic-release#commit-message-format). Commits and Pull Requests should be pushed by indicating a `fix`, `feat` or `BREAKING CHANGE` in the commit messages appropriately.
+
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 ## References
 

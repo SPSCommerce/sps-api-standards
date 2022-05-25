@@ -1,0 +1,23 @@
+{
+  "name": "@spscommerce/spectral-ruleset",
+  "version": "0.0.0",
+  "description": "Spectral ruleset for SPS Commerce APIs",
+  "main": "src/.spectral.yml",
+  "devDependencies": {
+    "@stoplight/spectral-core": "^1.8.0",
+    "@stoplight/spectral-parsers": "^1.0.1",
+    "@stoplight/spectral-ruleset-bundler": "^1.1.0",
+    "@stoplight/spectral-runtime": "^1.0.0",
+    "@stoplight/types": "^12.3.0",
+    "jest": "^28.1.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "spectral",
+    "test",
+    "linting",
+    "spscommerce"
+  ]
+}

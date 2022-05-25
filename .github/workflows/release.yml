@@ -1,0 +1,44 @@
+name: api-standards-release
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: use node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 16
+          cache-dependency-path: rulesets/package-lock.json
+      - run: |
+          npm install
+        working-directory: rulesets
+        name: install dependencies
+      - run: |
+          npm test
+        working-directory: rulesets
+        name: unit test validation
+      
+  release:
+    name: release
+    needs: [test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: use node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
