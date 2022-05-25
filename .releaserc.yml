@@ -6,17 +6,14 @@ verifyConditions: "@semantic-release/github"
 analyzeCommits: "@semantic-release/commit-analyzer"
 generateNotes: "@semantic-release/release-notes-generator"
 prepare: false
-publish: "@semantic-release/github"
+publish: 
+- path: "@semantic-release/github"
+  assets:
+  - path: sps-api-standards-documentation.zip
+    label: SPS API Standards Documentation
+  - path: sps-api-standards.spectral.yml
+    label: SPS API Standards Spectral Rulesets
 dryRun: false
 ci: true
 success: false
 fail: false
-plugins:
-- "@semantic-release/commit-analyzer"
-- "@semantic-release/release-notes-generator"
-- - "@semantic-release/github"
-  - assets:
-    - path: sps-api-standards-documentation.zip
-      label: SPS API Standards Documentation
-    - path: sps-api-standards.spectral.yml
-      label: SPS API Standards Spectral Rulesets
