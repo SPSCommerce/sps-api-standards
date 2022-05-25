@@ -39,6 +39,10 @@ jobs:
         uses: mikefarah/yq@v4.25.1
         with:
           cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.yml
+      - name: view files
+        run: ls
+      - name: view merged file
+        run: cat result.yml
       
   release:
     name: release
