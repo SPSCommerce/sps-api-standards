@@ -40,9 +40,9 @@ jobs:
         with:
           cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.yml
       - name: view files
-        run: ls
+        run: ls -lR
       - name: view merged file
-        run: cat result.yml
+        run: cat rulesets/src/result.yml
       
   release:
     name: release
