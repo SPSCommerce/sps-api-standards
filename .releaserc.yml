@@ -13,6 +13,8 @@ publish:
     label: sps-api-standards-documentation.zip
   - path: sps-api-standards.spectral.yml
     label: sps-api-standards.spectral.yml
+  - path: LICENCE.txt
+    label: LICENCE.txt
 dryRun: false
 ci: true
 success: false
