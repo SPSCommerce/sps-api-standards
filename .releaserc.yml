@@ -18,5 +18,5 @@ plugins:
   - assets:
     - path: sps-api-standards-documentation.zip
       label: SPS API Standards Documentation
-    - path: sps-api-standards-rulesets.yml
+    - path: sps-api-standards.spectral.yml
       label: SPS API Standards Spectral Rulesets

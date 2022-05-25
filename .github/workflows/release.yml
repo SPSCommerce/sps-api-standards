@@ -27,20 +27,12 @@ jobs:
           npm test
         working-directory: rulesets
         name: unit test validation
-
-  prep:
-    name: preparation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: zip documentation
-        run: zip -r sps-api-standards-documentation.zip standards
-      - name: merge spectral rulesets
+      - name: test merging of rulesets
         uses: mikefarah/yq@v4.25.1
         with:
-          cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.ruleset.yml >> sps-api-standards-rulesets.yml
-      - name: view merged file
-        run: cat sps-api-standards-rulesets.yml
+          cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.ruleset.yml >> sps-api-standards.spectral.yml
+      - name: view merged rulesets
+        run: cat sps-api-standards.spectral.yml
       
   release:
     name: release
@@ -49,6 +41,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: zip documentation
+        run: zip -r sps-api-standards-documentation.zip standards
+      - name: merge spectral rulesets
+        uses: mikefarah/yq@v4.25.1
+        with:
+          cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.ruleset.yml >> sps-api-standards.spectral.yml
       - name: use node.js 16
         uses: actions/setup-node@v3
         with:
