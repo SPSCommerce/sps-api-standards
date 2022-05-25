@@ -53,6 +53,40 @@ The following guidance is provided to help drive the decision making process on 
 - No differences between internal or external APIs should be called out, as all APIs should be crafted in preparation for externalization.
 - Compose and reuse other API Guidelines, standards and schemas where possible including the use of existing industry standard RFCs.
 
+## OpenAPI Linting with Spectral
+
+The API design standards documented here are intended to be paired with and used in conjunction with the [Spectral CLI](https://meta.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli) to lint and validate compliance of these standards given an OpenAPI `3.x` specification.
+
+Individual spectral rulesets are available in this repository representing each of the core API standards documentation pages in the outline. These rulesets are merged together and made available via [GitHub Release](https://github.com/SPSCommerce/sps-api-standards/releases) as `sps-api-standards.spectral.yml` and also available publicly on the SPS Commerce CDN by immutable version or `latest`:
+
+- **Specific Versioned Ruleset**: [https://cdn.prod.spsc.io/api/design/standards/rulesets/v1.0.8/sps-api-standards.spectral.yml](https://cdn.prod.spsc.io/api/design/standards/rulesets/v1.0.8/sps-api-standards.spectral.yml) (modify `v1.0.8` to represent an associate versioned tag or GitHub Release).
+- **Latest Ruleset**: [https://cdn.prod.spsc.io/api/design/standards/rulesets/custom/latest/sps-api-standards.spectral.yml](https://cdn.prod.spsc.io/api/design/standards/rulesets/custom/latest/sps-api-standards.spectral.yml)
+
+Getting started with Spectral linting (where `openapi.yml` is your local OpenAPI spec file):
+
+```
+npm install -g @stoplight/spectral-cli
+spectral lint openapi.yml --ruleset https://cdn.prod.spsc.io/api/design/standards/rulesets/custom/latest/sps-api-standards.spectral.yml
+```
+
+You can also customize the SPS ruleset by extending it with your own local configuration `.spectral.yml`:
+
+```yaml
+extends:
+  # extend the SPS API Standards and others in composition if desired
+  - https://cdn.prod.spsc.io/api/design/standards/rulesets/custom/latest/sps-api-standards.spectral.yml
+
+rules:
+  # disable or downgrade SPS errors to warnings if you desire.
+  paths-kebab-case: warn    
+```
+
+```
+spectral lint openapi.yml --ruleset .spectral.yml
+```
+
+Additionally, use IDE extensions like [Spectral Linter for VS Code](https://marketplace.visualstudio.com/items?itemName=stoplight.spectral) for local editing of Open API specifications and automated linting using spectral. Use the `latest` URL to specify the `Spectral Ruleset File` setting to always use the latest SPS API Standards validation in your IDE.
+
 ## API Standards Versioning
 
 The API standards are versioned similarly to the [Semantic Versioning](https://semver.org/) specification where possible to help indicate the types of ongoing changes and modifications that will be introduced over time. While having a set of standards that is a moving target is not ideal, in reality we expect to continually evolve and make backwards compatible changes over time. There are many aspects of API design and contracts still missing from the existing guidelines that will need to be added to the initial draft. Using semantic versioning format means you can identify that changes are large or contract-breaking with a large version bump. Every intention and effort will be made to avoid major version bumps of these standards that may contain any contract breaking modifications. Simple modifications to examples or clarifications added would materialize as a patch version bump. This also enables future work to provide supporting material on the standards, such as automated linting rules. 
