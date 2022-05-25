@@ -1,0 +1,13 @@
+extends: 
+  - spectral:oas
+  - general.ruleset.yml
+  - authentication.ruleset.yml
+  - errors.ruleset.yml
+  - request-response.ruleset.yml
+  - serialization.ruleset.yml
+  - url-structure.ruleset.yml
+
+rules:
+  info-contact: off
+  oas3-unused-component: off
+ 
