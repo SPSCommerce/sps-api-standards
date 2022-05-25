@@ -11,3 +11,12 @@ dryRun: false
 ci: true
 success: false
 fail: false
+plugins:
+- "@semantic-release/commit-analyzer"
+- "@semantic-release/release-notes-generator"
+- - "@semantic-release/github"
+  - assets:
+    - path: sps-api-standards-documentation.zip
+      label: SPS API Standards Documentation
+    - path: sps-api-standards.spectral.yml
+      label: SPS API Standards Spectral Rulesets
