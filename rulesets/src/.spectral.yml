@@ -1,13 +1,12 @@
 extends: 
-  - spectral:oas
+  - root.ruleset.yml
   - general.ruleset.yml
   - authentication.ruleset.yml
   - errors.ruleset.yml
   - request-response.ruleset.yml
   - serialization.ruleset.yml
-  - url-structure.ruleset.yml
+  - url-structure.ruleset.yml 
 
 rules:
-  info-contact: off
+  #  not keeping this, just off for testing in this repo
   oas3-unused-component: off
- 

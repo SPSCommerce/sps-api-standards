@@ -1,0 +1,7 @@
+extends: 
+  - spectral:oas
+
+rules:
+  # ignoring contact information as that is typically handled at a higher level of concern than each API spec individually
+  info-contact: off
+  
