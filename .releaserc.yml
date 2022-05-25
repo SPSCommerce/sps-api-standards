@@ -10,9 +10,9 @@ publish:
 - path: "@semantic-release/github"
   assets:
   - path: sps-api-standards-documentation.zip
-    label: SPS API Standards Documentation
+    label: sps-api-standards-documentation.zip
   - path: sps-api-standards.spectral.yml
-    label: SPS API Standards Spectral Rulesets
+    label: sps-api-standards.spectral.yml
 dryRun: false
 ci: true
 success: false
