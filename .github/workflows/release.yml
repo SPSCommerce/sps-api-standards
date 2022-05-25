@@ -38,11 +38,11 @@ jobs:
       - name: merge spectral rulesets
         uses: mikefarah/yq@v4.25.1
         with:
-          cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.yml
+          cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.yml >> sps-api-standards-rulesets.yml
       - name: view files
         run: ls -lR
       - name: view merged file
-        run: cat rulesets/src/result.yml
+        run: cat sps-api-standards-rulesets.yml
       
   release:
     name: release
