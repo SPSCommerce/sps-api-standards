@@ -2,7 +2,10 @@
 
 This documentation represents the REST API standards to be used by all teams at SPS Commerce creating RESTful style internal or external APIs of any size or form. These guidelines supersede any and all existing or alternative sources of standards for REST APIs at SPS Commerce.
 
-The intent with this information is to clearly and effectively define how HTTP REST style APIs should be contractually designed with a high degree of consistency across distributed systems. This information focuses directly on REST APIs as a primary driver for interoperability between services within the organization and between organizations. While other styles of API implementation are important within an architecture the overwhelming majority of communication internally and externally, as indicated in the 2020 SmartBear API Report, is focused on REST style APIs at this time. 
+The intent with this information is to clearly and effectively define how HTTP REST style APIs should be contractually designed with a high degree of consistency across distributed systems. This information focuses directly on REST APIs as a primary driver for interoperability between services within the organization and between organizations. While other styles of API implementation are important within an architecture the overwhelming majority of communication internally and externally, as indicated in recent industry API Reports, is focused on REST style APIs at this time. 
+
+To easily review, read and reference these standards refer to documentation published at:
+[https://spscommerce.github.io/sps-api-standards](https://spscommerce.github.io/sps-api-standards)
 
 ## Outline
 
