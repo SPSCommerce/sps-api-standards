@@ -379,6 +379,7 @@ To limit or narrow down the results of a collection endpoint you may provide fil
         - `POST` requests for non-REST style filtering **SHOULD** specify parameters at the root of the request body with the same names that would be used for query parameters normally.
         - `POST` requests for non-REST style filtering **SHOULD** specify parameters with multiple values using JSON array format, rather than using the same property name twice.
         - `POST` requests for non-REST style filtering **SHOULD** result in the same response payload expectations and schema for collections as normally expected (including pagination). 
+        
         ```
         // REQUEST
         // example GET request translated to POST search endpoint below
