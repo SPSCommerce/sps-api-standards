@@ -4,9 +4,11 @@ site_author: SPS Commerce
 repo_url: 'https://github.com/spscommerce/sps-api-standards'
 edit_on_github: true
 github_docs_folder: false
-logo: 'https://www.spscommerce.com/wp-content/uploads/2017/09/logo-with-tag1.png'
+logo: 'https://www.spscommerce.com/wp-content/uploads/2014/07/logo_only.png'
 site_favicon: 'https://www.spscommerce.com/favicon.ico'
 prev_next_buttons_location: bottom
 sticky_navigation: true
 search_enabled: true
 hljs_style: github-gist
+exclude:
+- rulesets
