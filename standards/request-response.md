@@ -482,7 +482,7 @@ The usage of non-standard headers is not considered custom headers. For example,
     - `application/json` **SHOULD** be the default return MIME type when an `Accept` header includes `application/json` and other possible types for content negotiation.
 - Resource endpoints **MUST** support `application/json` as the content type for both request/response bodies (refer to "Standard Headers").
     - API endpoints that are responsible for returning data in different formats **MUST** support other content types depending on the requirements, in addition to `application/json`.
-- MIME types provided **MUST** follow customization standards or be a common MIME type.
+- MIME types provided **MUST** follow customization standards or be a common MIME type indicated in the [IANA Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml).
 - Requests made with unsupported `Content-Types` (and MIME types) **MUST** result in a standard error response with a `415` status code following the standard error response format.
 - Request and Response media type formats **MUST NOT** be implied using extensions on resources (i.e. `.json` or `.xml`). Instead, use the standard resource path with the appropriate `Content-Type` header.
 
