@@ -10,7 +10,7 @@ rules:
         match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
 
   no-numeric-ids:
-    description: Avoid exposing IDs as an integer, UUIDs are preferred.
+    description: Avoid exposing IDs as an integer, UUIDs or other interoperable strings are preferred.
     severity: warn
     given: $.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema
     then:
