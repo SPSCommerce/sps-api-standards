@@ -10,7 +10,7 @@ rules:
 
   schema-names-pascal-case:
     severity: warn
-    description: Schema names MUST be written in PascalCase
+    description: Schema names SHOULD be written in PascalCase
     message: '{{property}} is not PascalCase: {{error}}'
     recommended: true
     type: style
@@ -22,7 +22,7 @@ rules:
 
   response-names-pascal-case:
     severity: warn
-    description: Response names MUST be written in PascalCase
+    description: Response names SHOULD be written in PascalCase
     message: '{{property}} is not PascalCase: {{error}}'
     recommended: true
     type: style
