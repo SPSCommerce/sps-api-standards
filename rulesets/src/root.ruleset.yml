@@ -4,7 +4,4 @@ extends:
 rules:
   # ignoring contact information as that is typically handled at a higher level of concern than each API spec individually
   info-contact: off
-  # ignoring unused components as it often seems to be wrong and calculate "potential" ambiguously.
-  # there may be inconsistencies in this between spectral versions - right now its MOSTLY wrong in examples coming up.
-  oas3-unused-component: off
   
