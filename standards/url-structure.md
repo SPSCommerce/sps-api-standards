@@ -14,7 +14,7 @@ Protocol      Host              Path                    Query                   
 
 ## Protocol
 
-- APIs **MUST** be accessible via HTTPS only (and specifically not accessible by HTTP).
+- APIs **MUST** be accessible via HTTPS only (and specifically not accessible by HTTP). <sup><a name="sps-hosts-https-only">[#sps-hosts-https-only]</a></sup>
 - APIS **MUST** follow guidance on TLS and security protocols and versions to be used with HTTPS provided by the security team.
 
 ## Host
