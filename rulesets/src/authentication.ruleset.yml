@@ -1,6 +1,7 @@
+documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/authentication.html
 rules:
-  # Author: Andrzej (https://github.com/jerzyn)
-  hosts-https-only-oas3:
+
+  hosts-https-only:
     description: "ALL requests MUST go through `https` protocol only"
     formats: [oas3]
     severity: error

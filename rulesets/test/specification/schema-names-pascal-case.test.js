@@ -1,9 +1,9 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("response-names-pascal-case", () => {
+describe("schema-names-pascal-case", () => {
     let spectral = null;
     const ruleName = expect.getState().currentTestName;
-    const ruleset = "src/general.ruleset.yml";
+    const ruleset = "src/specification.ruleset.yml";
 
     beforeEach(async () => {
         spectral = new SpectralTestHarness(ruleset);
@@ -14,9 +14,9 @@ describe("response-names-pascal-case", () => {
             openapi: 3.1.0
             paths: {}
             components:
-                responses:
+                schemas:
                     FooBar:
-                        description: "Description"
+                        type: string
         `;
     
         await spectral.validateSuccess(spec, ruleName);
@@ -27,9 +27,9 @@ describe("response-names-pascal-case", () => {
             openapi: 3.1.0
             paths: {}
             components:
-                responses:
+                schemas:
                     fooBar:
-                        description: "Description"
+                        type: string
         `;
     
         await spectral.validateFailure(spec, ruleName, "Warning");
@@ -40,9 +40,9 @@ describe("response-names-pascal-case", () => {
             openapi: 3.1.0
             paths: {}
             components:
-                responses:
+                schemas:
                     foo_bar:
-                        description: "Description"
+                        type: string
         `;
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
@@ -52,9 +52,9 @@ describe("response-names-pascal-case", () => {
             openapi: 3.1.0
             paths: {}
             components:
-                responses:
+                schemas:
                     foo-bar:
-                        description: "Description"
+                        type: string
         `;
     
         await spectral.validateFailure(spec, ruleName, "Warning");

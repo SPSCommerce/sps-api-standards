@@ -1,5 +1,5 @@
+documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/errors.html
 rules:
-  # Author: Phil Sturgeon (https://github.com/philsturgeon)
   unknown-error-format:
     description: "Every error response SHOULD support RFC 7807."
     severity: error

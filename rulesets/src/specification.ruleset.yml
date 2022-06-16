@@ -1,3 +1,4 @@
+documentationUrl: https://spscommerce.github.io/sps-api-standards/
 rules:
   semver:
     severity: warn
@@ -31,3 +32,5 @@ rules:
       function: pattern
       functionOptions:
         match: '^[A-Z][a-zA-Z0-9]*$'
+
+  

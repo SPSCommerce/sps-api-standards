@@ -1,58 +1,62 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("semver", () => {
+describe("response-names-pascal-case", () => {
     let spectral = null;
     const ruleName = expect.getState().currentTestName;
-    const ruleset = "src/general.ruleset.yml";
+    const ruleset = "src/specification.ruleset.yml";
 
     beforeEach(async () => {
         spectral = new SpectralTestHarness(ruleset);
     });
 
-    test("successful standard semver format", async () => {
+    test("pascal case is good", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: '1.2.3'
             paths: {}
+            components:
+                responses:
+                    FooBar:
+                        description: "Description"
         `;
+    
         await spectral.validateSuccess(spec, ruleName);
     });
 
-    test("fails when not a number", async () => {
+    test("camel case is not ok", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: 'abc'
             paths: {}
+            components:
+                responses:
+                    fooBar:
+                        description: "Description"
         `;
-
+    
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
 
-    test('fails when empty', async () => {
+    test("snake case is not ok", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: ''
             paths: {}
+            components:
+                responses:
+                    foo_bar:
+                        description: "Description"
         `;
-        
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
 
-    test('fails when there is a major and minor version but no patch', async () => {
+    test("hyphen case is not ok", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: '1.2'
             paths: {}
+            components:
+                responses:
+                    foo-bar:
+                        description: "Description"
         `;
-        
+    
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
 });

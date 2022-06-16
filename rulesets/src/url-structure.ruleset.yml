@@ -1,3 +1,4 @@
+documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/url-structure.html
 rules:
   paths-kebab-case:
     description: Should paths be kebab-case.

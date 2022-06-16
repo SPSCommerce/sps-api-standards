@@ -1,6 +1,7 @@
+documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/request-response.html
 rules:   
-  # Author: Andrzej (https://github.com/jerzyn)
-  request-GET-no-body-oas3:
+
+  request-GET-no-body:
     description: A `GET` request MUST NOT accept a request body
     severity: error
     formats: [oas3]
@@ -8,7 +9,6 @@ rules:
     then:
       function: undefined
 
-  # Author: Andrzej (https://github.com/jerzyn)
   headers-hyphenated-pascal-case:
     description: All `HTTP` headers MUST use `Hyphenated-Pascal-Case` notation
     severity: error

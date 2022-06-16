@@ -1,6 +1,6 @@
 extends: 
   - root.ruleset.yml
-  - general.ruleset.yml
+  - specification.ruleset.yml
   - authentication.ruleset.yml
   - errors.ruleset.yml
   - request-response.ruleset.yml
