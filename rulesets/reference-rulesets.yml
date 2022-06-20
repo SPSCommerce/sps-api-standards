@@ -182,7 +182,7 @@
       functionOptions:
         # Check each path segment individually and ignore param segments
         # Note: the ':' is only allowed in the final path segment
-        match: '^(/([0-9A-Za-z._~-]+|{[^}]+}))*(/([0-9A-Za-z._~:-]+|{[^}]*}(:[0-9A-Za-z._~-]+)?))$'
+        match: ^(/([0-9A-Za-z._~-]+|{[^}]+}))*(/([0-9A-Za-z._~:-]+|{[^}]*}(:[0-9A-Za-z._~-]+)?))$
 
   # todo
   az-post-201-response:
@@ -357,44 +357,10 @@
       functionOptions:
         match: ^([A-Z][a-z]*)(-[A-Z0-9][a-z0-9]*)*$
 
-  # SHOULD not use /api as base path [135]
-  # => https://opensource.zalando.com/restful-api-guidelines/#135
 
-  should-not-use-api-as-base-path:
-    message: Path should not start with /api
-    description: SHOULD not use /api as base path [135]
-    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#135
-    severity: warn
-    given: $.paths.*~
-    then:
-      function: pattern
-      functionOptions:
-        notMatch: ^/api
 
-  # MUST use normalized paths without empty path segments and trailing slashes [136]
-  # => https://opensource.zalando.com/restful-api-guidelines/#136
 
-  must-use-normalized-paths-without-empty-path-segments:
-    message: Empty path segments are not allowed
-    description: MUST use normalized paths without empty path segments and trailing slashes [136]
-    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#136
-    severity: error
-    given: $.paths.*~
-    then:
-      function: pattern
-      functionOptions:
-        notMatch: //
 
-  must-use-normalized-paths-without-trailing-slash:
-    message: Path with trailing slash is not allowed
-    description: MUST use normalized paths without empty path segments and trailing slashes [136]
-    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#136
-    severity: error
-    given: $.paths.*~
-    then:
-      function: pattern
-      functionOptions:
-        notMatch: /$
 
    # SHOULD limit number of resource types [146]
   # => https://opensource.zalando.com/restful-api-guidelines/#146
@@ -410,19 +376,6 @@
       functionOptions:
         max: 8
 
-  # SHOULD limit number of sub-resource levels [147]
-  # => https://opensource.zalando.com/restful-api-guidelines/#147
-
-  should-limit-number-of-sub-resource-levels:
-    message: Sub-resource levels should by <= 3
-    description: SHOULD limit number of sub-resource levels [147]
-    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#147
-    severity: warn
-    given: $.paths.*~
-    then:
-      function: pattern
-      functionOptions:
-        match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
 
   # MUST use standard HTTP status codes [150]
   # => https://opensource.zalando.com/restful-api-guidelines/#150
