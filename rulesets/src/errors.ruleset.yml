@@ -1,6 +1,6 @@
 documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/errors.html
 rules:
-  unknown-error-format:
+  sps-unknown-error-format:
     description: "Every error response SHOULD support RFC 7807."
     severity: error
     given: $.paths...responses[?(@property.match(/^(4|5)/))].content.*~

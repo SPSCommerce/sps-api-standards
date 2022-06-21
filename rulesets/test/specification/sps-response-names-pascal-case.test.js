@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("response-names-pascal-case", () => {
+describe("sps-response-names-pascal-case", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
+    const ruleName = "sps-response-names-pascal-case";
     const ruleset = "src/specification.ruleset.yml";
 
     beforeEach(async () => {

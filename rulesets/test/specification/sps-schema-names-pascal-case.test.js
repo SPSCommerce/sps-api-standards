@@ -1,58 +1,62 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("semver", () => {
+describe("sps-schema-names-pascal-case", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
+    const ruleName = "sps-schema-names-pascal-case";
     const ruleset = "src/specification.ruleset.yml";
 
     beforeEach(async () => {
         spectral = new SpectralTestHarness(ruleset);
     });
 
-    test("successful standard semver format", async () => {
+    test("pascal case is good", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: '1.2.3'
             paths: {}
+            components:
+                schemas:
+                    FooBar:
+                        type: string
         `;
+    
         await spectral.validateSuccess(spec, ruleName);
     });
 
-    test("fails when not a number", async () => {
+    test("camel case is not ok", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: 'abc'
             paths: {}
+            components:
+                schemas:
+                    fooBar:
+                        type: string
         `;
-
+    
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
 
-    test('fails when empty', async () => {
+    test("snake case is not ok", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: ''
             paths: {}
+            components:
+                schemas:
+                    foo_bar:
+                        type: string
         `;
-        
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
 
-    test('fails when there is a major and minor version but no patch', async () => {
+    test("hyphen case is not ok", async () => {
         const spec = `
             openapi: 3.1.0
-            info:
-                title: ''
-                version: '1.2'
             paths: {}
+            components:
+                schemas:
+                    foo-bar:
+                        type: string
         `;
-        
+    
         await spectral.validateFailure(spec, ruleName, "Warning");
     });
 });

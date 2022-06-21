@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("no-http-basic", () => {
+describe("sps-no-http-basic", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
+    const ruleName = "sps-no-http-basic";
     const ruleset = "src/authentication.ruleset.yml";
 
     beforeEach(async () => {

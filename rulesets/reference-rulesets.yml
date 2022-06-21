@@ -320,17 +320,7 @@
       function: truthy
 
 
-  # todo
-  must-use-lowercase-with-hypens-for-path-segements:
-    message: Path segments have to be lowercase separate words with hyphens
-    description: MUST use lowercase separate words with hyphens for path segments [129]
-    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#129
-    severity: error
-    given: $.paths.*~
-    then:
-      function: pattern
-      functionOptions:
-        match: ^(([\/a-z][a-z0-9\-\/]*)?({[^}]*})?)+$
+
 
   must-use-snake-case-for-query-parameters:
     message: Query parameters must be snake_case
@@ -358,23 +348,6 @@
         match: ^([A-Z][a-z]*)(-[A-Z0-9][a-z0-9]*)*$
 
 
-
-
-
-
-   # SHOULD limit number of resource types [146]
-  # => https://opensource.zalando.com/restful-api-guidelines/#146
-
-  should-limit-number-of-resource-types:
-    message: '{{error}}'
-    description: SHOULD limit number of resource types [146]
-    documentationUrl: https://opensource.zalando.com/restful-api-guidelines/#146
-    severity: warn
-    given: $.paths
-    then:
-      function: count-resource-types
-      functionOptions:
-        max: 8
 
 
   # MUST use standard HTTP status codes [150]
@@ -529,18 +502,26 @@
         notMatch: "/^(x|X)-/"
 
 
-  adidas-oas3-protocol-https-only: # checks how does the servers array values start
-    description: "ALL requests MUST go through `https` protocol only"
-    formats:
-      - oas3
-    recommended: true
-    severity: error
-    message: "Servers MUST be https and no other protocol is allowed."
-    given: $.servers..url
-    then:
-      function: pattern
-      functionOptions:
-        match: "/^https:/"
+  # additions
+# security:
+# - always specify min/max for numbers
+# - strings should always have a limit and a pattern
+# - limit array sizes
+# - disable additional properties or constrain them
+# - always define a security scheme
+
+# examples:
+# - ensure everything has examples
+# - enforce descriptions, with a length
+# - always end description with a full stop (.)
+# - always start with a capital letter for descriptions
+# - summary must be provided for stoplight
+
+# error handling:
+# - match schema on required fields for problem details
+# - enforce no problem json used for 2xx request
+
+
 
   # todo many more here to review: https://github.com/jmlue42/spectral-jsonapi-ruleset
 

@@ -10,16 +10,16 @@ https://api.spscommerce.com/path-1/path-2?queryParam1=value&queryParam2=value2#f
 Protocol      Host              Path                    Query                    Fragment
 ```
 
-- APIs **SHOULD NOT** expand their total URL length beyond a few hundred characters, with the host+path generally being less than 100 characters for readability and usability. While there is no absolute definition of the maximum size of a URL, some rare legacy constraints for older browsers and implementations restrict you to 2,048 characters. For good measure and simplicity keeping the total length less than a few hundred forces better design and usage of request bodies at that size.
+- APIs **SHOULD NOT** expand their total URL length beyond a few hundred characters, with the host+path generally being less than 100 characters for readability and usability. While there is no absolute definition of the maximum size of a URL, some rare legacy constraints for older browsers and implementations restrict you to 2,048 characters. For good measure and simplicity keeping the total length less than a few hundred forces better design and usage of request bodies at that size. <sup><a name="sps-limit-path-size"><img src="" tooltip="Rule: sps-limit-path-size" /></a></sup>
 
 ## Protocol
 
-- APIs **MUST** be accessible via HTTPS only (and specifically not accessible by HTTP).
+- APIs **MUST** be accessible via HTTPS only (and specifically not accessible by HTTP).<a name="sps-hosts-https-only" href="#sps-hosts-https-only"><i class="fa fa-check-circle" title="#sps-hosts-https-only"></i></a>
 - APIS **MUST** follow guidance on TLS and security protocols and versions to be used with HTTPS provided by the security team.
 
 ## Host
 
-- Distributed APIs **SHOULD** be accessible under a centralized and singular hostname giving the appearance of a single API.
+- Distributed APIs **SHOULD** be accessible under a centralized and singular hostname giving the appearance of a single API. <a name="sps-hosts-spscommerce-domain" href="#sps-hosts-spscommerce-domain"><i class="fa fa-check-circle" title="#sps-hosts-spscommerce-domain"></i></a>
 
 ```
 // CORRECT
@@ -27,11 +27,11 @@ api.spscommerce.com/users
 api.spscommerce.com/articles
  
 // INCORRECT
-users.spsc.io/
-articles.spsc.io/
+users.spscommerce.net/
+articles.spscommerce.net/
 ```
 
-- APIs **MUST** differentiate their deployment environment based on hostnames and **NOT** based on URL Path. 
+- APIs **MUST** differentiate their deployment environment based on hostnames and **NOT** based on URL Path. <a name="sps-path-no-environment" href="#sps-path-no-environment"><i class="fa fa-check-circle" title="#sps-path-no-environment"></i></a>
 
 ```
 // CORRECT
@@ -52,15 +52,15 @@ api.spscommerce.com/users    // (External)
 api.sps-internal.com/users   // (Internal)
  
 // INCORRECT
-users.spsc.io/               // (External)
-users.spsprod.in/            // (Internal)
+users.spscommerce.io/        // (External)
+users.spscommerce-prod.in/   // (Internal)
 ```
 
 - When URLs are provided as referenced relative paths in your API they **MUST** be relative to the host (i.e. `/users/profiles/1` for `https://api.spscommerce.com/users/profiles/1`).
 
 ## Port
 
-- The port **MUST NOT** be provided by any consumers, mentioned in documentation or required to access your API, and is always assumed to be an abstract default of the layered system based on your protocol (i.e. HTTPS, 443).
+- The port **MUST NOT** be provided by any consumers, mentioned in documentation or required to access your API, and is always assumed to be an abstract default of the layered system based on your protocol (i.e. HTTPS, 443). <a name="sps-hosts-no-port" href="#sps-hosts-no-port"><i class="fa fa-check-circle" title="#sps-hosts-no-port"></i></a>
 
 ## Path
 
@@ -72,14 +72,18 @@ The paths of your API **MUST** be structured using the concepts defined for reso
 - A resource **SHOULD** be plural.
 - A resource **MUST** be named based on American English (en-US) locale.
 - A resource **MUST** be addressed by stable and permanent identifiers only.
-- A resource **MUST NOT** leak or expose format or technology-specific information at any point in the path (i.e. `/index.php`)
-- A resource **SHOULD NOT** make use of an extension at any point in the path. (i.e. `/test.pdf`).
-- A resource containing multiple words **MUST** be separated using kebab-case (i.e. `/change-management/`).
+- A resource **MUST NOT** leak or expose format or technology-specific information at any point in the path (i.e. `/index.php`). <a name="sps-paths-expose-technology" href="#sps-paths-expose-technology"><i class="fa fa-check-circle" title="#sps-paths-expose-technology"></i></a>
+- A resource **SHOULD NOT** make use of an extension at any point in the path. (i.e. `/test.pdf`). <a name="sps-paths-expose-extension" href="#sps-paths-expose-extension"><i class="fa fa-check-circle" title="#sps-paths-expose-extension"></i></a>
+- A resource containing multiple words **MUST** be separated using kebab-case (i.e. `/change-management/`). <a name="sps-paths-kebab-case" href="#sps-paths-kebab-case"><i class="fa fa-check-circle" title="#sps-paths-kebab-case"></i></a>
 - A resource **SHOULD NOT** include acronyms or abbreviations.
+- A resource **SHOULD NOT** include HTTP method names. <a name="sps-paths-with-http-methods" href="#sps-paths-with-http-methods"><i class="fa fa-check-circle" title="#sps-paths-with-http-methods"></i></a>
 - A resource **SHOULD NOT** dynamically change its response body schema or shape based on query parameters or other dynamic behavior. If you require a differently shaped body to be returned, consider - breaking it into different resource endpoints.
-- A resource **MUST** only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character.
-- A resource **MUST** be addressable without a trailing slash on the URI (i.e. `/users`) and additionally **SHOULD** support a trailing slash as the same addressable resource (i.e. `/users/ == /users`).
-Personally identifiable information and other sensitive data **MUST NOT** be used within the URL as it can be easily inadvertently exposed. This data should be transmitted via HTTP Header or  Request Body (both of which are encrypted during transport).
+- A resource **MUST** only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character. <a name="sps-paths-non-standard-characters" href="#sps-paths-non-standard-characters"><i class="fa fa-check-circle" title="#sps-paths-non-standard-characters"></i></a>
+- A resource **SHOULD NOT** should not contain `api` as a prefix in or a part of the path. <a name="sps-paths-with-api" href="#sps-paths-with-api"><i class="fa fa-check-circle" title="#sps-paths-with-api"></i></a>
+- A resource **MUST** use normalized paths without empty path segments. <a name="sps-paths-empty-segments" href="#sps-paths-empty-segments"><i class="fa fa-check-circle" title="#sps-paths-empty-segments"></i></a>
+- A resource **MUST** be addressable without a trailing slash on the URI (i.e. `/users`) and additionally **SHOULD** support a trailing slash as the same addressable resource (i.e. `/users/ == /users`). <a name="sps-paths-trailing-slash" href="#sps-paths-trailing-slash"><i class="fa fa-check-circle" title="#sps-paths-trailing-slash"></i></a>
+- Personally identifiable information and other sensitive data **MUST NOT** be used within the URL as it can be easily inadvertently exposed. This data should be transmitted via HTTP Header or  Request Body (both of which are encrypted during transport).
+
 
 ```
 // CORRECT
@@ -88,14 +92,17 @@ Personally identifiable information and other sensitive data **MUST NOT** be use
 /change-requests            // kebab casing used to represent compound noun
 /colors/red                 // correct usage of accessing the "red" object part of colors collection
 /devices/telephone          // correct usage of accessing the "telephone" object device.
+
  
-// INCORRECT   
+// INCORRECT 
 /user                       // must be plural
 /execute                    // not a noun (verb)
 /changeRequests             // invalid casing
 /users/documents/index.php  // leaking of a technology
-/colours/red                // "colour" uses en-CA english instead of American.
+/colours/red                // "colour" uses en-CA english instead of American
 /devices/tel                // should not use an abbreviation for "telephone"
+/api/users                  // should not contain self-identity description of "api"
+/users//profile             // must not contain an empty path between two slashes
 ```
 
 ```note
@@ -117,7 +124,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 /articles/1/comments        // the comments resource can only exist in association to the article
  
 // INCORRECT
-/comments                   // not explicitly incorrect, depending on the relationship of comments to the articles in your model.
+/comments                   // not explicitly incorrect, depending on the relationship of comments to the articles in your API.
 ```
 
 - Dynamic identifiers in the path:
@@ -146,7 +153,7 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
     For Date and Time references to format and serialization in the body or the path refer to [Serialization](serialization.md).
     ```
 
-- The hierarchy of nested resources **SHOULD NOT** exceed more than 3 resources. 
+- The hierarchy of nested resources **SHOULD NOT** exceed more than 3 resources. <a name="sps-paths-limit-sub-resources" href="#sps-paths-limit-sub-resources"><i class="fa fa-check-circle" title="#sps-paths-limit-sub-resources"></i></a>
 
 ```
 // INCORRECT
@@ -220,7 +227,7 @@ Many APIs may contain static or reference collections that are often used to dis
 REST only provides constraints and conventions for working with well-defined resources. In practice, an API should strive to derive consistent resource endpoints for their paths but may have the unavoidable scenario of needing to define more action-based endpoints that act upon a resource. A common use case is for APIs that must model actions related to reporting. In these rare cases, you should model actions based on the following guidelines:
 
 - Action style endpoints **MUST** define resources with verbs (actions).
-- You **SHOULD NOT** prefer to use actions unless it is explicitly necessary. Prefer translation of the action to a noun-based resource where possible, with a consistent model. 
+- You **SHOULD NOT** use actions unless it is explicitly necessary. Prefer translation of the action to a noun-based resource where possible, with a consistent model. 
 
 ```
 // Preference - A noun if you intend to allow standard operations as a normal resource (i.e. read, create, update, delete).
@@ -239,15 +246,15 @@ Using a single endpoint verb to perform an action is only valid as an HTTP POST 
 
 Query parameters specified on a REST API resource endpoint generally represent an attribute of a resource and rather than a resource itself (unless referencing another resource). Query parameters are a great method of hiding complexities from your resource path when necessary. They are most often used for specifying how to filter a collection and other behaviors discussed in [Collections](collections.md).
 
-- Query parameter keys **MUST** include only alpha-numeric characters and periods: `[Aa0-Zz9]`.
-- Query parameter keys with periods in them **MUST** only be used to signify relationships in object references.
-- Query parameter keys **MUST** use camelCase. 
+- Query parameter keys **MUST** include only alpha-numeric characters and periods: `[Aa0-Zz9]`. <a name="sps-query-params-characters" href="#sps-query-params-characters"><i class="fa fa-check-circle" title="#sps-query-params-characters"></i></a>
+- Query parameter keys with periods in them **MUST** only be used to signify relationships in object references. 
+- Query parameter keys **MUST** use camelCase. <a name="sps-query-params-camel-case" href="#sps-query-params-camel-case"><i class="fa fa-check-circle" title="#sps-query-params-camel-case"></i></a>
 - Query parameters **MUST** accept a collection of values by using the same query key multiple times, each with a different value.
 - Query parameter specification sequence or order **MUST NOT** impact the response of the request in any way.
-- Query parameters **MUST** be optional. If necessary then they default to sensible choices that balance consumer expectations and API performance.
+- Query parameters **MUST** be optional. If necessary then they default to sensible choices that balance consumer expectations and API performance. <a name="sps-query-params-not-required" href="#sps-query-params-not-required"><i class="fa fa-check-circle" title="#sps-query-params-not-required"></i></a>
 - Query parameters that have defaulted values across many resource endpoints **SHOULD** keep defaults consistent across the API as long as there are no implications on performance in doing so. Where deviation is necessary, it should result in specific annotations to mention this in the Open API documentation. Consider inverting a query parameter name (i.e. "published" vs "unpublished") if different defaults are required on different endpoints in order to be consistent with the defaulted values.
 - Additional query parameters not used by the API **MUST** be disregarded without error to make compatibility and transitions simpler and adhere to standards of tolerance.
-- Personally identifiable information and other sensitive data **SHOULD NOT** be present in the Query Parameters as they can be easily inadvertently exposed. This data should be transmitted via HTTP Request Body.
+- Personally identifiable information and other sensitive data **SHOULD NOT** be present in the Query Parameters as they can be easily inadvertently exposed. This data should be transmitted via HTTP Request Body. <a name="sps-query-params-no-api-keys" href="#sps-query-params-no-api-keys"><i class="fa fa-check-circle" title="#sps-query-params-no-api-keys"></i></a>
 
 ```
 // CORRECT

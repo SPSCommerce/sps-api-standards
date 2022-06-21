@@ -1,6 +1,7 @@
 documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/serialization.html
 rules:
-  request-support-json:
+
+  sps-request-support-json:
     description: Every request SHOULD support `application/json` media type
     formats: [oas3]
     severity: error
@@ -8,3 +9,20 @@ rules:
     given: $.paths.[*].requestBody.content[?(@property.indexOf('json') === -1)]^
     then:
       function: falsy
+
+  sps-no-numeric-ids:
+    description: Avoid exposing IDs as an integer, UUIDs or other interoperable strings are preferred.
+    severity: warn
+    given: $.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          not:
+            properties:
+              type:
+                const: integer
+          properties:
+            format:
+              const: uuid
