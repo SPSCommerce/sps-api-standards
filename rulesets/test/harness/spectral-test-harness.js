@@ -56,7 +56,7 @@ class SpectralTestHarness {
         if (!this.results){
             throw 'No results to get, use the run method first.';
         }
-        console.log(JSON.stringify(this.results));
+        // console.log(JSON.stringify(this.results));
         let filteredResults = null;
         if (!code){
             filteredResults = this.results;

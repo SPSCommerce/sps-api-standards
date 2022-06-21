@@ -162,7 +162,4 @@ rules:
     then:
       function: pattern
       functionOptions:  
-        notMatch: apiKey|token
-
-
-  # servers must be provided
+        notMatch: "apiKey|token"
