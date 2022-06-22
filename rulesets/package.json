@@ -4,12 +4,12 @@
   "description": "Spectral ruleset for SPS Commerce APIs",
   "main": "src/.spectral.yml",
   "devDependencies": {
-    "@stoplight/spectral-core": "^1.8.0",
+    "@stoplight/spectral-core": "^1.12.2",
     "@stoplight/spectral-parsers": "^1.0.1",
-    "@stoplight/spectral-ruleset-bundler": "^1.1.0",
-    "@stoplight/spectral-runtime": "^1.0.0",
-    "@stoplight/types": "^12.3.0",
-    "jest": "^28.1.0"
+    "@stoplight/spectral-ruleset-bundler": "^1.2.1",
+    "@stoplight/spectral-runtime": "^1.1.2",
+    "@stoplight/types": "^13.3.0",
+    "jest": "^28.1.1"
   },
   "scripts": {
     "test": "jest"

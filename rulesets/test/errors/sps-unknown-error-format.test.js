@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("unknown-error-format", () => {
+describe("sps-unknown-error-format", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
+    const ruleName = "sps-unknown-error-format";
     const ruleset = "src/errors.ruleset.yml";
 
     beforeEach(async () => {

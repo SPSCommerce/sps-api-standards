@@ -2,7 +2,7 @@ const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("info-contact", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
+    const ruleName = "info-contact";
     const ruleset = "src/root.ruleset.yml";
 
     beforeEach(async () => {
