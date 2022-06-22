@@ -93,7 +93,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^[0-9a-z-\/{}]*$"
+        match: ^[0-9a-z-\/{}]*$
 
   sps-paths-trailing-slash:
     message: "A resource MUST be addressable without a trailing slash on the path."
