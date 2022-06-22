@@ -17,6 +17,10 @@ To easily review, read and reference these standards refer to documentation publ
 1. [Authentication](standards/authentication.md) - Auth Headers and Standard Responses.
 1. [Errors](standards/errors.md) - Standard Error Schema and Common Responses.
 
+## Contributing
+
+Your contributions and community engagement from external sources to SPS Commerce is welcomed and encouraged. Refer to [Contributing](CONTRIBUTING.md) for more details.
+
 ## Definition
 
 The majority of this definition directs and acts as a REST API style guide, with a focus on designing uniform interfaces and contracts. While it addresses certain expected behaviors where necessary, it is not intended as a comprehensive overview or guidance of all the tenants of REST-style APIs. You are still expected to understand the core tenants, including client-server, statelessness, cache-ability, layered systems, etc. The following reading may help you understand the philosophy behind the REST Architectural Style. If you are new to RESTful design, here are some good resources:
@@ -44,17 +48,6 @@ The following guidance is provided to help drive the decision making process on 
 - **Experience**: Developer experience is more of a focus than architecture. DX trumps other principles as a tie-breaker.
 
 <sub>References Principles Sourced From: [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cc-api-v3-style-guide#guiding-principles).</sub>
-
-## API Standards Creation
-
-- "MUST", "MUST NOT", "SHOULD" and "SHOULD NOT" are used in the context as [defined in RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
-- Provide links to other parts of the standards where associations need to be made but at all costs reduce duplication as it is detrimental to maintenance and accuracy.
-- Clearly call out any assumptions inline.
-- Ambiguity is clarified through examples.
-- Examples of what not to do are just as important as what to do.
-- All examples should use standardized consistency and syntax for schema definitions.
-- No differences between internal or external APIs should be called out, as all APIs should be crafted in preparation for externalization.
-- Compose and reuse other API Guidelines, standards and schemas where possible including the use of existing industry standard RFCs.
 
 ## OpenAPI Linting with Spectral
 
