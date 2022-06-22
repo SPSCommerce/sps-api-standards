@@ -1,4 +1,3 @@
-documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/serialization.html
 rules:
 
   sps-request-support-json:

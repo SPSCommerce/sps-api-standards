@@ -1,4 +1,3 @@
-documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/errors.html
 rules:
   sps-unknown-error-format:
     description: "Every error response SHOULD support RFC 7807."

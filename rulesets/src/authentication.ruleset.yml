@@ -1,4 +1,3 @@
-documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/authentication.html
 rules:
   sps-no-http-basic:
     description: "Consider a more secure alternative to HTTP Basic."

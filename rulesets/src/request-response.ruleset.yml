@@ -1,4 +1,3 @@
-documentationUrl: https://spscommerce.github.io/sps-api-standards/standards/request-response.html
 rules:   
 
   sps-request-get-no-body:

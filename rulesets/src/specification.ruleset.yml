@@ -1,4 +1,3 @@
-documentationUrl: https://spscommerce.github.io/sps-api-standards/
 rules:
   sps-semver:
     severity: warn
