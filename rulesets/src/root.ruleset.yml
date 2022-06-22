@@ -1,7 +1,12 @@
+documentationUrl: https://spscommerce.github.io/sps-api-standards
 extends: 
   - spectral:oas
 
 rules:
   # ignoring contact information as that is typically handled at a higher level of concern than each API spec individually
   info-contact: off
+
+  # operation ids are essential for changelogs and other evolutions over time
+  operation-operationId: error
+  operation-operationId-unique: error
   

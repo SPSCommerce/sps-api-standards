@@ -1,27 +1,196 @@
 rules:
-  paths-kebab-case:
-    description: Should paths be kebab-case.
-    message: '{{property}} should be kebab-case (lower case and separated with hyphens)'
+
+  sps-limit-path-size:
+    message: APIs SHOULD NOT expand their total URL length beyond a few hundred characters.
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: length
+      functionOptions:
+        max: 75
+
+  sps-hosts-https-only:
+    message: "Servers MUST be https and no other protocol is allowed."
+    formats: [oas3]
     severity: error
-    given: $.paths[*]~
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: "/^https:/"
+
+  sps-hosts-lowercase:
+    message: "Server URL SHOULD BE lowercase."
+    formats: [oas3]
+    severity: warn
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: ^[^A-Z]*$
+
+  sps-hosts-spscommerce-domain:
+    message: "APIs SHOULD be accessible under api.spscommerce.com."
+    formats: [oas3]
+    severity: warn
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: api.spscommerce.com|api.sps-internal.com
+  
+  sps-path-no-environment:
+    message: "API paths MUST NOT indicate environment names."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: /prod/|/preprod/|/dev/|/test/|/integration/|/stage/
+
+  sps-hosts-no-port:
+    message: "Port MUST NOT be specified or required to use the API."
+    formats: [oas3]
+    severity: error
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: (https?://.*):(\d*)\/?(.*)  
+
+  sps-paths-expose-technology:
+    message: "A resource MUST NOT leak or expose format or technology-specific information at any point in the path."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: (.php|.asp|.jsp|.cgi|.psp|.json|.xml)
+
+  sps-paths-expose-extension:
+    message: "A resource SHOULD NOT make use of an extension at any point in the path."
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: \.
+
+  sps-paths-kebab-case:
+    message: "A resource containing multiple words MUST be separated using kebab-case (lower case and separated with hyphens)."
+    severity: error
+    given: $.paths.*~
     then:
       function: pattern
       functionOptions:
         match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
 
-  no-numeric-ids:
-    description: Avoid exposing IDs as an integer, UUIDs or other interoperable strings are preferred.
-    severity: warn
-    given: $.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema
+  sps-paths-no-special-characters:
+    message: "A resource MUST only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character."
+    severity: error
+    given: $.paths.*~
     then:
-      function: schema
+      function: pattern
       functionOptions:
-        schema:
-          type: object
-          not:
-            properties:
-              type:
-                const: integer
-          properties:
-            format:
-              const: uuid
+        match: ^[0-9a-z-\/{}]*$
+
+  sps-paths-trailing-slash:
+    message: "A resource MUST be addressable without a trailing slash on the path."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "/$"
+
+  sps-paths-with-api:
+    message: "A resource SHOULD NOT contain 'api' as a prefix in or a part of the path."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: /api|/api/|-api/
+
+  sps-paths-empty-segments:
+    message: "A resource MUST use normalized paths without empty path segments."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: //
+
+  sps-paths-limit-sub-resources:
+    message: The hierarchy of nested resources SHOULD NOT exceed more than 3 resources
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
+
+  sps-paths-with-http-methods:
+    message: "A resource SHOULD NOT contain HTTP methods."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: (\/get|\/post|\/put|\/delete|\/patch)
+
+  sps-paths-params-camel-case:
+    message: "Path parameter keys MUST use camelCase."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='path')].name
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+        disallowDigits: true
+
+  sps-query-params-characters:
+    message: "Query parameter keys MUST include only alpha-numeric characters and periods: [Aa0-Zz9]'."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].name
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Za-z0-9\\.]+$"
+
+  sps-query-params-camel-case:
+    message: "Query parameter keys MUST use camelCase."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].name
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+        disallowDigits: true
+
+  sps-query-params-not-required:
+    message: "Query parameters MUST be optional."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].required
+    then:
+      function: falsy
+  
+  sps-query-params-no-api-keys:
+    message: "Query parameters MUST not contain sensitive information, like API tokens or keys."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].name
+    then:
+      function: pattern
+      functionOptions:  
+        notMatch: "apiKey|token"
+  
+  sps-query-params-not-in-path:
+    message: "Paths SHOULD NOT have query parameters in them. They should be defined separately in the OpenAPI."
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: \?
+   
+    

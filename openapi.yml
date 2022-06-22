@@ -1,0 +1,918 @@
+openapi: 3.0.0
+info:
+  version: v1
+  title: Items API
+  description: Item information provided from the Assortment Ecosystem
+  x-sps-service-id: "c01e04b5-87e0-44cf-9537-c0ea24f249ff"
+
+tags:
+  - name: Items
+  - name: Imports
+  - name: Attributes
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/spscommerce/items-api/v1
+  - description: integration
+    url: https://integration.api.spscommerce.com/items
+  - description: prod
+    url: https://api.spscommerce.com/items
+
+security:
+- SpsBearer: []
+
+paths:
+
+  /v1/items:
+    get:
+      operationId: items-get
+      summary: Search Items
+      description: |
+        Retrieves a set of items that is filterable based on any attribute values it has. This search uses FIQL syntax for advanced search options against any attribute in the system. The list of attribute keys to use can be retrieved from the attribute endpoints.
+        
+        <table>
+          <tr>
+            <th>Operator</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+          <tr>
+            <td>==</td>
+            <td>Equal To</td>
+            <td>/v1/items?filter=attributes.upc==123456</td>
+          </tr>
+          <tr>
+            <td>!=</td>
+            <td>Not Equal To</td>
+            <td>/v1/items?filter=attributes.partnumber!=abcdefg</td>
+          </tr>
+          <tr>
+            <td>=gt=</td>
+            <td>Greater Than</td>
+            <td>/v1/items?filter=attributes.filesize=gt=1024</td>
+          </tr>
+          <tr>
+            <td>=ge=</td>
+            <td>Greater Or Equal To</td>
+            <td>/v1/items?filter=attributes.horsepower=ge=100</td>
+          </tr>
+          <tr>
+            <td>=lt=</td>
+            <td>Less Than</td>
+            <td>/v1/items?filter=attributes.brightness=lt=30</td>
+          </tr>
+          <tr>
+            <td>=le=</td>
+            <td>Less Or Equal To</td>
+            <td>/v1/items?filter=attributes.decibels=le=20</td>
+          </tr>
+          <tr>
+            <td>=contains=</td>
+            <td>Contains</td>
+            <td>/v1/items?filter=attributes.partnumber=contains=shoe</td>
+          </tr>
+          <tr>
+            <td>=containsic=</td>
+            <td>Contains Invariant Case</td>
+            <td>/v1/items?filter=attributes.partnumber=containsic=SHOE</td>
+          </tr>
+          <tr>
+            <td>=startswith=</td>
+            <td>Starts With</td>
+            <td>/v1/items?filter=attributes.partnumber=startswith=sh</td>
+          </tr>
+          <tr>
+            <td>=startswithic=</td>
+            <td>Starts With Invariant Case</td>
+            <td>/v1/items?filter=attributes.partnumber=startswithic=SH</td>
+          </tr>
+          <tr>
+            <td>;</td>
+            <td>AND</td>
+            <td>/v1/items?filter=attributes.palletlength==20;attributes.palletwidth=gt=20</td>
+          </tr>
+          <tr>
+            <td>,</td>
+            <td>OR</td>
+            <td>/v1/items?filter=attributes.numberofhandles==2,attributes.numberofburners==4</td>
+          </tr>
+        </table>
+        
+        These operators can be combined in may ways. Here is a more complex example:
+        
+        /v1/items?filter=attributes.filesize=gt=1024;attributes.orientation==Portrait;(attributes.format==JPEG,attributes.format==PNG)
+      tags:
+        - Items 
+      parameters:
+        - $ref: '#/components/parameters/Filter'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - name: attributeSelector
+          in: query
+          description: A list of attributes to include on items returned. If not provided this will default to all attributes.
+          schema:
+            type: array
+            items: 
+              type: string
+        - $ref: '#/components/parameters/ContentLanguage'
+      responses:
+        '200':
+          description: A list of items results based on filter criteria.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+                  paging:
+                    $ref: '#/components/schemas/PagingCursors'    
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '500':
+          $ref: '#/components/responses/Error'
+               
+    post:
+      operationId: item-create
+      summary: Create Item
+      description: Creates a new item with attributes from the given payload.
+      tags:
+        - Items
+      parameters:
+      - $ref: '#/components/parameters/ContentLanguage'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemProperties'
+      responses:
+        '201':
+          description: Item has been successfully created.
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemId'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+  /v1/items/{spsItemId}:
+    get:
+      operationId: item-get-by-id
+      summary: Get Item by ID
+      description: Retrieves details about a specific item.
+      tags:
+        - Items
+      parameters:
+        - $ref: '#/components/parameters/SpsItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+      responses:
+        '200':
+          description: Item with the provided ID in the requested locale.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+    put:
+      operationId: item-update
+      summary: Update Item
+      description: |
+        Updates an existing item with attributes from the given payload.
+        The entire item is overwritten with new item provided.
+      tags:
+        - Items
+      parameters:
+        - $ref: '#/components/parameters/SpsItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item was successfully updated.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+    patch:
+      operationId: item-partial-update
+      summary: Partial Update Item
+      description: |
+        Updates an existing item with attributes from the given payload.
+        Item provided will be merged with existing item. NULL or UNDEFINED properties will remain unchanged.
+      tags:
+        - Items
+      parameters:
+        - $ref: '#/components/parameters/SpsItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item was successfully updated.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+    delete:
+      operationId: item-delete
+      summary: Delete Item
+      description: Deletes an existing item. <-- Add documentation about deleting by locale and how you cannot delete en-us -->
+      tags:
+        - Items
+      parameters:
+        - $ref: '#/components/parameters/SpsItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '204':
+          description: Item was deleted successfully.
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+    
+  /v1/items/imports:
+    get:
+      operationId: items-import-status
+      summary: Get Item Import Operations
+      description: Retrieves imports for the current company.
+      tags:
+        - Imports
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: List of Item Imports
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemImport'
+                  paging:
+                    $ref: '#/components/schemas/PagingCursors'
+        '500':
+          $ref: '#/components/responses/Error'
+
+    post:
+      operationId: items-import
+      summary: Start Item Import Operation
+      description: |
+        Creates, updates, or deletes an item record for each entry provided. 
+        Useful if modifying/adding a large number of items at one time.
+        This operation executes asynchronously and will return before all items have been processed. 
+        Use the /items/import/{id} to check the status of the import.
+      tags:
+        - Imports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Item'
+                deleteItemIds:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SpsItemId'
+          multipart/form-data:
+            schema:
+              properties:
+                form:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Item import operation was successfully started.
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemImport'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+  /v1/items/imports/{id}:      
+    get:
+      operationId: items-import-get
+      summary: Get Item Import Operation by ID
+      description: Used to determine the status of a specific item import operation.
+      tags:
+        - Imports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the item import operation.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Import Operation Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemImport'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+  /v1/items/attributes:
+    get:
+      operationId: attributes-get
+      summary: Get Attributes
+      description: |
+        Retrieves a set of attributes that are used to describe an item. This endpoint is filterable based on properties on an attribute. This search uses FIQL syntax for advanced search options against any attribute in the system.
+        
+        <table>
+          <tr>
+            <th>Operator</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+          <tr>
+            <td>==</td>
+            <td>Equal To</td>
+            <td>/v1/items/attributes?filter=name==upc</td>
+          </tr>
+          <tr>
+            <td>!=</td>
+            <td>Not Equal To</td>
+            <td>/v1/items/attributes?filter=displayName!=Vendor%Part%Number</td>
+          </tr>
+          <tr>
+            <td>=gt=</td>
+            <td>Greater Than</td>
+            <td>/v1/items/attributes?filter=id=gt=1024</td>
+          </tr>
+          <tr>
+            <td>=ge=</td>
+            <td>Greater Or Equal To</td>
+            <td>/v1/items/attributes?filter=id=ge=100</td>
+          </tr>
+          <tr>
+            <td>=lt=</td>
+            <td>Less Than</td>
+            <td>/v1/items/attributes?filter=id=lt=30</td>
+          </tr>
+          <tr>
+            <td>=le=</td>
+            <td>Less Or Equal To</td>
+            <td>/v1/items/attributes?filter=id=le=20</td>
+          </tr>
+          <tr>
+            <td>=contains=</td>
+            <td>Contains</td>
+            <td>/v1/items/attributes?filter=name=contains=width</td>
+          </tr>
+          <tr>
+            <td>=containsic=</td>
+            <td>Contains Invariant Case</td>
+            <td>/v1/items/attributes?filter=name=containsic=WIDTH</td>
+          </tr>
+          <tr>
+            <td>=startswith=</td>
+            <td>Starts With</td>
+            <td>/v1/items/attributes?filter=name=startswith=wi</td>
+          </tr>
+          <tr>
+            <td>=startswithic=</td>
+            <td>Starts With Invariant Case</td>
+            <td>/v1/items/attributes?filter=name=startswithic=WI</td>
+          </tr>
+          <tr>
+            <td>;</td>
+            <td>AND</td>
+            <td>/v1/items/attributes?filter=id=ge=20;dateType==4</td>
+          </tr>
+          <tr>
+            <td>,</td>
+            <td>OR</td>
+            <td>/v1/items/attributes?filter=displayName==UPC,displayName==EAN</td>
+          </tr>
+        </table>
+        
+        These operators can be combined in may ways. Here is a more complex example:
+        
+        /v1/items/attributes?filter=id=gt=10;id=lt=300;(name==upc,name==isbn)
+      tags:
+        - Attributes
+      parameters:
+        - $ref: '#/components/parameters/Filter'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Attribute'
+                  paging:
+                    $ref: '#/components/schemas/PagingCursors'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+components:
+
+  responses:
+
+    Error:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/Error'
+
+    InvalidData:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/InvalidData'
+
+    Conflict:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/Conflict'
+
+    NotFound:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/NotFound'
+
+    PreconditionFailed:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/PreconditionFailed' 
+
+  parameters:
+
+    Filter:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/parameters/Filter'
+
+    Limit:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/parameters/Limit'
+
+    Cursor:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/parameters/Cursor'
+
+    ContentLanguage:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/parameters/ContentLanguage'
+
+    IfMatch:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/parameters/IfMatch'
+
+    SpsItemId:
+      name: spsItemId
+      in: path
+      required: true
+      description: |
+        A unique identifier for an item within SPS Commerce.
+      schema:
+        $ref: '#/components/schemas/SpsItemId'
+
+  headers:
+
+    Content-Language:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/headers/Content-Language'
+
+    Location:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/headers/Location'
+
+    ETag:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/headers/ETag'   
+
+  securitySchemes:
+    
+    SpsBearer:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Security/1.0#/components/securitySchemes/SpsBearer' 
+
+  schemas:
+
+    PagingCursors:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/schemas/PagingCursors'
+
+    SpsItemId:
+      description: |
+        A unique identifier for an item within SPS Commerce.
+      type: string
+      format: sps-uid
+      example: sps:item:3fd038ac-fc50-4889-9c99-61161ca12b7b
+
+    Attribute:
+      description: An object used to describe a specific property about an item.
+      type: object
+      properties:
+        id:
+          description: The unique primary identifier of an attribute.
+          type: number
+          format: int32
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        dataTypeId:
+          type: number
+          format: int32
+        primaryGroupName:
+          type: string
+        repeatable:
+          type: boolean
+        rsxPath:
+          type: string
+      example:
+        id: 123
+        name: 'partnumber'
+        displayName: 'Vendor Part Number'
+        description: 'Indicates the vendor-created number used by vendors to identify their items. Note: Vendor Part Number is not a universally governed or recognized item identifier. It is recommended that either UPC, GTIN, EAN or ISBN obtain values if this attribute obtains a value.'
+        dataTypeId: 12
+        primaryGroupName: 'Item Identifier'
+        repeatable: false
+        rsxPath: '//LineItem/InventoryLine/VendorPartNumber'
+        
+    Item:
+      allOf:
+        - $ref: '#/components/schemas/ItemId'
+        - $ref: '#/components/schemas/ItemProperties'
+    
+    ItemId:
+      type: object
+      properties:
+        spsItemId:
+          $ref: '#/components/schemas/SpsItemId'
+    
+    ItemProperties:
+      description: An object being described by a set of attributes. Items can be sellable or non-sellable and can be made up of multiple other items.
+      type: object
+      properties:
+        attributes:
+          description: Attributes that describe this item. An attribute may have either a single or repeatable value assigned to it.
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttribute'
+        attributeClusters:
+          description: This item's attributes that are part of a repeatable group.
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttributeCluster'
+        packs:
+          description: Shipping packs that this item is apart of.
+          type: array
+          items:
+            $ref: '#/components/schemas/Pack'
+        parentItemIds:
+          description: Item ids of any related parent items. These may be sellable and/or non-sellable items. 
+          type: array
+          items:
+            $ref: '#/components/schemas/SpsItemId'
+        childItemIds:
+          description: Item ids of any related child items. These may be sellable and/or non-sellable items. 
+          type: array
+          items:
+            $ref: '#/components/schemas/SpsItemId'
+
+    ItemAttribute:
+      description: Used to represent a single value for an attribute.
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        values: 
+          type: array
+          items:
+            type: object
+      example:
+        id: "15"
+        name: "UPC"
+        values: ["1234567"]
+
+    ItemImport:
+      description: Contains status information about a specific item import.
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        status:
+          type: string
+          enum: [QUEUED_FOR_IMPORT, IN_PROGRESS, DOC_FAILED, VALIDATION_FAILED, COMPLETED]
+        completedDateTime:
+          type: string
+          format: date-time
+          example: "2021-05-16T14:12:07-05:00"
+        errorCount:
+          type: integer
+          format: int32
+        validItemCount:
+          type: integer
+          format: int32
+        invalidItemCount:
+          type: integer
+          format: int32
+        totalItemCount:
+          type: integer
+          format: int32
+          
+    ItemAttributeCluster:
+      description: Used to represent multiple values for a collection of related attributes.
+      type: object
+      properties:
+        name:
+          type: string
+        attributeGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttributeGroup'
+      example:
+        name: "PRICE"
+        attributeGroups: [
+          {
+            attributes: [
+              {
+                id: "30",
+                name: "Qualifier",
+                values: ["MSR"]
+              },
+              {
+                id: "31",
+                name: "Amount",
+                values: [15.50]
+              }
+            ]
+          },
+          {
+            attributes: [
+              {
+                id: "30",
+                name: "Qualifier",
+                values: ["UCP"]
+              },
+              {
+                id: "31",
+                name: "Amount",
+                values: [20.00]
+              }
+            ]
+          }
+        ]
+          
+    ItemAttributeGroup:
+      description: Used to represent multiple values for a collection of related attributes.
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttribute'
+      example:
+        attributes:
+          [{
+            id: "30",
+            name: "Battery Quantity",
+            values: [2]
+          },
+          {
+            id: "31",
+            name: "Battery Size",
+            values: ["AAA"]
+          }]
+          
+    Pack:
+      description: A pack is a type of item which contains its own set of attributes. Often these are dimensions related but it can use any of the same attributes an item has.
+      type: object
+      properties:
+        id:
+          description: The unique primary identifier of a pack.
+          type: number
+          format: int32
+        attributes:
+          description: Attributes that describe this pack. An attribute may have either a single or repeatable value assigned to it.
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttribute'
+        attributeClusters:
+          description: This pack's attributes that are part of a repeatable group.
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemAttributeCluster'
+
+    ItemV2:
+      description: A different approach to item layout
+      type: object
+      properties:
+        spsItemId:
+          $ref: '#/components/schemas/SpsItemId'
+        orgId:
+          type: string
+        type:
+          type: string
+          enum:
+            - primarySellable
+            - nonSellable
+            - pack
+        lineItem:
+          type: object
+          properties:
+            inventoryLine:
+              type: object
+            physicalDetails:
+              type: object
+            palletInformation:
+              type: array
+              items:
+                properties:
+                  palletQualifier:
+                    type: string
+                  palletValue:
+                    type: string
+                  palletTypeCode:
+                    type: string
+                  palletTiers:
+                    type: integer
+                    format: int32
+                  palletBlocks:
+                    type: number
+                  unitWeight:
+                    type: number
+                  unitWeightUOM:
+                    type: string
+            references:
+              type: array
+              items:
+                properties:
+                  referenceQual:
+                    type: string
+                  referenceId:
+                    type: string
+                  description:
+                    type: string
+                  date:
+                    type: string
+                  time:
+                    type: string
+                  referenceIds:
+                    type: array
+                    items:
+                      properties:
+                        referenceQual:
+                          type: string
+                        referenceId:
+                          type: string
+            notes:
+              type: object
+            floorReady:
+              type: object
+            dates:
+              type: object
+            measurements:
+              type: object
+            priceDetails:
+              type: object
+            productOrItemDescription:
+              type: object
+            address:
+              type: object
+            subline:
+              type: object
+            quantitiesSchedulesLocations:
+              type: object
+            taxes:
+              type: object
+            chargesAllowances:
+              type: object
+            carrierInformation:
+              type: object
+            carrierSpecialHandlingDetail:
+              type: object
+            hazardousInformation:
+              type: object
+            commodity:
+              type: object
+            specialLabeling:
+              type: object
+            fobRelatedInstruction:
+              type: object
+            regulatoryCompliances:
+              type: object
+
+        additionalDescriptors:
+          type: object
+          properties:
+            attributes:
+              description: Attributes that describe this item. An attribute may have either a single or repeatable value assigned to it.
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttribute'
+            attributeClusters:
+              description: This item's attributes that are part of a repeatable group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttributeCluster'
+            packs:
+              description: Shipping packs that this item is apart of.
+              type: array
+              items:
+                $ref: '#/components/schemas/Pack'
+            parentItemIds:
+              description: Item ids of any related parent items. These may be sellable and/or non-sellable items. 
+              type: array
+              items:
+                $ref: '#/components/schemas/SpsItemId'
+            childItemIds:
+              description: Item ids of any related child items. These may be sellable and/or non-sellable items. 
+              type: array
+              items:
+                $ref: '#/components/schemas/SpsItemId'
+
+      example:
+        spsItemId: 'sps:item:3fd038ac-fc50-4889-9c99-61161ca12b7b'
+        orgId: '155049951210486476712211176527271264451'
+        type: 'primarySellable'
+        qualifiers: {
+          upc: '886602698957',
+          isbn: '0664213537298',
+          gtin: '00045923081637',
+          vendorPartNumber: 'S8163',
+          ean: '0664213537311'
+        }
+        core: {
+          productColorCode: 'C-999',
+          productColorDescription: 'Fire Truck Red',
+          productMaterialCode: 'F-000',
+          productMaterialDescription: 'Faux Fabric'
+        }
+        descriptors: {
+        }

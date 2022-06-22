@@ -1,17 +1,5 @@
 rules:
-  # Author: Andrzej (https://github.com/jerzyn)
-  hosts-https-only-oas3:
-    description: "ALL requests MUST go through `https` protocol only"
-    formats: [oas3]
-    severity: error
-    message: "Servers MUST be https and no other protocol is allowed."
-    given: $.servers..url
-    then:
-      function: pattern
-      functionOptions:
-        match: "/^https:/"
-
-  no-http-basic:
+  sps-no-http-basic:
     description: "Consider a more secure alternative to HTTP Basic."
     message: "HTTP Basic is an insecure way to pass credentials around, use an alternative."
     severity: error

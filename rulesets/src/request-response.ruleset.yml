@@ -1,6 +1,6 @@
 rules:   
-  # Author: Andrzej (https://github.com/jerzyn)
-  request-GET-no-body-oas3:
+
+  sps-request-get-no-body:
     description: A `GET` request MUST NOT accept a request body
     severity: error
     formats: [oas3]
@@ -8,8 +8,7 @@ rules:
     then:
       function: undefined
 
-  # Author: Andrzej (https://github.com/jerzyn)
-  headers-hyphenated-pascal-case:
+  sps-headers-hyphenated-pascal-case:
     description: All `HTTP` headers MUST use `Hyphenated-Pascal-Case` notation
     severity: error
     given: "$..parameters[?(@.in == 'header')].name"
@@ -20,7 +19,7 @@ rules:
       functionOptions:
         match: "/^([A-Z][a-z0-9]-)*([A-Z][a-z0-9])+/"
 
-  no-x-headers:
+  sps-no-x-headers:
     description: "Do not use headers with X-"
     severity: warn
     message: "Headers cannot start with X-. More: https://tools.ietf.org/html/rfc6648"
@@ -30,7 +29,7 @@ rules:
       functionOptions:
         notMatch: '^(x|X)-'
 
-  no-x-response-headers:
+  sps-no-x-response-headers:
     description: "Do not use headers with X-"
     severity: warn
     message: "Headers cannot start with X-, so please find a new name for {{property}}. More: https://tools.ietf.org/html/rfc6648"

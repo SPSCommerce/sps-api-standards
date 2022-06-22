@@ -1,9 +1,9 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("hosts-https-only-oas3", () => {
+describe("sps-hosts-https-only", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
-    const ruleset = "src/authentication.ruleset.yml";
+    const ruleName = "sps-hosts-https-only";
+    const ruleset = "src/url-structure.ruleset.yml";
 
     beforeEach(async () => {
         spectral = new SpectralTestHarness(ruleset);
@@ -17,7 +17,7 @@ describe("hosts-https-only-oas3", () => {
                 - description: test-env
                   url: https://api.test.com
         `;
-    
+       
         await spectral.validateSuccess(spec, ruleName);
     });
 

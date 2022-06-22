@@ -1,9 +1,9 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("semver", () => {
+describe("sps-semver", () => {
     let spectral = null;
-    const ruleName = expect.getState().currentTestName;
-    const ruleset = "src/general.ruleset.yml";
+    const ruleName = "sps-semver";
+    const ruleset = "src/specification.ruleset.yml";
 
     beforeEach(async () => {
         spectral = new SpectralTestHarness(ruleset);

@@ -60,6 +60,8 @@ The following guidance is provided to help drive the decision making process on 
 
 The API design standards documented here are intended to be paired with and used in conjunction with the [Spectral CLI](https://meta.stoplight.io/docs/spectral/ZG9jOjI1MTg1-spectral-cli) to lint and validate compliance of these standards given an OpenAPI `3.x` specification.
 
+**ICONS**: Markdown bullets that have associated rulesets is noted in the documentation with a Font-Awesome `circle-check` icon (<a name="sps-hosts-https-only" href="#sps-hosts-https-only"><i class="fa fa-check-circle" title="#sps-hosts-https-only"></i></a>) that has a tooltip and an anchor of the spectral ruleset name.
+
 Individual spectral rulesets are available in this repository representing each of the core API standards documentation pages in the outline. These rulesets are merged together and made available via [GitHub Release](https://github.com/SPSCommerce/sps-api-standards/releases) as `sps-api-standards.spectral.yml` and also available publicly on the SPS Commerce CDN by immutable version or `latest`:
 
 - **Specific Versioned Ruleset**: [https://cdn.prod.spsc.io/api/design/standards/rulesets/v1.0.8/sps-api-standards.spectral.yml](https://cdn.prod.spsc.io/api/design/standards/rulesets/v1.0.8/sps-api-standards.spectral.yml) (modify `v1.0.8` to represent an associate versioned tag or GitHub Release).
