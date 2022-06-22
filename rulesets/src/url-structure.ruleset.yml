@@ -20,6 +20,16 @@ rules:
       functionOptions:
         match: "/^https:/"
 
+  sps-hosts-lowercase:
+    message: "Server URL SHOULD BE lowercase."
+    formats: [oas3]
+    severity: warn
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: ^[^A-Z]*$
+
   sps-hosts-spscommerce-domain:
     message: "APIs SHOULD be accessible under api.spscommerce.com."
     formats: [oas3]
@@ -56,7 +66,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: .php|.asp|.jsp|.cgi|.psp
+        notMatch: (.php|.asp|.jsp|.cgi|.psp|.json|.xml)
 
   sps-paths-expose-extension:
     message: "A resource SHOULD NOT make use of an extension at any point in the path."
@@ -76,14 +86,14 @@ rules:
       functionOptions:
         match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
 
-  sps-paths-non-standard-characters:
+  sps-paths-no-special-characters:
     message: "A resource MUST only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character."
     severity: error
     given: $.paths.*~
     then:
       function: pattern
       functionOptions:
-        match: "^[0-9a-z-\/{}]*$"
+        match: ^[\$&+,;=?@]*$
 
   sps-paths-trailing-slash:
     message: "A resource MUST be addressable without a trailing slash on the path."
@@ -128,7 +138,17 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: \/get|\/post|\/put|\/delete|\/patch
+        notMatch: (\/get|\/post|\/put|\/delete|\/patch)
+
+  sps-paths-params-camel-case:
+    message: "Path parameter keys MUST use camelCase."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='path')].name
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+        disallowDigits: true
 
   sps-query-params-characters:
     message: "Query parameter keys MUST include only alpha-numeric characters and periods: [Aa0-Zz9]'."
@@ -147,6 +167,7 @@ rules:
       function: casing
       functionOptions:
         type: camel
+        disallowDigits: true
 
   sps-query-params-not-required:
     message: "Query parameters MUST be optional."
@@ -163,3 +184,14 @@ rules:
       function: pattern
       functionOptions:  
         notMatch: "apiKey|token"
+  
+  sps-query-params-not-in-path:
+    message: "Paths SHOULD NOT have query parameters in them. They should be defined separately in the OpenAPI."
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: \?
+   
+    

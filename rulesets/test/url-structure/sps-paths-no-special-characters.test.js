@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-paths-non-standard-characters", () => {
+describe("sps-paths-no-special-characters", () => {
     let spectral = null;
-    const ruleName = "sps-paths-non-standard-characters";
+    const ruleName = "sps-paths-no-special-characterss";
     const ruleset = "src/url-structure.ruleset.yml";
 
     beforeEach(async () => {
