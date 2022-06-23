@@ -86,13 +86,13 @@ rules:
         match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
 
   sps-paths-no-special-characters:
-    message: "A resource MUST only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character."
+    message: "A resource MUST only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character. Parameters must be camel cased."
     severity: error
     given: $.paths.*~
     then:
       function: pattern
       functionOptions:
-        match: ^[0-9a-z-\/{}]*$
+        match: ^([0-9a-z-\/]*({[a-z][0-9a-zA-Z-]+})?)*$
 
   sps-paths-trailing-slash:
     message: "A resource MUST be addressable without a trailing slash on the path."

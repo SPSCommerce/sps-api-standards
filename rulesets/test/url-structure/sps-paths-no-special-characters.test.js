@@ -25,7 +25,7 @@ describe("sps-paths-no-special-characters", () => {
         const spec = `
             openapi: 3.1.0
             paths:
-                /v1/resource/{id}:
+                /v1/resource/{itemId}:
                     get:
                         summary: hello
         `;
@@ -38,6 +38,9 @@ describe("sps-paths-no-special-characters", () => {
         openapi: 3.1.0
         paths:
             /v1/fancy_resource:
+                get:
+                    summary: hello
+            /v1/fancy_resource/{ItemId}:
                 get:
                     summary: hello
             /v1/fancy&resource:
@@ -54,6 +57,6 @@ describe("sps-paths-no-special-characters", () => {
                     summary: hello
         `;
        
-        await spectral.validateFailure(spec, ruleName, "Error", 5);
+        await spectral.validateFailure(spec, ruleName, "Error", 6);
     });
 });
