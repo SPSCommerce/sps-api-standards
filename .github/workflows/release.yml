@@ -51,7 +51,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install @semantic-release/git -g
+      - run: npm install -g semantic-release @semantic-release/git -D
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
