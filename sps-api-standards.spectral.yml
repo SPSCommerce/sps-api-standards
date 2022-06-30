@@ -1,0 +1,290 @@
+rules:
+  sps-no-http-basic:
+    description: "Consider a more secure alternative to HTTP Basic."
+    message: "HTTP Basic is an insecure way to pass credentials around, use an alternative."
+    severity: error
+    given: $.components.securitySchemes[*]
+    then:
+      field: scheme
+      function: pattern
+      functionOptions:
+        notMatch: basic
+  sps-unknown-error-format:
+    description: "Every error response SHOULD support RFC 7807."
+    severity: error
+    given: $.paths...responses[?(@property.match(/^(4|5)/))].content.*~
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+          - application/problem+xml
+          - application/problem+json
+  sps-request-get-no-body:
+    description: A `GET` request MUST NOT accept a request body
+    severity: error
+    formats: [oas3]
+    given: $.paths..get.requestBody
+    then:
+      function: undefined
+  sps-headers-hyphenated-pascal-case:
+    description: All `HTTP` headers MUST use `Hyphenated-Pascal-Case` notation
+    severity: error
+    given: "$..parameters[?(@.in == 'header')].name"
+    message: "'HTTP' headers MUST follow 'Hyphenated-Pascal-Case' notation"
+    type: style
+    then:
+      function: pattern
+      functionOptions:
+        match: "/^([A-Z][a-z0-9]-)*([A-Z][a-z0-9])+/"
+  sps-no-x-headers:
+    description: "Do not use headers with X-"
+    severity: warn
+    message: "Headers cannot start with X-. More: https://tools.ietf.org/html/rfc6648"
+    given: "$..parameters.[?(@.in === 'header')].name"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '^(x|X)-'
+  sps-no-x-response-headers:
+    description: "Do not use headers with X-"
+    severity: warn
+    message: "Headers cannot start with X-, so please find a new name for {{property}}. More: https://tools.ietf.org/html/rfc6648"
+    given: "$..headers.*~"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '^(x|X)-'
+  # ignoring contact information as that is typically handled at a higher level of concern than each API spec individually
+  info-contact: off
+  # operation ids are essential for changelogs and other evolutions over time
+  operation-operationId: error
+  operation-operationId-unique: error
+  sps-request-support-json:
+    description: Every request SHOULD support `application/json` media type
+    formats: [oas3]
+    severity: error
+    message: "{{description}}: {{error}}"
+    given: $.paths.[*].requestBody.content[?(@property.indexOf('json') === -1)]^
+    then:
+      function: falsy
+  sps-no-numeric-ids:
+    description: Avoid exposing IDs as an integer, UUIDs or other interoperable strings are preferred.
+    severity: warn
+    given: $.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          not:
+            properties:
+              type:
+                const: integer
+          properties:
+            format:
+              const: uuid
+  sps-semver:
+    severity: warn
+    message: Version should use semantic versioning. {{value}} is not a valid version.
+    given: $.info.version
+    then:
+      function: pattern
+      functionOptions:
+        match: "^([0-9]+.[0-9]+.[0-9]+)$"
+  sps-schema-names-pascal-case:
+    severity: warn
+    description: Schema names SHOULD be written in PascalCase
+    message: '{{property}} is not PascalCase: {{error}}'
+    recommended: true
+    type: style
+    given: '$.components.schemas.*~'
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[A-Z][a-zA-Z0-9]*$'
+  sps-response-names-pascal-case:
+    severity: warn
+    description: Response names SHOULD be written in PascalCase
+    message: '{{property}} is not PascalCase: {{error}}'
+    recommended: true
+    type: style
+    given: '$.components.responses.*~'
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[A-Z][a-zA-Z0-9]*$'
+  sps-limit-path-size:
+    message: APIs SHOULD NOT expand their total URL length beyond a few hundred characters.
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: length
+      functionOptions:
+        max: 75
+  sps-hosts-https-only:
+    message: "Servers MUST be https and no other protocol is allowed."
+    formats: [oas3]
+    severity: error
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: "/^https:/"
+  sps-hosts-lowercase:
+    message: "Server URL SHOULD BE lowercase."
+    formats: [oas3]
+    severity: warn
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: ^[^A-Z]*$
+  sps-hosts-spscommerce-domain:
+    message: "APIs SHOULD be accessible under api.spscommerce.com."
+    formats: [oas3]
+    severity: warn
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        match: api.spscommerce.com|api.sps-internal.com
+  sps-path-no-environment:
+    message: "API paths MUST NOT indicate environment names."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: /prod/|/preprod/|/dev/|/test/|/integration/|/stage/
+  sps-hosts-no-port:
+    message: "Port MUST NOT be specified or required to use the API."
+    formats: [oas3]
+    severity: error
+    given: $.servers..url
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: (https?://.*):(\d*)\/?(.*)
+  sps-paths-expose-technology:
+    message: "A resource MUST NOT leak or expose format or technology-specific information at any point in the path."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: (.php|.asp|.jsp|.cgi|.psp|.json|.xml)
+  sps-paths-expose-extension:
+    message: "A resource SHOULD NOT make use of an extension at any point in the path."
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: \.
+  sps-paths-kebab-case:
+    message: "A resource containing multiple words MUST be separated using kebab-case (lower case and separated with hyphens)."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
+  sps-paths-no-special-characters:
+    message: "A resource MUST only contain lowercase ISO basic Latin alphabet characters, the numeric characters `0-9`, and a hyphen or dash character. Parameters must be camel cased."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: ^([0-9a-z-\/]*({[a-z][0-9a-zA-Z-]+})?)*$
+  sps-paths-trailing-slash:
+    message: "A resource MUST be addressable without a trailing slash on the path."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "/$"
+  sps-paths-with-api:
+    message: "A resource SHOULD NOT contain 'api' as a prefix in or a part of the path."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: /api|/api/|-api/
+  sps-paths-empty-segments:
+    message: "A resource MUST use normalized paths without empty path segments."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: //
+  sps-paths-limit-sub-resources:
+    message: The hierarchy of nested resources SHOULD NOT exceed more than 3 resources
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
+  sps-paths-with-http-methods:
+    message: "A resource SHOULD NOT contain HTTP methods."
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: (\/get|\/post|\/put|\/delete|\/patch)
+  sps-paths-params-camel-case:
+    message: "Path parameter keys MUST use camelCase."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='path')].name
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+        disallowDigits: true
+  sps-query-params-characters:
+    message: "Query parameter keys MUST include only alpha-numeric characters and periods: [Aa0-Zz9]'."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].name
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Za-z0-9\\.]+$"
+  sps-query-params-camel-case:
+    message: "Query parameter keys MUST use camelCase."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].name
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+        disallowDigits: true
+  sps-query-params-not-required:
+    message: "Query parameters MUST be optional."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].required
+    then:
+      function: falsy
+  sps-query-params-no-api-keys:
+    message: "Query parameters MUST not contain sensitive information, like API tokens or keys."
+    severity: error
+    given: $.paths.*.*.parameters[?(@.in=='query')].name
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "apiKey|token"
+  sps-query-params-not-in-path:
+    message: "Paths SHOULD NOT have query parameters in them. They should be defined separately in the OpenAPI."
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: \?
+documentationUrl: https://spscommerce.github.io/sps-api-standards
+extends:
+  - spectral:oas
