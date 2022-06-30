@@ -7,6 +7,8 @@ The intent with this information is to clearly and effectively define how HTTP R
 To easily review, read and reference these standards refer to documentation published at:
 [https://spscommerce.github.io/sps-api-standards](https://spscommerce.github.io/sps-api-standards)
 
+[![api-standards-release](https://github.com/SPSCommerce/sps-api-standards/actions/workflows/release.yml/badge.svg)](https://github.com/SPSCommerce/sps-api-standards/actions/workflows/release.yml)
+
 ## Outline
 
 1. [URL Structure](standards/url-structure.md) - URLs, Resources, Hierarchies and Query Parameters.
