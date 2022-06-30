@@ -54,7 +54,7 @@ jobs:
       - run: npm install -g semantic-release @semantic-release/git -D
       - run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GIT_COMMITTER_NAME: ${{ secrets.GIT_COMMITTER_NAME }}
           GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMITTER_EMAIL }}
           GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMITTER_NAME }}
