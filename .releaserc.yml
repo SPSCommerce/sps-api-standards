@@ -5,7 +5,13 @@ tagFormat: v${version}
 verifyConditions: "@semantic-release/github"
 analyzeCommits: "@semantic-release/commit-analyzer"
 generateNotes: "@semantic-release/release-notes-generator"
-prepare: false
+plugins:
+- "@semantic-release/git"
+prepare: 
+- path: "@semantic-release/git"
+  message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+  assets: 
+  - sps-api-standards.spectral.yml
 publish: 
 - path: "@semantic-release/github"
   assets:
@@ -15,10 +21,6 @@ publish:
     label: sps-api-standards.spectral.yml
   - path: LICENSE.txt
     label: LICENSE.txt
-- path: "@semantic-release/git"
-  message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-  assets: 
-  - "sps-api-standards.spectral.yml"
 dryRun: false
 ci: true
 success: false
