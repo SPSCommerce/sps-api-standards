@@ -45,7 +45,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          token: ${{ secrets.GH_TOKEN }}
       - name: zip documentation
         run: zip -r sps-api-standards-documentation.zip standards
       - name: merge spectral rulesets
@@ -60,6 +59,9 @@ jobs:
         run: npm install -g semantic-release @semantic-release/git -D
       - name: semantic release
         run: npx semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: azure pipelines publishing
         uses: Azure/pipelines@v1
         with:
