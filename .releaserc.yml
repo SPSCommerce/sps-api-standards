@@ -15,6 +15,10 @@ publish:
     label: sps-api-standards.spectral.yml
   - path: LICENSE.txt
     label: LICENSE.txt
+- path: "@semantic-release/git"
+  message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+  assets: 
+  - "sps-api-standards.spectral.yml"
 dryRun: false
 ci: true
 success: false
