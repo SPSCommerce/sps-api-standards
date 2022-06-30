@@ -70,7 +70,7 @@ For more information on how Spectral is consumed and used refer to [OpenAPI Lint
 
 ### Pull Requests
 
-Pull requests can be submitted for any updates or bug fixes from forked versions of the repository. [CODEOWNERS](.github/CODEOWNERS) file automatically ensures your API is assigned the internal SPS Commerce reviewers group that will review and respond in a reasonable period of time. When submitting your Pull Request, be sure to:
+Pull requests can be submitted for any updates or bug fixes from forked versions of the repository. [CODEOWNERS](.github/CODEOWNERS) file automatically ensures your pull request is assigned to a maintainer that will review and respond in a reasonable period of time. When submitting your Pull Request, be sure to:
 
 - Add enough details via the Pull Request description about what your update and change is doing.
 - Update any relevant documentation with the change being made in the same Pull Request.
@@ -80,6 +80,14 @@ Pull request validation via GitHub Actions will be approved after the Pull Reque
 
 ### Merging & Releasing
 
-Updates are only added via Pull Requests, and they will be merged by a maintainer at the appropriate time. The maintainer will always use a [squash merge](https://docs.microsoft.com/en-us/azure/devops/repos/git/merging-with-squash?view=azure-devops) and apply a GIT Commit message for the squash adhering to the [Semantic Release](https://github.com/semantic-release/semantic-release) format that will calculate the [SemVer](https://semver.org/) value based on syntax of the message. The message will indicate if it is a patch, major or minor change. Further discussion on [how semantic versioning is used in these standards](README.md#api-standards-versioning) should be reviewed.
+Updates are only added via Pull Requests, and they will be merged by a maintainer (indicated in [CODEOWNERS](.github/CODEOWNERS)) at the appropriate time. The maintainer will always use a [squash merge](https://docs.microsoft.com/en-us/azure/devops/repos/git/merging-with-squash?view=azure-devops) and apply a GIT Commit message for the squash adhering to the [Semantic Release](https://github.com/semantic-release/semantic-release) format that will calculate the [SemVer](https://semver.org/) value based on syntax of the message. The message will indicate if it is a patch, major or minor change. Further discussion on [how semantic versioning is used in these standards](README.md#api-standards-versioning) should be reviewed.
 
 When pushed to the `main` branch and versioned, a consolidated file of all the Spectral rulesets and a zip file of all the markdown documentation is made available as a [GitHub Release](https://github.com/SPSCommerce/sps-api-standards/releases) immediately, which identifies the changes made in that release along with the version number. Documentation is made available via [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages) automatically shortly after at: [https://spscommerce.github.io/sps-api-standards]. The consolidated Spectral ruleset is also made available in the `main` branch at the root so it can be referenced via Raw GitHub content: [https://raw.githubusercontent.com/SPSCommerce/sps-api-standards/main/sps-api-standards.spectral.yml]
+
+During a pull request review, maintainers are responsible for:
+- Validating that no-changes occur within the `.github` root folder of the repository, which could contain modifications to the release workflow in any way. Public fork pull request workflows from [GitHub Actions can be approved](https://docs.github.com/en/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks) only after validated.
+- Additional pull requests from the same external contributors **MUST** be re-reviewed and approved on every commit, regardless of prior contribution history.
+- Elevating malicious, ill-intent or any behavior violating the [Code of Conduct](CODE_OF_CONDUCT.md) to the SPS Security team.
+- Evaluating the changes for their positive impact for the internal SPS Commerce applications and the external community of users.
+- Ensuring that all reasonably possible test automation is contributed in the same pull request as the modification themselves.
+- Providing clear and timely feedback on next steps if not closed.
