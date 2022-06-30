@@ -40,7 +40,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: checkout 
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          token: ${{ secrets.GH_TOKEN }}
       - name: zip documentation
         run: zip -r sps-api-standards-documentation.zip standards
       - name: merge spectral rulesets
@@ -51,16 +56,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install -g semantic-release @semantic-release/git -D
-      - run: npx semantic-release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GIT_CREDENTIALS: ${{ secrets.GIT_CREDENTIALS }}
-          GIT_COMMITTER_NAME: ${{ secrets.GIT_COMMITTER_NAME }}
-          GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMITTER_EMAIL }}
-          GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMITTER_NAME }}
-          GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMITTER_EMAIL }}
+      - name: install release plugins
+        run: npm install -g semantic-release @semantic-release/git -D
+      - name: semantic release
+        run: npx semantic-release
       - name: azure pipelines publishing
         uses: Azure/pipelines@v1
         with:
