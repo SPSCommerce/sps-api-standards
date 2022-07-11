@@ -107,7 +107,9 @@ Semantic versioning, GitHub Releases and automated release notes are provisioned
 
 The creation of these API standards was not driven from scratch or unique by any means. It is a composition of SPS Commerce internal experience alongside heavily borrowed text and concepts from other API Guideline documentation that are immensely valuable in and of themselves:
 
-- [Microsoft REST API Guidelines](https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md) 
+- [Microsoft REST API Guidelines](https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md) (MS Graph API)
+- [Microsoft Azure REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md)
+- [Azure API Styleguide](https://github.com/Azure/azure-api-style-guide/blob/main/README.md)
 - [Google Cloud API Design Guide](https://cloud.google.com/apis/design/) 
 - [PayPal API Design Guidelines](https://github.com/paypal/api-standards)
 - [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cc-api-v3-style-guide)
