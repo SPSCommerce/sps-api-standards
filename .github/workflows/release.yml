@@ -27,6 +27,9 @@ jobs:
           npm test
         working-directory: rulesets
         name: unit test validation
+      - run: |
+          rm sps-api-standards.spectral.yml
+        name: remove existing merged rulesets
       - name: test merging of rulesets
         uses: mikefarah/yq@v4.25.1
         with:
@@ -47,6 +50,9 @@ jobs:
           persist-credentials: false
       - name: zip documentation
         run: zip -r sps-api-standards-documentation.zip standards
+      - run: |
+          rm sps-api-standards.spectral.yml
+        name: remove existing merged rulesets
       - name: merge spectral rulesets
         uses: mikefarah/yq@v4.25.1
         with:
