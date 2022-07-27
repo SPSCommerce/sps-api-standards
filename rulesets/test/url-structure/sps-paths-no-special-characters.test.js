@@ -9,7 +9,7 @@ describe("sps-paths-no-special-characters", () => {
         spectral = new SpectralTestHarness(ruleset);
     });
 
-    test("succeeds with standard characters", async () => {
+    xtest("succeeds with standard characters", async () => {
         const spec = `
             openapi: 3.1.0
             paths:
@@ -21,7 +21,7 @@ describe("sps-paths-no-special-characters", () => {
         await spectral.validateSuccess(spec, ruleName);
     });
 
-    test("succeeds with interpolation", async () => {
+    xtest("succeeds with interpolation", async () => {
         const spec = `
             openapi: 3.1.0
             paths:
@@ -33,7 +33,7 @@ describe("sps-paths-no-special-characters", () => {
         await spectral.validateSuccess(spec, ruleName);
     });
 
-    test("fails special characters", async () => {
+    xtest("fails special characters", async () => {
         const spec = `
         openapi: 3.1.0
         paths:
