@@ -70,7 +70,7 @@ rules:
   sps-no-numeric-ids:
     description: Avoid exposing IDs as an integer, UUIDs or other interoperable strings are preferred.
     severity: warn
-    given: $.paths..parameters[*].[?(@property === "name" && (@ === "id" || @.match(/(_id|Id)$/)))]^.schema
+    given: $.paths..parameters[*].[?(@property === "name" && (@ === "id" || @ === "ID" || @ === "Id"))]^.schema
     then:
       function: schema
       functionOptions:
