@@ -49,7 +49,7 @@ The following guidance is provided to help drive the decision making process on 
 - **Automation**: Standards and statements should be structured and considered in such a way as to lean towards defendable standards through automation where it does not compromise another design principle.
 - **Experience**: Developer experience is more of a focus than architecture. DX trumps other principles as a tie-breaker.
 
-<sub>References Principles Sourced From: [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cc-api-v3-style-guide#guiding-principles).</sub>
+<sub>References Principles Sourced From: [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cloud_controller_ng/blob/main/docs/v3_style_guide.md#guiding-principles).</sub>
 
 ## OpenAPI Linting with Spectral
 
