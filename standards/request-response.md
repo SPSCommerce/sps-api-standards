@@ -45,13 +45,13 @@ When responding to API requests, the following status code ranges **MUST** be us
 | `5xx` | Server Error | The server was not able to execute the method due to a site outage or software defect. 5xx range status codes **SHOULD NOT** be used for validation or logical error handling. |
 
 ```note
-"HTTP applications are not required to understand the meaning of all registered status codes, though such understanding is obviously desirable. However, applications **MUST** understand the class of any status code, as indicated by the first digit, and treat any unrecognized response as being equivalent to the x00 status code of that class, with the exception that an unrecognized response **MUST NOT** be cached" ([RFC 2626](https://www.ietf.org/rfc/rfc2616.txt)).
+"HTTP applications are not required to understand the meaning of all registered status codes, though such understanding is obviously desirable. However, applications **MUST** understand the class of any status code, as indicated by the first digit, and treat any unrecognized response as being equivalent to the x00 status code of that class, with the exception that an unrecognized response **MUST NOT** be cached" ([RFC 2616](https://www.ietf.org/rfc/rfc2616.txt)).
 ```
 
 - Success **MUST** be reported with a status code in the `2xx` range.
 - Reason phrases **MUST NOT** be modified or customized. The default reason phrases deliver an industry-standard experience for API consumers. Use the response payload as necessary to communicate further reasoning.
 - HTTP status codes in the `2xx` range **MUST** be returned only if the complete code execution path is successful. There is no such thing as partial success.
-    - Bulk request operations **MUST** return a 200 status code with a response body indicating failures as part of the payload for each processed entity, unless all processing failures due to a system issue, in which case its appropriate to issue standard `5xx` error message.
+    - Bulk request operations **MUST** return a 200 status code with a response body indicating failures as part of the payload for each processed entity, unless all processing failures due to a system issue, in which case it's appropriate to issue a standard `5xx` error message.
 - Failures **MUST** be reported in the `4xx` or `5xx` range. This is true for both system errors and application errors.
 - All status codes used in the `4xx` or `5xx` range **MUST** return standardized error responses as outlined under [Errors](errors.md).
 - A server returning a status code in the `2xx` range **MUST NOT** return any error models defined in [Errors](errors.md), or any HTTP status code, as part of the response body. 
@@ -105,7 +105,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 - The data as part of the payload cannot be converted to the underlying data type.
 - The data or parameters is not in the expected data format.
 - The required field is not available.
-- Simple data validation type of error..
+- Simple data validation type of error.
 
 **Example Usage**: Used to inform errors with accepting incoming requests that:
 - Incorrectly formatted
@@ -624,7 +624,7 @@ The purpose of the `GET` method is to retrieve a resource.
 
 - HTTP `GET` Method **MUST NOT** accept a request body.
 - HTTP `GET` Method **MUST** return a response body.
-    - The response body **SHOULD NO**T produce a complex response that requires unreasonable hierarchy traversal. Beyond three levels of an object reference becomes unwieldy and **SHOULD** be avoided for API designs in favor of additional resources.
+    - The response body **SHOULD NOT** produce a complex response that requires unreasonable hierarchy traversal. Beyond three levels of an object reference becomes unwieldy and **SHOULD** be avoided for API designs in favor of additional resources.
 - HTTP `GET` Method **MUST NOT** modify the state of the API resources as it is for retrieval purposes only.
 - HTTP `GET` Method **MUST** be idempotent.
 - HTTP `GET` Method **MUST** return a `404` status code when a resource is not present by a specified identifier unless there is intent to expose a soft-delete status.
@@ -659,7 +659,7 @@ The primary purpose of `POST` is to create a resource. It may also be used for n
 - HTTP `POST` Method that results in the successful creation of the resource:
     - **MUST** indicate so with a `201` status code.
     - **MUST** return a reference to the resource created either as a link or a resource identifier in the response body or Location header or both.
-    - may **OPTIONALLY** return the newly created entity as a whole reference if it is different or resolved in comparison to the request body, understanding that it may not contain an `ETag` or appropriate cache-control headers the same as a GET request..
+    - may **OPTIONALLY** return the newly created entity as a whole reference if it is different or resolved in comparison to the request body, understanding that it may not contain an `ETag` or appropriate cache-control headers the same as a GET request.
 - HTTP `POST` Method **MUST** return a `200` status code when successful with non-RESTful-based actions (see Actions in [URL Structure](url-structure.md)).
 - HTTP `POST` Method response body, if returned, **MUST NOT** be a primitive, but rather a complex object with the identifier or other response information.
 - HTTP `POST` Method **MUST** indicate asynchronous acceptance of the request that is without resolution as a `202` status code.
@@ -809,11 +809,11 @@ The primary purpose of `PATCH` is to update parts of an entity and not replace t
 
 - HTTP `PATCH` Method **MUST** only update parts or certain fields of an entity in compliance with JSON Merge Patch semantics.
     - Fields that are not intended to be updated **MUST** not be provided in the request body.
-    - Fields that are intended to be removed, **MUS**T be set to `NULL` in the request body.
+    - Fields that are intended to be removed, **MUST** be set to `NULL` in the request body.
     - Arrays that are provided in a `PATCH` request **MUST** replace the entire array on the destination field.
 - HTTP `PATCH` Method **MUST NOT** be used to create a new entity on a collection.
 - HTTP `PATCH` Method **SHOULD** return a `204` status code for any success responses, other than asynchronous acceptance with a `202` status code.
-- HTTP `PATCH` Method **SHOULD** NOT return a response body that is an echo of the request body if they are the same. It is acceptable to return a similar resolved entity as a convenience from calling the GET method.
+- HTTP `PATCH` Method **SHOULD NOT** return a response body that is an echo of the request body if they are the same. It is acceptable to return a similar resolved entity as a convenience from calling the GET method.
 - HTTP `PATCH` Method **SHOULD** return a `409` when a resource cannot be updated because it would result in an invalid, or be in opposition to any constraints, including any database or persistent storage constraints.
 - HTTP `PATCH` Method **SHOULD** be used when updating attributes of a resource collection.
 - HTTP `PATCH` Method **SHOULD** take advantage of the same `ETag` state validation, if required, for `PATCH` requests as described under HTTP `PUT` Method.

@@ -370,7 +370,7 @@ To limit or narrow down the results of a collection endpoint you may provide fil
 - Filtering query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional. 
 - The resource identifier in a collection **SHOULD NOT** be used to filter collection results, resource identifier should be in the URI.
 - Filtering **SHOULD** only occur on endpoints that are collections using the schema described above.
-- Filtering attribute names may represent nested objects and **MUS**T use a period to represent each segment of the object path: `grandparent.parent.child`. 
+- Filtering attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`. 
     - Limit filter references to three levels of object hierarchy in accordance with `GET-based` HTTP Methods ([Request Response](request-response.md)).
 - Filtering **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
 - Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md).
@@ -409,7 +409,7 @@ To limit or narrow down the results of a collection endpoint you may provide fil
 - Filtering **MUST** be limited to equality checks of JSON attributes represented in the response payload. 
     - Attributes not represented in the response payload **SHOULD NOT** be available for filtering.
     - Attribute names **MUST** follow standard naming and serialization patterns as defined elsewhere for their keys (see [Serialization](serialization.md)).
-- Filtering capability and support **MUST** be documented within your  API spec to clearly indicate how a consumer can filter your resource. Given that filtering support can drastically vary from endpoint to endpoint, incredible detail and clarity must be provided within the documentation of your API spec.
+- Filtering capability and support **MUST** be documented within your API spec to clearly indicate how a consumer can filter your resource. Given that filtering support can drastically vary from endpoint to endpoint, incredible detail and clarity must be provided within the documentation of your API spec.
 
 ```warning
 Take into consideration the performance of your filtering capability. It may be undesirable to support certain filtering capabilities if it has a substantial impact on your API performance. 
