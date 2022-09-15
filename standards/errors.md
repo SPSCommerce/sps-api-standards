@@ -12,7 +12,7 @@ Just like an HTML error page that shows a useful error message to a visitor, an 
 - The error schema defined here **MUST NOT** be returned for a `2xx` series status code (including with the usage of the `207` multi-status code, which is restricted).
 - An error or validation response **MUST** follow the error object schema and **SHOULD** have response `Content-Type` of: `application/problem+json`.
 - An error or validation response **MUST** include a `requestId` attribute that is used to correlate requests.
-- If the request includes a request identifier as a X-Request-ID header, it **MUST** be used as `requestId` value and `X-Request-ID` header should be carried over to the response.
+- If the request includes a request identifier as an `X-Request-ID` header, it **MUST** be used as `requestId` value and `X-Request-ID` header should be carried over to the response.
 - If a more detailed context is necessary to describe a problem or multiple problems, it **MUST** include the context extension, indicating validation violation per each field or object (if applicable).
 - Optional attributes of the error schema that remain `null` **MUST** be excluded from the response payload during the serialization process.
 - Error messages **SHOULD** be descriptive and grammatically correct in single or multiple sentence format, so they can be surfaced by API clients without the need for modification.

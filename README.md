@@ -25,7 +25,7 @@ Your contributions and community engagement from external sources to SPS Commerc
 
 ## Definition
 
-The majority of this definition directs and acts as a REST API style guide, with a focus on designing uniform interfaces and contracts. While it addresses certain expected behaviors where necessary, it is not intended as a comprehensive overview or guidance of all the tenants of REST-style APIs. You are still expected to understand the core tenants, including client-server, statelessness, cache-ability, layered systems, etc. The following reading may help you understand the philosophy behind the REST Architectural Style. If you are new to RESTful design, here are some good resources:
+The majority of this definition directs and acts as a REST API style guide, with a focus on designing uniform interfaces and contracts. While it addresses certain expected behaviors where necessary, it is not intended as a comprehensive overview or guidance of all the tenets of REST-style APIs. You are still expected to understand the core tenets, including client-server, statelessness, cache-ability, layered systems, etc. The following reading may help you understand the philosophy behind the REST Architectural Style. If you are new to RESTful design, here are some good resources:
 
 - [REST on Wikipedia](https://en.wikipedia.org/wiki/Representational_state_transfer) - Overview of common definitions and core ideas behind REST.
 - [REST Dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) - The chapter on REST in Roy Fielding's dissertation on Network Architecture, "Architectural Styles and the Design of Network-based Software Architectures".
