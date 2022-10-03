@@ -36,9 +36,9 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 // CORRECT
 GET https://api.spscommerce.com/v1/books
     ?limit=int                              // amount of items requested in the results of a single request
-                                            //   -> Not Required, Defaults to API Defined Limit (must be a limit though)
+                                            //   -> Not Required, Defaults to API Defined Limit (there must be a max limit value, min limit value is 1).
     &offset=int                             // amount of items to skip before including the number of limit results in the request
-                                            //   -> Not Required, Defaults to 0, Used only for Offset-based
+                                            //   -> Not Required, Defaults to 0, Used only for Offset-based (min offset value is 0).
     &cursor=string                          // base64 opaque string indicating the metadata and state used to determine the set of results to return
                                             //   -> Not Required, Defaults to Empty / First Row, Used only for Cursor-based
 ```
@@ -82,6 +82,7 @@ POST https://api.spscommerce.com/v1/books
 
 ```
 // RESPONSE
+HTTP/1.1 200
 {
     "results": [                   
         {... DOMAIN OBJECT ...}    
@@ -98,6 +99,7 @@ POST https://api.spscommerce.com/v1/books
 // generally speaking the first request for the first page of results will have a null previous page
 GET https://api.spscommerce.com/v1/example?limit=25&offset=0
 // RESPONSE
+HTTP/1.1 200
 {
     "results": [                   
         {... DOMAIN OBJECT ...}    
@@ -110,6 +112,34 @@ GET https://api.spscommerce.com/v1/example?limit=25&offset=0
         "previous": null
     }
 }
+```
+
+- Invalid requests due to pagination validation **MUST** return a `400 Bad Request` status code following the standard [error schema](errors.md#400-bad-request).
+
+```
+// CORRECT
+GET https://api.spscommerce.com/v1/books
+    ?limit=-2                               // limit cannot be a negative value
+// RESPONSE
+HTTP/1.1 400
+Content-Type: application/problem+json
+{
+    "title": "Invalid Data",
+    "status": 400,
+    "detail": "Missing content or invalid input provided.",
+    "instance": "/v1/books",
+    "requestId": "b6d9a290-9f20-465b-bcd3-4a5166eeb3d7",
+    "context": [
+       {
+            "code": "INPUT_MIN_VALUE",
+            "message": "Attribute 'limit' must be greater than or equal to 1.",
+            "field": "limit",
+            "source": "query",
+            "value": "-2"
+        }
+    ]
+}
+
 ```
 
 ## Offset-Based
