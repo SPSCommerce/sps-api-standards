@@ -122,7 +122,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 
 #### 403 Forbidden
 
-**Description**: The client is not authorized to access the resource, although it may have valid credentials. The API could use this status code in case business-level authorization failures. For example, the requestor does not have permission to request the organization's information.
+**Description**: The client is not authorized to access the resource, although it may have valid credentials. The API could use this status code to handle business-level authorization failures. For example, the requestor does not have permission to request the organization's information.
 
 <hr />
 
