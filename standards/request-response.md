@@ -477,7 +477,7 @@ The usage of non-standard headers is not considered custom headers. For example,
 
 **Support**: OPTIONAL
 
-**Description**: A [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) error with an invalid request on a non-200 status code can be difficult to understand the reasons why the request was rejected. Using a custom header provides the ability to include more detailed information to the consumer on why their CORS preflight OPTIONS request was rejected.
+**Description**: A [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) error from an invalid request will return a non-200 status code, but it can be difficult for an API consumer to understand the reason that their request was unsuccessful. A custom header provides more detailed information to the consumer on why their CORS preflight OPTIONS request was rejected.
 
 - The header **MUST** be added when a `CORS` `OPTIONS` request is rejected.
 - A response with this header **SHOULD** indicate a status code of `403 - Forbidden`.
