@@ -890,7 +890,7 @@ The `OPTIONS` method is used to describe communication options for the target re
 - HTTP `OPTIONS` Method **MUST NOT** be used with any sensitive data.
 - HTTP `OPTIONS` Method responses **MUST NOT** be intended to be cached.
 - HTTP `OPTIONS` Method used for `CORS` integration **MUST** provide standard `CORS` headers for access control (`Access-Control-Allow-*`).
-    - Rejected `CORS` requests should return a `403` status code, including the [SPS-CORS-Error](#SPS-CORS-Error) custom header indicating the reason for rejection.
+    - Rejected `CORS` requests should return a `403` status code, including the [SPS-CORS-Error](#sps-cors-error) custom header indicating the reason for rejection.
 
 ```
 // REQUEST
