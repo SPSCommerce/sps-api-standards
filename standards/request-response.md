@@ -482,7 +482,7 @@ The usage of non-standard headers is not considered custom headers. For example,
 - The header **MUST** be added when a `CORS` `OPTIONS` request is rejected.
 - A response with this header **SHOULD** indicate a status code of `403 - Forbidden`.
 - The header **MUST** contain one of the following values:
-    - __bad origin__ - Indicates to the consumer that the provided request header `Origin` header did not match approved list of source URLs.
+    - __bad origin__ - Indicates to the consumer that the provided request header `Origin` did not match approved list of source URLs.
     - __bad method__ - Indicates to the consumer that the provided request header `Access-Control-Request-Method` contained request methods that are not allowed.
     - __bad header__ - Indicates to the consumer that the provided request header `Access-Control-Request-Headers` contained request header names that are not allowed.
 
