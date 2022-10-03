@@ -50,7 +50,6 @@ GET https://api.spscommerce.com/v1/books
 // CORRECT
 POST https://api.spscommerce.com/v1/books
 // REQUEST
-HTTP/1.1 200
 {
     ...
     "paging": {               
@@ -70,7 +69,6 @@ POST https://api.spscommerce.com/v1/books
      &offset=int                               
      &cursor=string
 // REQUEST
-HTTP/1.1 200
 {
     "paging": {               
         "limit": int,
@@ -116,7 +114,7 @@ HTTP/1.1 200
 }
 ```
 
-- Invalid requests due to pagination validation **MUST** return a `400 Bad Request` status code following the standard [error schema](errors.md).
+- Invalid requests due to pagination validation **MUST** return a `400 Bad Request` status code following the standard [error schema](errors.md#400-bad-request).
 
 ```
 // CORRECT
@@ -137,7 +135,7 @@ Content-Type: application/problem+json
             "message": "Attribute 'limit' must be greater than or equal to 1.",
             "field": "limit",
             "source": "query",
-            "value": "0"
+            "value": "-2"
         }
     ]
 }
