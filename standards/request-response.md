@@ -122,7 +122,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 
 #### 403 Forbidden
 
-**Description**: The client is not authorized to access the resource, although it may have valid credentials. API could use this code in case business-level authorization fails. For example, the requestor does not have permission to talk request the organization's information.
+**Description**: The client is not authorized to access the resource, although it may have valid credentials. The API could use this status code to handle business-level authorization failures. For example, the requestor does not have permission to request the organization's information.
 
 <hr />
 
@@ -469,6 +469,28 @@ X-SPS-User: 123456789012345678901234567890
 
 ```note
 The usage of non-standard headers is not considered custom headers. For example, your API may consume or interact with other infrastructure outside of the contract specification for your service, such as `X-Forwarded-Host` or `X-Request-ID`, these are appropriate to continue using, but would not expect to identify them in your Open API spec for example. As such these types of headers not relevant to REST are intentionally left out of this documentation.
+```
+
+#### SPS-CORS-Error
+
+**Type**: Response
+
+**Support**: OPTIONAL
+
+**Description**: A [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) error from an invalid request will return a non-200 status code, but it can be difficult for an API consumer to understand the reason that their request was unsuccessful. A custom header provides more detailed information to the consumer on why their CORS preflight OPTIONS request was rejected.
+
+- The header **MUST** be added when a `CORS` `OPTIONS` request is rejected.
+- A response with this header **SHOULD** indicate a status code of `403 - Forbidden`.
+- The header **MUST** contain one of the following values:
+    - __bad origin__ - Indicates to the consumer that the provided request header `Origin` did not match the approved list of source hostnames.
+    - __bad method__ - Indicates to the consumer that the provided request header `Access-Control-Request-Method` contained request methods that are not allowed.
+    - __bad header__ - Indicates to the consumer that the provided request header `Access-Control-Request-Headers` contained request header names that are not allowed.
+
+**Example(s)**:
+
+```
+// CORRECT
+SPS-CORS-Error: bad origin
 ```
 
 ## MIME Types
@@ -868,6 +890,7 @@ The `OPTIONS` method is used to describe communication options for the target re
 - HTTP `OPTIONS` Method **MUST NOT** be used with any sensitive data.
 - HTTP `OPTIONS` Method responses **MUST NOT** be intended to be cached.
 - HTTP `OPTIONS` Method used for `CORS` integration **MUST** provide standard `CORS` headers for access control (`Access-Control-Allow-*`).
+    - Rejected `CORS` requests should return a `403` status code, including the [SPS-CORS-Error](#SPS-CORS-Error) custom header indicating the reason for rejection.
 
 ```
 // REQUEST
