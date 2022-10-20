@@ -2,7 +2,7 @@
 
 This documentation represents the REST API standards to be used by all teams at SPS Commerce creating RESTful style internal or external APIs of any size or form. These guidelines supersede any and all existing or alternative sources of standards for REST APIs at SPS Commerce.
 
-The intent with this information is to clearly and effectively define how HTTP REST style APIs should be contractually designed with a high degree of consistency across distributed systems. This information focuses directly on REST APIs as a primary driver for interoperability between services within the organization and between organizations. While other styles of API implementation are important within an architecture the overwhelming majority of communication internally and externally, as indicated in recent industry API Reports, is focused on REST style APIs at this time. 
+The intent with this information is to clearly and effectively define how HTTP REST style APIs should be contractually designed with a high degree of consistency across distributed systems. This information focuses directly on REST APIs as a primary driver for interoperability between services within the organization and between organizations. While other styles of API implementation are important within an architecture the overwhelming majority of communication internally and externally, as indicated in recent industry API Reports, is focused on REST style APIs at this time.
 
 To easily review, read and reference these standards refer to documentation published at:
 [https://spscommerce.github.io/sps-api-standards](https://spscommerce.github.io/sps-api-standards)
@@ -43,7 +43,7 @@ The following guidance is provided to help drive the decision making process on 
 
 - **Consistency**: Understanding how to interact with one resource informs how to interact with any resource. Don't surprise your users.
 - **Discoverability**: API responses guide users without the need for external documentation.
-- **Simplicity**: Complex user workflows are constructed from smaller, easier-to-understand parts (East of Use).
+- **Simplicity**: Complex user workflows are constructed from smaller, easier-to-understand parts (Ease of Use).
 - **Opinionatedness**: There is one clear way to do something.
 - **Tolerance**: Contracts and consumers are as forgiving as possible without compromising security.
 - **Automation**: Standards and statements should be structured and considered in such a way as to lean towards defendable standards through automation where it does not compromise another design principle.
@@ -78,7 +78,7 @@ extends:
 
 rules:
   # disable or downgrade SPS errors to warnings if you desire.
-  paths-kebab-case: warn    
+  paths-kebab-case: warn
 ```
 
 ```
@@ -89,11 +89,12 @@ Additionally, use IDE extensions like [Spectral Linter for VS Code](https://mark
 
 ## API Standards Versioning
 
-The API standards are versioned similarly to the [Semantic Versioning](https://semver.org/) specification where possible to help indicate the types of ongoing changes and modifications that will be introduced over time. While having a set of standards that is a moving target is not ideal, in reality we expect to continually evolve and make backwards compatible changes over time. There are many aspects of API design and contracts still missing from the existing guidelines that will need to be added to the initial draft. Using semantic versioning format means you can identify that changes are large or contract-breaking with a large version bump. Every intention and effort will be made to avoid major version bumps of these standards that may contain any contract breaking modifications. Simple modifications to examples or clarifications added would materialize as a patch version bump. This also enables future work to provide supporting material on the standards, such as automated linting rules. 
+The API standards are versioned similarly to the [Semantic Versioning](https://semver.org/) specification where possible to help indicate the types of ongoing changes and modifications that will be introduced over time. While having a set of standards that is a moving target is not ideal, in reality we expect to continually evolve and make backwards compatible changes over time. There are many aspects of API design and contracts still missing from the existing guidelines that will need to be added to the initial draft. Using semantic versioning format means you can identify that changes are large or contract-breaking with a large version bump. Every intention and effort will be made to avoid major version bumps of these standards that may contain any contract breaking modifications. Simple modifications to examples or clarifications added would materialize as a patch version bump. This also enables future work to provide supporting material on the standards, such as automated linting rules.
 
 More practically, the usage of semantic versioning as it applies to breaking changes within the API Standards is inferred from how the impact of a standards update can affect an API implementation and its own API version. For example, if a "MUST" statement changes the API standards and results in a breaking change to an API implementation making a breaking contract change to their API, then that is considered contract breaking for the standards as well and that change would force a major version bump. However, if the standards indicate an "OPTIONAL" or "SHOULD" update that would indeed break a contract, the standards themselves are likely to NOT increment the major version. This balance is not as clear-cut as standard semantic versioning for a product and will require some maturity over time. The end intent is to land in a position where we limit the need for breaking changes to the API Standards but can introduce net new topics and small changes and this can be trusted by the development community referencing the standards. In some cases, provisions would be made to defer certain changes to a future planned major version or to make them optional in order to maintain a major version. This type of decision must be made on a case-by-case basis. Additive and non-breaking updates to the standards would be encouraged to happen as those updates are ready.
 
 Examples:
+
 - Updating of a "MUST" line item to a standard request header that was previously a "SHOULD" results in a major version bump.
 - Addition of a "SHOULD" line item for an entirely new header results in a minor version bump.
 - Text updates for clarification or wording modification within the same scope results in a patch version bump.
@@ -110,7 +111,7 @@ The creation of these API standards was not driven from scratch or unique by any
 - [Microsoft REST API Guidelines](https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md) (MS Graph API)
 - [Microsoft Azure REST API Guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md)
 - [Azure API Styleguide](https://github.com/Azure/azure-api-style-guide/blob/main/README.md)
-- [Google Cloud API Design Guide](https://cloud.google.com/apis/design/) 
+- [Google Cloud API Design Guide](https://cloud.google.com/apis/design/)
 - [PayPal API Design Guidelines](https://github.com/paypal/api-standards)
 - [Cloud Foundry API Style Guide](https://github.com/cloudfoundry/cc-api-v3-style-guide)
 - [Cisco REST API Design Guide](https://github.com/CiscoDevNet/api-design-guide)
