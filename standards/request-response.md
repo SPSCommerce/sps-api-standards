@@ -503,7 +503,7 @@ SPS-CORS-Error: bad origin
 
 - A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable.
 - The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
-    - __preprod__ - Well-known value used to represent non-production customer configuration where named configuration is not supported. Typically used for legacy support. Usage of dynamically named configuration sets is preferred.
+    - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
 - The header value **MUST NOT** exceed a maximum length of 100 characters.
 - The header value **SHOULD** contain human-readable tag for the context.
