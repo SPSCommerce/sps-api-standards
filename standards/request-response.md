@@ -493,6 +493,36 @@ The usage of non-standard headers is not considered custom headers. For example,
 SPS-CORS-Error: bad origin
 ```
 
+#### SPS-Execution-Context
+
+**Type**: Request
+
+**Support**: OPTIONAL
+
+**Description**: The Execution Context header provides a standard method of indicating the dataflow context that a request should be processed with. This is used to differentiate or test changes in customer configuration of non-production data. This isolates the version of the configuration state used in a request and allows identifying transactions that should leverage a specific tagged or aliased configuration set.
+
+- A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable.
+- The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
+    - __preprod__ - Well-known value used to represent non-production customer configuration where named configuration is not supported. Typically used for legacy support. Usage of dynamically named configuration sets is preferred.
+- An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
+- The header value **MUST NOT** exceed a maximum length of 100 characters.
+- The header value **SHOULD** contain human-readable tag for the context.
+- The header **MUST NOT** be used in a response.
+- The header **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
+
+**Example(s)**:
+
+```
+// CORRECT
+SPS-Execution-Context: preprod
+SPS-Execution-Context: customer-testing
+SPS-Execution-Context: example-customer-configuration
+
+// INCORRECT
+SPS-Execution-Context: prod         // when using `production` context, the header should be left out. There is no value for `prod` or `production`
+SPS-Execution-Context: production
+```
+
 ## MIME Types
 
 ### Standard MIME Types
