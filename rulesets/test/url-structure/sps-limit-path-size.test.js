@@ -25,7 +25,7 @@ describe("sps-limit-path-size", () => {
         const spec = `
             openapi: 3.1.0
             paths: 
-                /v1/users/very/long/path/goes/here/more/than/x-characters/to-be/solong:
+                /v1/users/very/long/path/goes/here/more/than/x-characters/to-be/solong/more/than/x-characters/to-be/solong:
                     get:
                         summary: "hello-world"
         `;
@@ -37,7 +37,7 @@ describe("sps-limit-path-size", () => {
         const spec = `
             openapi: 3.1.0
             paths: 
-                /v1/users/very/long/path/goes/here/more/than/x-characters/to-be/solong/morex:
+                /v1/users/very/long/path/goes/here/more/than/x-characters/to-be/solong/morex//v1/users/very/long/path/goes/here/more/than/x-characters/to-be/solong/morex:
                     get:
                         summary: "hello-world"
         `;

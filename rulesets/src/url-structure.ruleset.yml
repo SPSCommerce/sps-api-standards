@@ -7,7 +7,7 @@ rules:
     then:
       function: length
       functionOptions:
-        max: 75
+        max: 150
 
   sps-hosts-https-only:
     message: "Servers MUST be https and no other protocol is allowed."
