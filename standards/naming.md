@@ -240,9 +240,9 @@ Refer to further information in [Serialization](serialization.md) with regard to
 | Name               | Type           | Description |
 | ------------------ | -------------- | ----------- |
 | id                 | String         | A unique identifier for the parent entity.  |
-| ref                | String         |   |
+| ref                | String         | A unique reference for the parent entity / resource using unique resource names.  |
 | orgId              | String         | A unique identifier for an organization, typically a UUID. |
-| orgRef             | String         | A unique identifier for an organization, typically a UUID. |
+| orgRef             | String         | A unique reference for an organization using its domain qualified unique resource name containing the orgId. |
 | name               | String         | The official name of the parent entity. |
 | description        | String         | Text describing the parent entity. |
 | requestId          | String         | Used to represent a unique tracing identified associated with the platform. |
