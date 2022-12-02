@@ -171,7 +171,7 @@ PATCH /articles/1
 - Numbers **SHOULD** be referenced in JSON as integer types and be represented in a 32-bit signed integer, values between `((2^31) - 1)` and `-(2^31)` in the associated API schema.
     - When an integer type is used as a 32-bit integer it **SHOULD** provide an explicit minimum and a maximum in the associated API schema.
     - When requiring a 64-bit integer (a.k.a "long") it **SHOULD** be serialized as a string and specified as a formatted "int64" to ensure maximum compatibility across programming languages, particularly with JavaScript.
-    - In the circumstance where serializing a number as a 64-bit integer is required, you MAY provide the 64-bit value as both a string and a number to ensure its accessibility.
+    - In the circumstance where serializing a number as a 64-bit integer is required, you **MAY** provide the 64-bit value as both a string and a number to ensure its accessibility.
     
 ```
 {
@@ -191,7 +191,7 @@ PATCH /articles/1
     number: "10",           // 32-bit integers should be serialized as numbers.
     decimal: 10.2          // floating-point numbers should be serialized as strings to avoid precision loss.
     taxAddition: "8.75%",   // symbols should be left out of the string serialized percentage values.
-    percentage: 8,          // floating-point numbers should be serialized as strings to avoid precision loss.
+    percentage: 8           // floating-point numbers should be serialized as strings to avoid precision loss.
 }
  
 // CORRECT
@@ -199,7 +199,7 @@ PATCH /articles/1
     id: "234",
     number: 10,
     decimal: "10.2",
-    percentage: "9.75",
+    percentage: "9.75"
 }
 ```
 
