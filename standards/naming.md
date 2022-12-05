@@ -186,6 +186,7 @@ Refer to further information in [Serialization](serialization.md) with regard to
 | modifiedDateTime   | DateTime       | The modified timestamp of an entity. |
 | modifiedBy         | String         | An identifier for a user that modified an entity. |
 | deletedBy          | String         | An identifier for a user that deleted an entity. |
+| fingerprint        | String         | Represents a hash key value derived from the contents of asset(s). |
 
 Additional standardized property names and schemas are also described in the following:
 - [Collections](collections.md)
