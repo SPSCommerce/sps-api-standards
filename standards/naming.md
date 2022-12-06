@@ -197,15 +197,15 @@ RESPONSE
 
 - Unique references to other significant entities within your API Domain, but in a different root resource **SHOULD** use [URN (Uniform Resource Name)](https://en.wikipedia.org/wiki/Uniform_Resource_Name)-like references where appropriate.  
     - URN-like refers to using the convention of specifying agreed upon namespaces, entities followed by the object identifier, but without the `urn` prefix or formal registration of the namespace ID with IANA according to [RFC8141](https://datatracker.ietf.org/doc/rfc8141/). This provides interoperability and durability benefits within your API and endpoint ecosystem.
-    - URN-like values **MUST** the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration. A simplified example would be: `{namespace}:{entity}:{id}` (e.g. `spsc:book:b96cb3ead9a9`).
-        - URN-like values **MUST** have a max-length of 255 characters.
-        - URN-like values **MUST** be case-sensitive.
-        - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties.
+    - URN-like references **MUST** be the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration. A simplified example would be: `{namespace}:{entity}:{id}` (e.g. `spsc:book:b96cb3ead9a9`).
+        - URN-like references **MUST** have a max-length of 255 characters.
+        - URN-like references **MUST** be case-sensitive.
+        - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties. At SPS Commerce this value **MUST** be `spsc`.
         - URN-like `{namespace}` **MUST** only contain lowercase alpha characters `[a-z]` with a maximum length of 10 characters.
-        - URN-like `{entity}` **MUST** only contain lowercase alpha characters `[a-z]` with a maximum length of 20 characters.
-    - URN-like references **MUST** must use the naming `ref` in the same way as `id` is used for unique identifiers. `ref` can be used as a standalone property name indicating the unique name for the current entity, while `ref` can be used as a suffix to indicate the unique resource name for another entity.
+        - URN-like `{entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters.
+    - URN-like references **MUST** use the naming `ref` in the same way as `id` is used for unique identifiers. `ref` can be used as a standalone property name indicating the unique name for the current entity, while `ref` can be used as a suffix to indicate the unique resource name for another entity.
     - Responses containing self-reference property `ref` **MUST** always include an associated `id` property that matches the `{id}` portion of the URN-like `ref` value.
-    - URN-like values **SHOULD NOT** be passed in the URL path of a request (use the Object ID instead).
+    - URN-like references **SHOULD NOT** be passed in the URL path of a request (use the Object ID instead).
 
 ```
 // INCORRECT EXAMPLE
