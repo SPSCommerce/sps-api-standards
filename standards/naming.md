@@ -197,10 +197,10 @@ RESPONSE
 
 - Unique references to other significant entities within your API Domain, but in a different root resource **SHOULD** use [URN (Uniform Resource Name)](https://en.wikipedia.org/wiki/Uniform_Resource_Name)-like references where appropriate.  
     - URN-like refers to using the convention of specifying agreed upon namespaces, entities followed by the object identifier, but without the `urn` prefix or formal registration of the namespace ID with IANA according to [RFC8141](https://datatracker.ietf.org/doc/rfc8141/). This provides interoperability and durability benefits within your API and endpoint ecosystem.
-    - URN-like references **MUST** be the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration. A simplified example would be: `{namespace}:{entity}:{id}` (e.g. `spsc:book:b96cb3ead9a9`).
+    - URN-like references **MUST** be the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration. A simplified example would be: `{namespace}:{entity}:{id}` (e.g. `sps:book:b96cb3ead9a9`).
         - URN-like references **MUST** have a max-length of 255 characters.
         - URN-like references **MUST** be case-sensitive.
-        - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties. At SPS Commerce this value **MUST** be `spsc`.
+        - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties. At SPS Commerce this value **MUST** be `sps`.
         - URN-like `{namespace}` **MUST** only contain lowercase alpha characters `[a-z]` with a maximum length of 10 characters.
         - URN-like `{entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters.
     - URN-like references **MUST** use the naming `ref` in the same way as `id` is used for unique identifiers. `ref` can be used as a standalone property name indicating the unique name for the current entity, while `ref` can be used as a suffix to indicate the unique resource name for another entity.
@@ -213,7 +213,7 @@ GET /v1/books/5196ab21
 RESPONSE
 {
     "id": "5196ab21",                  
-    "ref": "spsc:Book:123456",              // The Object ID Portion of this URN-like value does not match the "id" property.
+    "ref": "sps:Book:123456",               // The Object ID Portion of this URN-like value does not match the "id" property.
                                             // The URN-like value for "entity" must be in lowercase as "book"
     "name": "The Best Book",
     "author": "author:3793213e"             // In the URN-like value, there is no provided namespace. At least a namespace, entity, and id are required. 
@@ -225,9 +225,9 @@ GET /v1/books/5196ab21
 RESPONSE
 {
     "id": "5196ab21", 
-    "ref": "spsc:book:5196ab21",            // All self-referencing URN-like values on a resource must contain the namespace prefix "spsc".             
+    "ref": "sps:book:5196ab21",             // All self-referencing URN-like values on a resource must contain the namespace prefix "sps".             
     "name": "The Best Book",
-    "authorRef": "spsc:author:3793213e"     // "author" is recognized in this example as a significant entity in the API domain, and has an URN.
+    "authorRef": "sps:author:3793213e"      // "author" is recognized in this example as a significant entity in the API domain, and has an URN.
 }
 ```
 
