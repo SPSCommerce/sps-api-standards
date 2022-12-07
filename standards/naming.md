@@ -203,6 +203,7 @@ RESPONSE
         - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties. At SPS Commerce this value **MUST** be `sps`.
         - URN-like `{namespace}` **MUST** only contain lowercase alpha characters `[a-z]` with a maximum length of 10 characters.
         - URN-like `{entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters.
+        - URN-like `{id}` **MUST** abide by the requirements and restrictions indicated for [identifiers](#identifiers).
     - URN-like references **MUST** use the naming `ref` in the same way as `id` is used for unique identifiers. `ref` can be used as a standalone property name indicating the unique name for the current entity, while `ref` can be used as a suffix to indicate the unique resource name for another entity.
     - Responses containing self-reference property `ref` **MUST** always include an associated `id` property that matches the `{id}` portion of the URN-like `ref` value.
     - URN-like references **SHOULD NOT** be passed in the URL path of a request (use the Object ID instead).
