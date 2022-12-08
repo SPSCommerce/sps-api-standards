@@ -252,6 +252,7 @@ Refer to further information in [Serialization](serialization.md) with regard to
 | modifiedDateTime   | DateTime       | The modified timestamp of an entity. |
 | modifiedBy         | String         | An identifier for a user that modified an entity. |
 | deletedBy          | String         | An identifier for a user that deleted an entity. |
+| fingerprint        | String         | Fingerprint represents a hashed reference to an associated data context (e.g file content hash, document identifier hash, etc). Use this standardized name over something like `hashkey`.<a name="sps-fingerprint-naming" href="#sps-fingerprint-naming"><i class="fa fa-check-circle" title="#sps-fingerprint-naming"></i></a> |
 
 Additional standardized property names and schemas are also described in the following:
 - [Collections](collections.md)
