@@ -1,0 +1,710 @@
+openapi: 3.0.0
+info:
+  version: '0.1'
+  title: Items API
+  description: Item information and operations executable from across the SPS Ecosystem
+  x-sps-service-id: "c01e04b5-87e0-44cf-9537-c0ea24f249ff"
+
+tags:
+  - name: Item Definitions
+  - name: Item Imports
+  - name: Item Validation Errors
+  - name: Item Packs
+  - name: Attributes
+
+servers:
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/spscommerce/assortment-item-service/v1
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/spscommerce/items-api/0.1
+  - description: integration
+    url: https://integration.api.spscommerce.com/items
+  - description: prod
+    url: https://api.spscommerce.com/items
+
+security:
+- SpsBearer: []
+
+paths:
+  /v1/definitions:
+    get:
+      operationId: items-get
+      summary: Search Items
+      description: |
+        Retrieves a set of item definitions that is filterable based on any attribute values it has. This search uses FIQL syntax for advanced search options against any attribute in the system. The list of attribute keys to use can be retrieved from the attribute endpoints.
+        
+        <table>
+          <tr>
+            <th>Operator</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+          <tr>
+            <td>==</td>
+            <td>Equal To</td>
+            <td>/v1/definitions?filter=attributes.upc==123456</td>
+          </tr>
+          <tr>
+            <td>;</td>
+            <td>AND</td>
+            <td>/v1/definitions?filter=attributes.palletlength==20;attributes.palletwidth=gt=20</td>
+          </tr>
+          <tr>
+            <td>,</td>
+            <td>OR</td>
+            <td>/v1/definitions?filter=attributes.numberofhandles==2,attributes.numberofburners==4</td>
+          </tr>
+        </table>
+        
+        These operators can be combined in may ways. Here is a more complex example:
+        
+        /v1/definitions?filter=attributes.filesize=gt=1024;attributes.orientation==Portrait;(attributes.format==JPEG,attributes.format==PNG)
+      tags:
+        - Item Definitions 
+      parameters:
+        - $ref: '#/components/parameters/Filter'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - name: owner-org-id
+          in: query
+          schema:
+            type: string
+        - name: viewer-org-id
+          in: query
+          schema:
+            type: string
+        - name: expand
+          in: query
+          description: A list of sections to include on items returned such as identifiers, attributes, etc. If not provided this will default to return all.
+          schema:
+            type: array
+            items: 
+              type: string
+        - $ref: '#/components/parameters/ContentLanguage'
+      responses:
+        '200':
+          description: A list of items results based on filter criteria.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemDefinition'
+                  paging:
+                    $ref: '#/components/schemas/PagingCursors'    
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '500':
+          $ref: '#/components/responses/Error'
+
+    post:
+      operationId: item-create
+      summary: Create Item
+      description: Creates a new item with attributes from the given payload.
+      tags:
+        - Item Definitions 
+      parameters:
+      - $ref: '#/components/parameters/ContentLanguage'
+      - name: owner-org-id
+        in: query
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDefinitionBase'
+      responses:
+        '201':
+          description: Item has been successfully created.
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ItemId'
+                  - $ref: '#/components/schemas/ItemRef'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+  /v1/definitions/{itemId}:
+    get:
+      operationId: item-get-by-id
+      summary: Get Item by ID
+      description: Retrieves details about a specific item.
+      tags:
+        - Item Definitions 
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - name: viewer-org-id
+          in: query
+          schema:
+            type: string
+        - name: expand
+          in: query
+          description: A list of sections to include on items returned such as identifiers, attributes, etc. If not provided this will default to return all.
+          schema:
+            type: array
+            items: 
+              type: string
+      responses:
+        '200':
+          description: Item with the provided ID in the requested locale.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDefinition'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+    put:
+      operationId: item-update
+      summary: Update Item
+      description: |
+        Updates an existing item with attributes from the given payload.
+        The entire item is overwritten with new item provided.
+      tags:
+        - Item Definitions 
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDefinition'
+      responses:
+        '200':
+          description: Item was successfully updated.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+    patch:
+      operationId: item-partial-update
+      summary: Partial Update Item
+      description: |
+        Updates an existing item with attributes from the given payload.
+        Item provided will be merged with existing item. NULL or UNDEFINED properties will remain unchanged.
+      tags:
+        - Item Definitions 
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDefinition'
+      responses:
+        '200':
+          description: Item was successfully updated.
+          headers:
+            Content-Language: 
+              $ref: '#/components/headers/Content-Language'
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDefinition'
+        '400':
+          $ref: '#/components/responses/InvalidData'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+    delete:
+      operationId: item-delete
+      summary: Delete Item
+      description: Deletes an existing item. <-- Add documentation about deleting by locale and how you cannot delete en-us -->
+      tags:
+        - Item Definitions
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+        - $ref: '#/components/parameters/ContentLanguage'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '204':
+          description: Item was deleted successfully.
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Error'
+              
+components:
+
+  responses:
+
+    Error:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/Error'
+
+    InvalidData:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/InvalidData'
+
+    Conflict:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/Conflict'
+
+    NotFound:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/NotFound'
+
+    PreconditionFailed:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Errors/2.0#/components/responses/PreconditionFailed' 
+
+  parameters:
+
+    Filter:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/parameters/Filter'
+
+    Limit:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/parameters/Limit'
+
+    Cursor:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/parameters/Cursor'
+
+    ContentLanguage:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/parameters/ContentLanguage'
+
+    IfMatch:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/parameters/IfMatch'
+
+    ItemId:
+      name: itemId
+      in: path
+      required: true
+      description: |
+        A unique object identifier for an item.
+        This can also ben an SPS Item Ref, for example: spsc:item:{itemId}
+      schema:
+        description: |
+            A unique Item object identifier.
+        type: string
+        format: uuid
+        example: 3fd038ac-fc50-4889-9c99-61161ca12b7b
+
+  headers:
+
+    Content-Language:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/headers/Content-Language'
+
+    Location:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/headers/Location'
+
+    ETag:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Global/1.0#/components/headers/ETag'   
+
+  securitySchemes:
+    
+    SpsBearer:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Security/1.0#/components/securitySchemes/SpsBearer' 
+
+  schemas:
+
+    PagingCursors:
+      $ref: 'https://api.swaggerhub.com/domains/spscommerce/Collections/1.0#/components/schemas/PagingCursors'
+      
+    ItemRef:
+      type: object
+      properties:
+        ref:
+          $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsItemRef'
+
+          
+    ItemId:
+      description: SPS Item Object ID to uniquely identify an Item.
+      type: object
+      properties:
+        id:
+          description: |
+            A unique Item object identifier.
+          type: string
+          example: 3fd038ac-fc50-4889-9c99-61161ca12b7b
+
+    ItemOwnership:
+      type: object
+      properties:
+        ownerOrgRef:
+          allOf:
+            - $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+            - description: The SPS Organization reference of the company who owns this item.
+        viewerOrgRef:
+          allOf:
+            - $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+            - description: The SPS Organization reference of whos perspective of this item was requested.
+
+    ItemIdentifierBase:
+      description: Contains base level item information.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - PRIMARY_SELLABLE
+            - NON_SELLABLE
+        description:
+          description: Vendor Part Description text that describes what this item is in a human readable way
+          type: string
+        identifiers:
+          description: Attributes that are used to uniquely identify an item.
+          type: object
+          properties:
+            upc:
+              description: The GTIN-12 is the only GTIN that can be used in UPC-A barcodes. The first eleven digits contain your U.P.C. Company Prefix and the Item Reference. The final digit is the check digit.
+              type: string
+            ean:
+              description: The GTIN-13 is the only GTIN that can be used in EAN-13 barcodes. The first twelve digits contain your GS1 Company Prefix and the Item Reference. The final digit is the check digit.
+              type: string
+            gtin:
+              description: The GTIN-14 cannot be used in EAN/UPC barcodes. The first digit is the Indicator Digit to indicate packaging level (1-8) or that the product is variable measure (9). The next twelve digits containing your GS1 Company Prefix and the Item Reference. The final digit is the check digit.
+              type: string
+            vendorPartNumber:
+              description: Indicates the vendor-created number used by vendors to identify their items. Note - Vendor Part Number is not a universally governed or recognized item identifier. It is recommended that either UPC, GTIN, EAN or ISBN obtain values if this attribute obtains a value.
+              type: string
+            isbn:
+              description: International Standard Book Number. A unique, global identifier used by vendors to identify their items according to the standard available at http://www.isbn.org/about_isbn_standard
+              type: string
+            bpn:
+              description: Buyer specific part number
+              type: object
+              properties:
+                perspectives: 
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      viewerOrgRef:
+                        $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+                      value:
+                        type: string
+
+    ItemDefinition:
+      description: Contains all information related to an item than can be managed.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ItemId'
+        - $ref: '#/components/schemas/ItemRef'
+        - $ref: '#/components/schemas/ItemOwnership'
+        - $ref: '#/components/schemas/ItemDefinitionBase'
+    
+    ItemDefinitionBase:
+      description: An object being described by a set of attributes. Items can be sellable or non-sellable and can be made up of multiple other items.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ItemIdentifierBase'
+      properties:
+        attributes:
+          description: Properties used to describe this item in detail.
+          type: object
+          properties:
+            individuals:
+              description: A descriptor for this item. An individual attribute may have either a one value or a repeatable list of values assigned to it.
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttributeIndividual'
+            clusters:
+              description: This item's attributes that are part of a repeatable group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttributeCluster'
+        quantityUomConversions:
+          description: Quantity unit of measure conversions
+          type: array
+          items:
+            properties:
+              uom1:
+                type: string
+              uom2:
+                type: string
+              conversionFactorFromUom1ToUom2:
+                type: string
+              viewerOrgRef:
+                $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+        relationships:
+          description: Some items are made up of smaller items or are part of a sellable group of items. These relationships are comprised of components that are defined in this section.
+          type: object
+          properties:
+            packIds:
+              description: Item ids of any related parent items. These may be sellable and/or non-sellable items. 
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemId'
+            parentItemIds:
+              description: Item ids of any related parent items. These may be sellable and/or non-sellable items. 
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemId'
+            childItemIds:
+              description: Item ids of any related child items. These may be sellable and/or non-sellable items. 
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemId'
+
+    ItemAttribute:
+      description: Used to represent an individual value for an attribute.
+      type: object
+      properties:
+        perspectives: 
+          type: array
+          items:
+            type: object
+            properties:
+              viewerOrgRef:
+                $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+              values:
+                type: array
+                items:
+                  type: string
+      example:
+        perspectives: [
+          { "values": ["Small"] },
+          { "viewerOrgRef": "spsc:org:123-456-789-xcbv-dfsa", "values": ["Medium"] }
+        ]
+
+    ItemAttributeIndividual:
+      description: Used to represent an individual value for an attribute.
+      type: object
+      properties:
+        id:
+          type: string
+        perspectives: 
+          type: array
+          items:
+            type: object
+            properties:
+              viewerOrgRef:
+                $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+              values:
+                type: array
+                items:
+                  type: string
+      example:
+        id: "socksize"
+        perspectives: [
+          { "values": ["Small"] },
+          { "viewerOrgRef": "spsc:org:123-456-789-xcbv-dfsa", "values": ["Medium"] }
+        ]
+
+    ItemImport:
+      description: Contains status information about a specific item import.
+      type: object
+      properties:
+        id:
+          type: integer
+          format: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [QUEUED_FOR_IMPORT, IN_PROGRESS, DOC_FAILED, VALIDATION_FAILED, COMPLETED]
+        completedDateTime:
+          type: string
+          format: date-time
+          example: "2021-05-16T14:12:07-05:00"
+        errorCount:
+          type: integer
+          format: int32
+        validItemCount:
+          type: integer
+          format: int32
+        invalidItemCount:
+          type: integer
+          format: int32
+        totalItemCount:
+          type: integer
+          format: int32
+
+    ItemError:
+      description: Contains all information about current errors on a specific item.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ItemId'
+        - $ref: '#/components/schemas/ItemRef'
+      properties:
+        validationErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemValidationError'
+      
+    ItemValidationError:
+      description: Contains item validation error information related to a single validation set or map.
+      type: object
+      properties:
+        orgIds:
+          description: The ids of the orgs these errors apply to
+          type: array
+          items:
+            type: string
+        attributeName:
+          type: string
+        errorMessage:
+          type: string
+        attributeNames:
+          type: array
+          items:
+            type: string
+        stages:
+          type: array
+          items:
+            type: string
+            enum:
+              - core
+              - corePlus
+              - coreAdvanced
+
+    ItemAttributeCluster:
+      description: Used to represent multiple values for a collection of related attributes.
+      type: object
+      properties:
+        name:
+          type: string
+        viewerOrgRef:
+          $ref: 'https://api.swaggerhub.com/domains/spscommerce/URNs/1.0#/components/schemas/SpsOrgRef'
+        attributes:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              values:
+                type: array
+                items:
+                  type: string
+      example:
+        name: "BATTERY"
+        viewerOrgRef: "sps:org:3fd038ac-fc50-4889-9c99-61161ca12b7b" 
+        attributes: [
+          {
+            id: "batteryquantity",
+            values: ["2"]
+          },
+          {
+            id: "batterysize",
+            values: ["AAA"]
+          }
+        ]
+          
+    Pack:
+      description: A pack is a type of item which contains its own set of attributes. Often these are dimensions related but it can use any of the same attributes an item has.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ItemId'
+        - $ref: '#/components/schemas/ItemOwnership'
+        - $ref: '#/components/schemas/ItemIdentifierBase'
+      properties:
+        attributes:
+          description: Properties used to describe this item in detail.
+          type: object
+          properties:
+            individuals:
+              description: A descriptor for this item. An individual attribute may have either a one value or a repeatable list of values assigned to it.
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttributeIndividual'
+            clusters:
+              description: This item's attributes that are part of a repeatable group.
+              type: array
+              items:
+                $ref: '#/components/schemas/ItemAttributeCluster'
+        prices:
+          description: Price information associated with this pack.
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+
+    Price:
+      description: A price represents what some quantity of this item is sold for. Can be universal or retailer specific.
+      type: object
+      properties:
+        orgId:
+          description: The org id of the retail partner this price is applicable for. If left empty the price is available to all partners.
+          type: string
+        startDateTime:
+          description: The date and time this prices begins being offered
+          type: string
+          format: date-time
+        endDateTime:
+          description: The date and time this prices stops being offered
+          type: string
+          format: date-time
+        qualifier:
+          description: Identifies the price type. Valid Values include MSR (manufacturer suggested retail price), UCP (unit cost price), etc.
+          type: string
+        amount:
+          description: The represented item's price expressed in integers, exclusive of currency type. If this attribute has a value, "Currency" must also have a value. 
+          type: string
+        currency:
+          description: Describes currency this price is for. If this attribute has a value, amount must also have a value. Valid values include AUD (Australian Dollar),  CAD (Canadian Dollar), etc.
+          type: string
+        # region:
+        #   description:
+        #   type:
+        # regionQualifier:
+        #   description:
+        #   type:
+        # regionDescription:
+        #   description:
+        #   type:
+        # rangeType:
+        #   description:
+        #   type:
+        # dateRangeType:
+        #   description:
+        #   type:
+        # minRange:
+        #   description:
+        #   type:
+        # priceDivision:
+        #   description:
+        #   type:
+        # priceUnitQuantity:
+        #   description:
+        #   type:
+        # priceUnitQuantityUOM:
+        #   description:
+        #   type:
+        # priceConditionDescription:
+        #   description:
+        #   type:

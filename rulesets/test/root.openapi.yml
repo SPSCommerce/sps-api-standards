@@ -449,6 +449,14 @@ components:
           description: The unique identifier for the responsibility.
           format: uid
           example: 12345678-1234-1234-1234-123456789012
+        ref:
+          type: string
+          maxLength: 255
+          minLength: 7
+          pattern: "^sps:[a-z0-9].*:.*$"
+          description: "The reference for the responsibility."
+          format: "sps-ref"
+          example: "sps:domain:objectId"
         name:
           type: string
           description: The name of the responsibility.
