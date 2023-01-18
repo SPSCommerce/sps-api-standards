@@ -56,7 +56,7 @@ rules:
     description: Parameters for sps-ref formatted URN-like references SHOULD NOT be used in query or path parameters.
     severity: warn
     formats: [oas3]
-    given: '$..[?((@.name == "ref" || @.name == "Ref") && (@.in=="query" || @.in=="path"))]'
+    given: '$.paths.*.*.parameters[?((@.in=="query" || @.in=="path") && (@.name == "ref" || @.name == "Ref"))]'
     then:
       field: name
       function: falsy
