@@ -8,7 +8,20 @@ There are couple ways to accomplish asynchronous communication in REST APIs and 
 
 ## Polling
 
+Overall guidelines for asynchronous requests are:
+- API requests **must** be implemented as asynchronous if the 99th percentile response time is greater than 5s.
+- PATCH requests **must not** be used as asynchrnous request initiation. If entity update is required and takes more than established time then it **must** be implemented with POST request
+
 All asynchronous API requests starts with initiation. Since long-running requests need to be processed on background, asynchronous requests should initiate those processes with necessary input parameters. Background process details should be returned 
+
+- Asynchronous requests **must** be POST or DELETE
+- `Operation-Id` header is optionally supported and can be provided as part of request
+- Process ID should be automatically generated and returned to the client if `Operation-Id` header not provided
+- Perform as much validation as necessary when initiating the long-running process
+- Return error details as part of completed long-running process status when requested or via webhook
+- 400 (Bad Request) response should be returned if request for long-running operation fails initial validation or incomplete
+- 202 (Accepted) response status code **must** be returned to the request when a long-running processing requests was successfully initiated
+    - No other 2xx codes **should** be returnes in response to asynchronous request initialization, even if request completed before the initiating request returns  
 
 ```
 // REQUEST
@@ -29,13 +42,15 @@ HTTP/1.1 202 (Accepted)
 }
 ```
 
-Once new long-running request posted, corresponding instance of running process created for tracking purpose. To access details about process and completeness status GET operation **must** be used. Such request will return current status of the background process
+Once new long-running request posted, corresponding instance of running process created for tracking purpose. To access details about process and completeness status GET operation **must** be used. Such request will return current status of the background process.
+
+- Status of long-running processing **must** be always returned via GET request with provided `id` of the asynchronous process
 
 ```
 // request to get details about already posted asynchronous request
 GET https://api.spscommerce.com/v1/reports/queue/1234456789
 // RESPONSE
-HTTP/1.1 202 (Accepted)
+HTTP/1.1 200 (OK)
 {
     id: "1234456789",  
     status: "NotStarted | Running | Succeeded | Failed | Canceled",  // status of job completion
