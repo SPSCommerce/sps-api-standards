@@ -142,115 +142,6 @@ Content-Type: application/problem+json
 
 ```
 
-## Offset-Based
-
-### Offset-Based Paging Overview
-
-Offset-based pagination is the simplest form of paging through API results and offers advantages:
-
-- Creating a UI driven with a page selection option and the ability to skip to any page.
-- See progress based on which page you're on.
-- Assumes you also are ordering your results based on order queries as well.
-
-Reference the advantages of cursor-based pagination for some reasons why you may not use offsets.
-
-### Offset-Based Paging Guidelines
-
-- All collection-based endpoints **SHOULD** support cursor-based over offset-based pagination unless technology or performance makes offset-based pagination more advantageous.
-- Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
-
-```jsonc
-// RESPONSE
-{
-    "results": [
-        {... DOMAIN OBJECT ...}
-    ],
-    "paging": {
-        "totalCount": int,      // the total count of all unique available records (results) across all paginated queries of the endpoint
-                                //   -> Not Required
-        "limit": int,           // amount of items requested in the results of a single request, updated for the response to the max limit or the default as necessary
-                                //   -> Required, Defaults to API defined default / max or if within range the user provided limit request parameter
-        "offset": int,          //amount of items to skip before including the number of limit results in the request
-                                //   -> Required
-    }
-}
-```
-
-- Offset-based collection endpoints may **OPTIONALLY** make use of `next` and `previous` specifications for URLs.
-
-```jsonc
-// RESPONSE
-{
-    "results": [
-        {... DOMAIN OBJECT ...}
-    ],
-    "paging": {
-        "totalCount": int,
-        "limit": int,
-        "offset": int,
-        "next": {
-            "url": "string"     // represents the complete URL to navigate to the next result set of data given the state of your current request (including offset, limit, cursor where appropriate)
-                                //   -> Required
-                                //   -> Example: https://api.spscommerce.com/v1/books?limit=50
-         },
-        "previous": {           // optional for offset-based pagination. set to null to indicate no previous page.
-            "url": string       // represents the complete URL to navigate to the previous result set of data given the state of your current request (including offset, limit, cursor where appropriate).
-                                //   -> Required
-        }
-    }
-}
-```
-
-```note
- Complete URLs can be difficult to intercept behind a number of proxies/gateways for specification on URL fields, such as `next`/`previous` elements. Ensure your consuming the correct headers for construction. Also, consider the dynamic nature of the URL from different entry points across the same environments or different environments. Difficulties may also exist in dynamic documentation generation. Possible headers behind internal proxies or platforms include: `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`. Your application would still need to determine the subpath based on the request context of the application (i.e. after the host).
-```
-
-### Offset-Based Paging Example
-
-```jsonc
-// SCENARIO 1: Get the first page of results (leave offset as null to default to 0)
-GET https://api.spscommerce.com/v1/example?limit=25&offset=0
-RESPONSE
-{
-    "results": [
-        {... DOMAIN OBJECT ...}
-    ],
-    "paging": {
-        "totalCount": 100,
-        "limit": 25,
-        "offset": 0
-    }
-}
-
-// SCENARIO 2: Get the second page of results
-GET https://api.spscommerce.com/v1/example?limit=25&offset=25
-RESPONSE
-{
-    "results": [
-        {... DOMAIN OBJECT ...}
-    ],
-    "paging": {
-        "totalCount": 100,
-        "limit": 25,
-        "offset": 25
-    }
-}
-
-// SCENARIO 3: Get the last page of results (skip a page)
-// determine based on (totalCount - limit)
-GET https://api.spscommerce.com/v1/example?limit=25&offset=75
-RESPONSE
-{
-    "results": [
-        {... DOMAIN OBJECT ...}
-    ],
-    "paging": {
-        "totalCount": 100,
-        "limit": 25,
-        "offset": 75
-    }
-}
-```
 
 ## Cursor-Based
 
@@ -386,6 +277,116 @@ Additional concepts: [Evolving API Pagination at Slack](https://slack.engineerin
             "cursor": "cHJldl91c2VySWQ6Mw==",  # base64.encode("prev_userId:3"), if the limit is adjusted manually in the subsequent request, that will obviously impact the before/after
             "url": "https://api.spscommerce.com/v1/example?limit=2&cursor=cHJldl91c2VySWQ6Mw=="
          }
+    }
+}
+```
+
+## Offset-Based
+
+### Offset-Based Paging Overview
+
+Offset-based pagination is the simplest form of paging through API results and offers advantages:
+
+- Creating a UI driven with a page selection option and the ability to skip to any page.
+- See progress based on which page you're on.
+- Assumes you also are ordering your results based on order queries as well.
+
+Reference the advantages of cursor-based pagination for some reasons why you may not use offsets.
+
+### Offset-Based Paging Guidelines
+
+- All collection-based endpoints **SHOULD** support cursor-based over offset-based pagination unless technology or performance makes offset-based pagination more advantageous.
+- Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
+
+```jsonc
+// RESPONSE
+{
+    "results": [
+        {... DOMAIN OBJECT ...}
+    ],
+    "paging": {
+        "totalCount": int,      // the total count of all unique available records (results) across all paginated queries of the endpoint
+                                //   -> Not Required
+        "limit": int,           // amount of items requested in the results of a single request, updated for the response to the max limit or the default as necessary
+                                //   -> Required, Defaults to API defined default / max or if within range the user provided limit request parameter
+        "offset": int,          //amount of items to skip before including the number of limit results in the request
+                                //   -> Required
+    }
+}
+```
+
+- Offset-based collection endpoints may **OPTIONALLY** make use of `next` and `previous` specifications for URLs.
+
+```jsonc
+// RESPONSE
+{
+    "results": [
+        {... DOMAIN OBJECT ...}
+    ],
+    "paging": {
+        "totalCount": int,
+        "limit": int,
+        "offset": int,
+        "next": {
+            "url": "string"     // represents the complete URL to navigate to the next result set of data given the state of your current request (including offset, limit, cursor where appropriate)
+                                //   -> Required
+                                //   -> Example: https://api.spscommerce.com/v1/books?limit=50
+         },
+        "previous": {           // optional for offset-based pagination. set to null to indicate no previous page.
+            "url": string       // represents the complete URL to navigate to the previous result set of data given the state of your current request (including offset, limit, cursor where appropriate).
+                                //   -> Required
+        }
+    }
+}
+```
+
+```note
+ Complete URLs can be difficult to intercept behind a number of proxies/gateways for specification on URL fields, such as `next`/`previous` elements. Ensure your consuming the correct headers for construction. Also, consider the dynamic nature of the URL from different entry points across the same environments or different environments. Difficulties may also exist in dynamic documentation generation. Possible headers behind internal proxies or platforms include: `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`. Your application would still need to determine the subpath based on the request context of the application (i.e. after the host).
+```
+
+### Offset-Based Paging Example
+
+```jsonc
+// SCENARIO 1: Get the first page of results (leave offset as null to default to 0)
+GET https://api.spscommerce.com/v1/example?limit=25&offset=0
+RESPONSE
+{
+    "results": [
+        {... DOMAIN OBJECT ...}
+    ],
+    "paging": {
+        "totalCount": 100,
+        "limit": 25,
+        "offset": 0
+    }
+}
+
+// SCENARIO 2: Get the second page of results
+GET https://api.spscommerce.com/v1/example?limit=25&offset=25
+RESPONSE
+{
+    "results": [
+        {... DOMAIN OBJECT ...}
+    ],
+    "paging": {
+        "totalCount": 100,
+        "limit": 25,
+        "offset": 25
+    }
+}
+
+// SCENARIO 3: Get the last page of results (skip a page)
+// determine based on (totalCount - limit)
+GET https://api.spscommerce.com/v1/example?limit=25&offset=75
+RESPONSE
+{
+    "results": [
+        {... DOMAIN OBJECT ...}
+    ],
+    "paging": {
+        "totalCount": 100,
+        "limit": 25,
+        "offset": 75
     }
 }
 ```
