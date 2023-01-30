@@ -10,7 +10,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 
 - All collection-based endpoint responses **MUST** include the collection under the `results` root element.
 
-```
+```jsonc
 // CORRECT
 {
     "results": [                    // "results" term is a standardized part of the schema for all collection responses
@@ -32,7 +32,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 
 - All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below.
 
-```
+```jsonc
 // CORRECT
 GET https://api.spscommerce.com/v1/books
     ?limit=int                              // amount of items requested in the results of a single request
@@ -46,7 +46,7 @@ GET https://api.spscommerce.com/v1/books
 - All collection-based endpoints **SHOULD** use `GET` requests for pagination and not `POST` requests unless it is necessary for the action.
 - All collection-based endpoints `POST` request parameters **MUST** be specified as parameters in the body of the request within the `paging` element and the outlined schema below.
 
-```
+```jsonc
 // CORRECT
 POST https://api.spscommerce.com/v1/books
 // REQUEST
@@ -62,7 +62,7 @@ POST https://api.spscommerce.com/v1/books
 
 - Pagination request parameters `MUST` never exist as both query parameters and request body parameters.
 
-```
+```jsonc
 // INCORRECT
 POST https://api.spscommerce.com/v1/books
      ?limit=int
@@ -80,7 +80,7 @@ POST https://api.spscommerce.com/v1/books
 
 - All collection-based endpoint responses **MUST** include the root element `paging` whenever `results` are used, with the outlined schema from offset-based or cursor-based pagination.
 
-```
+```jsonc
 // RESPONSE
 HTTP/1.1 200
 {
@@ -95,7 +95,7 @@ HTTP/1.1 200
 
 - If using pagination response parameters for "next" and "previous", then they **MUST** be set to `NULL` to indicate there is no next or previous page.
 
-```
+```jsonc
 // generally speaking the first request for the first page of results will have a null previous page
 GET https://api.spscommerce.com/v1/example?limit=25&offset=0
 // RESPONSE
@@ -116,7 +116,7 @@ HTTP/1.1 200
 
 - Invalid requests due to pagination validation **MUST** return a `400 Bad Request` status code following the standard [error schema](errors.md#400-bad-request).
 
-```
+```jsonc
 // CORRECT
 GET https://api.spscommerce.com/v1/books
     ?limit=-2                               // limit cannot be a negative value
@@ -144,7 +144,7 @@ Content-Type: application/problem+json
 
 ## Offset-Based
 
-### Overview
+### Offset-Based Paging Overview
 
 Offset-based pagination is the simplest form of paging through API results and offers advantages:
 
@@ -154,7 +154,7 @@ Offset-based pagination is the simplest form of paging through API results and o
 
 Reference the advantages of cursor-based pagination for some reasons why you may not use offsets.
 
-### Guidelines
+### Offset-Based Paging Guidelines
 
 - All collection-based endpoints **SHOULD** support cursor-based over offset-based pagination unless technology or performance makes offset-based pagination more advantageous.
 - Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
@@ -178,7 +178,7 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 
 - Offset-based collection endpoints may **OPTIONALLY** make use of `next` and `previous` specifications for URLs.
 
-```
+```jsonc
 // RESPONSE
 {
     "results": [
@@ -205,9 +205,9 @@ Reference the advantages of cursor-based pagination for some reasons why you may
  Complete URLs can be difficult to intercept behind a number of proxies/gateways for specification on URL fields, such as `next`/`previous` elements. Ensure your consuming the correct headers for construction. Also, consider the dynamic nature of the URL from different entry points across the same environments or different environments. Difficulties may also exist in dynamic documentation generation. Possible headers behind internal proxies or platforms include: `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`. Your application would still need to determine the subpath based on the request context of the application (i.e. after the host).
 ```
 
-### Example
+### Offset-Based Paging Example
 
-```
+```jsonc
 // SCENARIO 1: Get the first page of results (leave offset as null to default to 0)
 GET https://api.spscommerce.com/v1/example?limit=25&offset=0
 RESPONSE
@@ -254,7 +254,7 @@ RESPONSE
 
 ## Cursor-Based
 
-### Overview
+### Cursor-based Paging Overview
 
 Cursor-based Pagination works extremely well when:
 
@@ -266,12 +266,12 @@ The performance advantages may be a larger requirement than the capabilities you
 - Ability to jump to a particular page.
 - Impacted understanding of how many pages there could be.
 
-### Guidelines
+### Cursor-based Paging Guidelines
 
 - Cursor-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
 
-```
-RESPONSE
+```jsonc
+//RESPONSE
 {
     "results": [
         {... DOMAIN OBJECT ...}
@@ -298,9 +298,8 @@ RESPONSE
 
 - When using pagination cursors, the cursor **MUST** be `Base64` encoded to be opaque.
 
-```
-// CORRECT
-RESPONSE
+```jsonc
+// CORRECT RESPONSE
 {
     "results": [
         {... DOMAIN OBJECT ...}
@@ -314,8 +313,7 @@ RESPONSE
     }
 }
 
-// INCORRECT
-RESPONSE
+// INCORRECT RESPONSE
 {
     "results": [
         {... DOMAIN OBJECT ...}
@@ -338,7 +336,7 @@ Additional concepts: [Evolving API Pagination at Slack](https://slack.engineerin
 
 - A cursor value **MUST** be created by the API, and never requested for the consumer to create their own cursor or apply `Base64` encoding themselves.
 
-### Example
+### Cursor-based Paging Example
 
 | UserId | Username | Email                 |
 |--------|----------|-----------------------|
@@ -348,10 +346,10 @@ Additional concepts: [Evolving API Pagination at Slack](https://slack.engineerin
 | 4      | aaron    | email4@spscommerce.com|
 | 5      | jay      | email5@spscommerce.com|
 
-```
+```jsonc
 // Scenario 1: Initial Request (no cursor)
-GET https://api.spscommerce.com/v1/users?limit=2
-RESPONSE
+// REQUEST: GET https://api.spscommerce.com/v1/users?limit=2
+// RESPONSE
 {
     "results": [
         { "userId": 1, "username": "john", "email": "email1@spscommerce.com" },
@@ -371,8 +369,8 @@ RESPONSE
 }
 
 // Scenario 2: Subsequent Request with a provided cursor
-GET https://api.spscommerce.com/v1/users?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
-RESPONSE
+// REQUEST: GET https://api.spscommerce.com/v1/users?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
+// RESPONSE
 {
     "results": [
         { "userId": 3, "username": "travis", "email": "email3@spscommerce.com" },
@@ -401,22 +399,22 @@ To limit or narrow down the results of a collection endpoint you may provide fil
 - The resource identifier in a collection **SHOULD NOT** be used to filter collection results, resource identifier should be in the URI.
 - Filtering **SHOULD** only occur on endpoints that are collections using the schema described above.
 - Filtering attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`.
-    - Limit filter references to three levels of object hierarchy in accordance with `GET-based` HTTP Methods ([Request Response](request-response.md)).
+  - Limit filter references to three levels of object hierarchy in accordance with `GET-based` HTTP Methods ([Request Response](request-response.md)).
 - Filtering **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
 - Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md).
-    - Overly verbose filtering that contains dozens or hundreds of parameters **SHOULD** consider if their API design is appropriate.
-    - Overly verbose filtering that contains an undesirable number of parameters that cannot be redesigned **SHOULD** consider using a non-REST style `POST` endpoint as described under [Actions in URL Structure](url-structure.md).
-        - `POST` requests for non-REST style filtering **SHOULD** specify parameters at the root of the request body with the same names that would be used for query parameters normally.
-        - `POST` requests for non-REST style filtering **SHOULD** specify parameters with multiple values using JSON array format, rather than using the same property name twice.
-        - `POST` requests for non-REST style filtering **SHOULD** result in the same response payload expectations and schema for collections as normally expected (including pagination).
+  - Overly verbose filtering that contains dozens or hundreds of parameters **SHOULD** consider if their API design is appropriate.
+  - Overly verbose filtering that contains an undesirable number of parameters that cannot be redesigned **SHOULD** consider using a non-REST style `POST` endpoint as described under [Actions in URL Structure](url-structure.md).
+    - `POST` requests for non-REST style filtering **SHOULD** specify parameters at the root of the request body with the same names that would be used for query parameters normally.
+    - `POST` requests for non-REST style filtering **SHOULD** specify parameters with multiple values using JSON array format, rather than using the same property name twice.
+    - `POST` requests for non-REST style filtering **SHOULD** result in the same response payload expectations and schema for collections as normally expected (including pagination).
 
-        ```
-        // REQUEST
+        ```jsonc
         // example GET request translated to POST search endpoint below
-        GET /articles?title=My%20Book&title=Their%20Book&author.firstName=John&limit=25
-        POST /articles/search
-        User-Agent: api-standards-v1
-        Content-Type: application/json
+        // GET /articles?title=My%20Book&title=Their%20Book&author.firstName=John&limit=25
+        // POST /articles/search
+        // User-Agent: api-standards-v1
+        // Content-Type: application/json
+        // REQUEST
         {
             "author.firstName": "John",
             "title": [
@@ -437,8 +435,8 @@ To limit or narrow down the results of a collection endpoint you may provide fil
 
 - Filtering query parameters **MUST** be included as part of the pagination next/previous URLs, similar to how `limit` is included as an additional limiting query parameter.
 - Filtering **MUST** be limited to equality checks of JSON attributes represented in the response payload.
-    - Attributes not represented in the response payload **SHOULD NOT** be available for filtering.
-    - Attribute names **MUST** follow standard naming and serialization patterns as defined elsewhere for their keys (see [Serialization](serialization.md)).
+  - Attributes not represented in the response payload **SHOULD NOT** be available for filtering.
+  - Attribute names **MUST** follow standard naming and serialization patterns as defined elsewhere for their keys (see [Serialization](serialization.md)).
 - Filtering capability and support **MUST** be documented within your API spec to clearly indicate how a consumer can filter your resource. Given that filtering support can drastically vary from endpoint to endpoint, incredible detail and clarity must be provided within the documentation of your API spec.
 
 ```warning
@@ -457,14 +455,14 @@ Many collection endpoints require very simple filtering capability. It is desira
 - Simple filtering with multiple query parameters with different attribute keys **MUST** result in a match for all conditions using the logical "AND" operator (and not in an "OR").
 - Simple filtering **MAY** support specifying the same attribute as a parameter multiple times desiring to support a logical "OR" operation between values belonging to the same attribute (see Query Parameters in [URL Structure](url-structure.md)).
 - Simple filtering **MAY** support wildcard filtering using an asterisk (`*`), but **MUST** only be supported on `string` object types.
-    - Wildcard filter character **SHOULD** only appear once in a string value.
-    - Wildcard filters **SHOULD** only be applied as a prefix or suffix to a string value, and not in the middle of other characters in the string.
+  - Wildcard filter character **SHOULD** only appear once in a string value.
+  - Wildcard filters **SHOULD** only be applied as a prefix or suffix to a string value, and not in the middle of other characters in the string.
 - Simple filtering with provided values **MUST** be case-sensitive.
 - Simple filtering with an attribute with no value **MUST** be interpreted as `NULL` (nil) or an empty string. The filter should filter down to entities that either are empty strings or NULL values.
-    - Simple filtering with an attribute with no value that is a non-nullable Boolean **SHOULD** result in no filtering on the attribute (returning entities matching both true/false).
+  - Simple filtering with an attribute with no value that is a non-nullable Boolean **SHOULD** result in no filtering on the attribute (returning entities matching both true/false).
 - Simple filtering with values provided for a response payload that is a primitive array **MUST** filter the resource entities that contain the filtered value (i.e. it **MUST NOT** filter the child array specified in the attribute filter).
 
-```
+```note
 // CORRECT
 GET /articles?title=My%20Book                        // matching the exact title prefix of "My Book" only.
 GET /articles?title=My%20Book*                       // starting with the title prefix "My Book" matching "My Book Best", etc.
@@ -504,22 +502,22 @@ RSQL is based on FIQL and is considered a superset of it, making it and FIQL usa
 ```
 
 - Advanced filtering **MUST** specify the entirety of the expression as a value of the single dedicated `filter` query parameter unless using advanced filtering for a particular subset of your payload response.
-    - `filter` **MUST** only be specified once in the URL.
-    - `filter` **MUST** only contain the FIQL/RSQL syntax specified in these standards.
+  - `filter` **MUST** only be specified once in the URL.
+  - `filter` **MUST** only contain the FIQL/RSQL syntax specified in these standards.
 - Each query parameter value or any field value inside FIQL/RSQL expression **MUST** be URL encoded. FIQL/RSQL expression itself generally does not require encoding as there are no unsafe characters.
 - FIQL/RSQL expressions **MUST** use logical AND operators as `;` (semicolon) and OR operators as `,` (comma), regardless of newer RSQL language alternatives for the same operators, to preserve consistency between APIs.
 - Advanced filtering **MAY** be applied to particular query parameters to filter based on a subset of attributes in the format `attributeFilter` (where keyword `attribute` is your attribute name), commonly referred to as hybrid filtering (hybrid between simple and advanced).
-    - Using "simple" or "advanced" filtering without the hybrid approach **SHOULD** be the preferred choice. Hybrid filtering is not desirable but may be necessary based on the constraints of your implementation and requirements (including performance).
-        - Hybrid filtering is intended to support scenarios where API producers are unable to provide advanced filtering capability on all aspects of the payload response attributes and want to provide scope clarity in the attribute filter name.
-    - Hybrid filtering attribute values **MUST** be valid advanced filtering expressions (FIQL/RSQL).
-    - Hybrid filtering **MAY** be offered on multiple attributes, but **MUST** never exist if a root "filter" query parameter is available.
-    - Hybrid filtering with multiple attribute filters **MUST** logically "AND" the results of both filters together (unless the attribute name is repeated, in which case repeated attributes names are "OR" for the results as described in simple filtering).
-    - Hybrid filtering **MAY** be combined with additional simple filtering query parameters, provided they do not have a suffix of `Filter`.
+  - Using "simple" or "advanced" filtering without the hybrid approach **SHOULD** be the preferred choice. Hybrid filtering is not desirable but may be necessary based on the constraints of your implementation and requirements (including performance).
+    - Hybrid filtering is intended to support scenarios where API producers are unable to provide advanced filtering capability on all aspects of the payload response attributes and want to provide scope clarity in the attribute filter name.
+  - Hybrid filtering attribute values **MUST** be valid advanced filtering expressions (FIQL/RSQL).
+  - Hybrid filtering **MAY** be offered on multiple attributes, but **MUST** never exist if a root "filter" query parameter is available.
+  - Hybrid filtering with multiple attribute filters **MUST** logically "AND" the results of both filters together (unless the attribute name is repeated, in which case repeated attributes names are "OR" for the results as described in simple filtering).
+  - Hybrid filtering **MAY** be combined with additional simple filtering query parameters, provided they do not have a suffix of `Filter`.
 
-```
+```json
 // EXAMPLE OBJECT
-GET /articles
-RESPONSE
+// GET /articles
+// RESPONSE
 {
     "results": [
         {
@@ -540,7 +538,9 @@ RESPONSE
         "offset": 0
     }
 }
+```
 
+```note
 // CORRECT
 GET /articles?filter=reviewRating=gt=4                          // articles with a review rating greater than 4
 GET /articles?filter=title==Title;author.lastName==Doe          // articles with the title "title" and author last name "Doe"
@@ -574,6 +574,8 @@ Getting Started: [REST Query Language with RSQL](https://www.baeldung.com/rest-a
 
 It is not mandatory to support all operators listed in the table below as this document is about syntax and convention. Any API may support just a subset of given operators or provide additional operators if needed.
 
+<!-- markdownlint-disable MD033 -->
+
 | Filter | Operator | Standard | Example | Notes |
 | ------ | -------- | -------- | ------- | ----- |
 | Equals | `==` | FIQL | someKey==value<br />someKey==*value<br />someKey==value*<br />someKey==*value*<br />someKey==*va*ue*<br />someKey=="Should be quoted if a value contains whitespaces or any reserved characters" | Allowed to use wildcard symbol '*' at the beginning, at the end, in the middle, or in multiple places of a string to represent 'ends with', 'starts with', 'contains', or 'like' functions. An endpoint should provide documentation about wildcard usage and the default case. |
@@ -587,6 +589,8 @@ It is not mandatory to support all operators listed in the table below as this d
 | Is NULL | `=isnull=` | Custom | someKey=isnull=true | If API requires NULL check then this operator should be used. |
 | String Operators | =contains=<br />=containsic=<br />=startswith=<br />=startswithic=<br />=endswith=<br />=endswithic=<br />=like=<br />=notlike=<br />=likeic=<br />=notlikeic=<br /> | Custom | someKey=contains=VALUE<br />case sensitive check as the given function doesn't have 'ic' suffix, where 'ic' means "ignoring case" | If API requires special handling for strings it is allowed to provide a custom operator with or without the 'ic' suffix to support advanced string filtering. It is the responsibility of the implementor to maintain consistency between wildcards used with 'Equals' and 'Not Equals' operators and custom functions. |
 
+<!-- markdownlint-enable MD033 -->
+
 ```warning
 The dynamic nature of filters means that all fields cannot be listed in Open API specifications because there could be dozens for a single endpoint depending on the level of nesting in the response. Instead, Open API specification may contain generic information about the supported filtering approach, the list of allowed operators, examples, and other information that may be helpful for a user.
 ```
@@ -598,8 +602,8 @@ Sorting on collection endpoints should be done by specifying the attributes that
 - Sorting is not a requirement on all collection-based endpoints.
 - Sorting query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional.
 - Default sort order **SHOULD** be considered as `undefined` and non-deterministic from the API consumer's perspective when no sorting query parameters are provided.
-    - A default sort order **MUST** be applied internally for implementation purposes to provide consistently paged responses.
-    - A default sort order modification is not considered an API breaking change unless the behavior is documented as such.
+  - A default sort order **MUST** be applied internally for implementation purposes to provide consistently paged responses.
+  - A default sort order modification is not considered an API breaking change unless the behavior is documented as such.
 - Sorting **SHOULD** only occur on endpoints that are collections using the schema described above.
 - Sorting **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
 - Sorting query parameters **MUST** be included as part of the pagination next/previous URLs, similar to how `limit` is included as an additional query parameter.
@@ -609,7 +613,7 @@ Sorting on collection endpoints should be done by specifying the attributes that
 - Multiple attributes **MUST** be sorted on in a given request if provided by multiple `ordering` attributes, prioritized based on the order they are specified.
 - Sorting attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`.
 
-```
+```note
 // CORRECT
 GET /articles?ordering=title                                // order articles by title ASC
 GET /articles?ordering=-title                               // order articles by title DESC
