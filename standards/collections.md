@@ -156,10 +156,10 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 
 ### Guidelines
 
-- All collection-based endpoints **SHOULD** support offset-based over cursor-based pagination unless technology or performance makes cursor-based pagination more advantageous.
-- Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used. 
+- All collection-based endpoints **SHOULD** support cursor-based over offset-based pagination unless technology or performance makes offset-based pagination more advantageous.
+- Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
 
-```
+```jsonc
 // RESPONSE
 {
     "results": [                   
