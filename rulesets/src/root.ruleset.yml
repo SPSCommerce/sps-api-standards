@@ -9,4 +9,14 @@ rules:
   # operation ids are essential for changelogs and other evolutions over time
   operation-operationId: error
   operation-operationId-unique: error
+
+overrides:
+  # disable linting validation for all webhooks, since we are at the mercy of the webhook provider
+  # overrides do not inherit through "extends", so only directly using the SPS ruleset do these override apply
+  # https://meta.stoplight.io/docs/spectral/branches/develop/293426e270fac-overrides
+  - files:
+      - "**#/paths/**~1_webhooks~1**"
+    rules:
+      sps-request-support-json: "off"
+      sps-schema-names-pascal-case: "off"
   
