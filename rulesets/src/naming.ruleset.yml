@@ -6,6 +6,7 @@ rules:
     severity: error
     formats: [oas3]
     given: '$..properties..[?((@property=== "ref" || @property === "Ref") && @.$ref == null && @.allOf == null && @.oneOf == null)]'
+    resolved: false
     then:
       - field: "format"
         function: truthy
