@@ -5,7 +5,7 @@ rules:
     description: Property with the name 'ref' MUST be of type 'sps-ref' following URN-like reference formats.
     severity: error
     formats: [oas3]
-    given: '$..[?((@property=== "ref" || @property === "Ref") && @.$ref == null && @.allOf == null && @.oneOf == null)]'
+    given: '$..properties..[?((@property=== "ref" || @property === "Ref") && @.$ref == null && @.allOf == null && @.oneOf == null)]'
     then:
       - field: "format"
         function: truthy

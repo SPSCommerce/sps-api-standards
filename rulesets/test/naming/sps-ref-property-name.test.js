@@ -9,7 +9,7 @@ describe("sps-ref-property-name", () => {
         spectral = new SpectralTestHarness(ruleset);
     });
 
-    test("Ref property successful with proper format", async () => {
+    test("Ref property successful with proper format and example", async () => {
         const spec = `
         openapi: 3.0.1
         paths: {}
@@ -23,6 +23,9 @@ describe("sps-ref-property-name", () => {
                             format: sps-ref
                         value:
                             type: string
+                    example:
+                        ref: myrefvalue
+                        name: hello
         `;
     
         await spectral.validateSuccess(spec, ruleName);
