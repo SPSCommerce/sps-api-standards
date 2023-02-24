@@ -9,4 +9,4 @@ rules:
   # operation ids are essential for changelogs and other evolutions over time
   operation-operationId: error
   operation-operationId-unique: error
-  
+  oas3-valid-media-example: off # buggy with examples, problem in spectral: https://github.com/stoplightio/spectral/issues/2081
