@@ -22,5 +22,8 @@ overrides:
     rules:
       sps-request-support-json: "off"
       sps-schema-names-pascal-case: "off"
+      sps-paths-params-camel-case: "off"
+      sps-query-params-not-required: "off"
+      sps-no-x-headers: "off"
   
   

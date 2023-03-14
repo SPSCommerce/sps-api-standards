@@ -16,6 +16,7 @@ security:
 - MyBearer: []
 tags:
 - name: Users
+- name: Webhooks
 paths:
   /v1/users:
     get:
@@ -347,6 +348,49 @@ paths:
                 requestId: b6d9a290-9f20-465b-bcd3-4a5166eeb3d7
                 detail: Requested resource 'resource/23' not found.
                 instance: https://example.com/account/12345/resource/23
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                title: Internal Server Error
+                status: 500
+                requestId: b6d9a290-9f20-465b-bcd3-4a5166eeb3d7
+                detail: Request for resource failed unexpectedly.
+                instance: https://example.com/account/12345/resource/23
+                context:
+                - code: CONNECTION_TIMEOUT
+                  message: A downstream dependency connection timed out.
+
+  /v1/_webhooks/sendgrid/email-opened:
+    post:
+      tags:
+      - Webhooks
+      summary: Sendgrid Push Notification on Email Open
+      x-internal: true
+      description: Event payload with email and open details.
+      operationId: sendgrid-email-opened
+      parameters:
+        - name: username
+          in: query
+          required: true   # requring this would normal fail, but should pass because this is a _webhook exception
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "204":
+          description: Item was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         "500":
           description: Internal Server Error
           content:

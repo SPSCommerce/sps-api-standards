@@ -1,0 +1,32 @@
+rules:
+
+  sps-webhooks-internal:
+    description: "Webhooks MUST be marked as internal using 'x-internal: true'."
+    formats: [oas3]
+    severity: error
+    given: $.paths[?(/^.*\/_webhooks\/.*$/i.test(@property))].*
+    then:
+      field: x-internal
+      function: truthy
+
+  sps-webhooks-post:
+    description: Webhooks SHOULD be POST requests.
+    formats: [oas3]
+    severity: warn
+    given: $.paths[?(/^.*\/_webhooks\/.*$/i.test(@property))].*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^post$"
+
+  sps-webhooks-path:
+    description: Webhook endpoints should be under the the path '/_webhooks/' to be identified as internal usage only.
+    formats: [oas3]
+    severity: error
+    given: $.paths[?(/^.*webhook.*$/i.test(@property))]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^.*\/_webhooks\/.*$"
+    
+      

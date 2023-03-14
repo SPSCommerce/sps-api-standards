@@ -79,8 +79,8 @@ rules:
   sps-paths-kebab-case:
     message: "A resource containing multiple words MUST be separated using kebab-case (lower case and separated with hyphens)."
     severity: error
-    given: $.paths.*~
-    then:
+    given: $.paths[?(/^((?!_webhooks).)*$/i.test(@property))]~
+    then: 
       function: pattern
       functionOptions:
         match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"

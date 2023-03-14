@@ -7,6 +7,7 @@ extends:
   - request-response.ruleset.yml
   - serialization.ruleset.yml
   - url-structure.ruleset.yml 
+  - webhooks.ruleset.yml
 
 rules:
   #  not keeping this, just off for testing in this repo
