@@ -46,7 +46,7 @@ Content-Type: application/problem+json                          // Should return
                                                                 // Request ID should be carried over from the X-Request-ID header of the request, otherwise, it's automatically generated GUID value.
     "context": [                                                // OPTIONAL (array): List of objects providing additional context and detail on sub-reasons for the validation issue or error.
          {
-            "code": "INPUT_NOT_NULL",                           // OPTIONAL (string): Short, machine-readable, name of the validation error that occurred.
+            "code": "INPUT_NULL",                           // OPTIONAL (string): Short, machine-readable, name of the validation error that occurred.
                                                                 // To infer that these are machine codes, usage MUST be CAPITAL_SNAKE_CASE.
             "message": "Attribute 'foo2' must not be null.",  // REQUIRED (string): Human-readable details or message specific error about the request failure.
              ....                                               // EXTENSIONS: (any): The context list object can be extended with additional properties as needed for your application.
@@ -133,6 +133,7 @@ Content-Type: application/problem+json
     "requestId": "b6d9a290-9f20-465b-bcd3-4a5166eeb3d7",
     "context": [
         {
+            // INDICATES A FIELD THAT DOES NOT MATCH THE DEFINED FORMAT
             "code": "INPUT_INVALID",                                   
             "message": "Attribute 'email' must be a valid email address.",
             "field": "email",                                              
@@ -140,30 +141,33 @@ Content-Type: application/problem+json
             "value": "testuser"                                            
         },
         {
-            "code": "INPUT_NOT_NULL",
+            // INDICATES A MISSING FIELD
+            "code": "INPUT_NULL",
             "message": "Attribute 'reason' must not be null.",
             "field": "reason",
             "source": "body"
         },
         {
-            "code": "INPUT_NOT_BLANK",
+            // INDICATES EMPTY STRING VALUE
+            "code": "INPUT_BLANK",
             "message": "Attribute 'description' must not be blank.",
             "field": "description",
             "source": "body"
         },
         {
-            "code": "INPUT_NOT_BLANK",
+            "code": "INPUT_BLANK",
             "message": "Attribute 'pages[0].description' must not be blank.",
             "field": "pages[0].description",
             "source": "body"
         },
         {
-            "code": "INPUT_NOT_EMPTY",
+            // INDICATES EMPTY ARRAY
+            "code": "INPUT_EMPTY",
             "message": "Attribute 'tags' must not be empty.",
             "field": "tags",
             "source": "body"
         },
-       {
+        {
             "code": "INPUT_MIN_VALUE",
             "message": "Attribute 'limit' must be greater than or equal to 1.",
             "field": "limit",
@@ -189,7 +193,7 @@ Content-Type: application/problem+json
             "message": "Attribute 'If-Match' does not match the expected format.",
             "field": "If-Match",
             "source": "header",
-            "value": "empty"
+            "value": "1234"
         }
     ]
 }
