@@ -10,6 +10,9 @@ rules:
   operation-operationId: error
   operation-operationId-unique: error
 
+  # buggy with examples, problem in spectral: https://github.com/stoplightio/spectral/issues/2081
+  oas3-valid-media-example: off 
+
 overrides:
   # disable linting validation for all webhooks, since we are at the mercy of the webhook provider
   # overrides do not inherit through "extends", so only directly using the SPS ruleset do these override apply
@@ -19,4 +22,5 @@ overrides:
     rules:
       sps-request-support-json: "off"
       sps-schema-names-pascal-case: "off"
+  
   
