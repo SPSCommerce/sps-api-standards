@@ -17,7 +17,7 @@ Webhook consumption is necessary to integrate with other first-party and third-p
 
 Webhook consuming endpoints:
 - **MAY NOT** follow API Standards or best practices when it does not pose inherit security risks or affect the rest of the API design consistency and experience.
-- **MUST** be marked as **internal** usage only in the design specification (i.e. in Open API Spec, this would translate to `x-internal: true`). <a name="sps-webhooks-internal" href="#sps-webhooks-internal"><i class="fa fa-check-circle" title="#sps-webhooks-internal"></i></a>
+- **MUST** be marked as **internal** usage only in the design specification. Internal usage implies that the endpoint should only be used by the API Producer themselves, including the configuration of that endpoint by them against a third party system if needed. Internal usage does not imply the endpoint is not publicly addressable (i.e. in Open API Spec, this would translate to `x-internal: true`). <a name="sps-webhooks-internal" href="#sps-webhooks-internal"><i class="fa fa-check-circle" title="#sps-webhooks-internal"></i></a>
 - **SHOULD** be `POST` endpoints unless specifically needing an alternative by the webhook producer. <a name="sps-webhooks-post" href="#sps-webhooks-post"><i class="fa fa-check-circle" title="#sps-webhooks-post"></i></a>
 - **MUST** be sent over `HTTPS` without exception.
 - **MUST** be secured with a unique secret key or token that prevents general requests to the webhook endpoint not from the webhook producer.
