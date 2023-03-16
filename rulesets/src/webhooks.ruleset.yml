@@ -27,6 +27,6 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^.*\/_webhooks\/.*$"
+        match: ^.*\/_webhooks\/.*$
     
       
