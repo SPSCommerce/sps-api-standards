@@ -13,17 +13,25 @@ rules:
   # buggy with examples, problem in spectral: https://github.com/stoplightio/spectral/issues/2081
   oas3-valid-media-example: off 
 
+# NOTE: this is copied to ".spectral.yml" as well for testing locally (this is the version that is deployed)
 overrides:
   # disable linting validation for all webhooks, since we are at the mercy of the webhook provider
   # overrides do not inherit through "extends", so only directly using the SPS ruleset do these override apply
   # https://meta.stoplight.io/docs/spectral/branches/develop/293426e270fac-overrides
   - files:
-      - "**#/paths/**~1_webhooks~1**"
+      # NOTE: after paths, you cannot use "**" wildcard as a prefix... :(
+      # But everything after is automatically a wildcard (just not before)
+      - "**#/paths/~1_webhooks"
+      - "**#/paths/~1v1~1_webhooks"
+      - "**#/paths/~1v2~1_webhooks"
+      - "**#/paths/~1v3~1_webhooks"
     rules:
-      sps-request-support-json: "off"
-      sps-schema-names-pascal-case: "off"
-      sps-paths-params-camel-case: "off"
-      sps-query-params-not-required: "off"
-      sps-no-x-headers: "off"
+      sps-request-support-json: off
+      sps-schema-names-pascal-case: off
+      sps-paths-params-camel-case: off
+      sps-query-params-not-required: off
+      sps-headers-hyphenated-pascal-case: off
+      sps-no-x-headers: off
+      sps-paths-kebab-case: off
   
   
