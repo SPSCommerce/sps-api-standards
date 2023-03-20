@@ -2,9 +2,10 @@
 
 ## Overview
 
-Webhooks are automated messages sent from apps when something happens, typically used to integrate two disconnected systems together, such as with a third-party provider. They have a message—or payload—and are sent to a unique URL configured by the customer or user. Webhooks are an advantage in an API as they are almost always faster than polling for an updated status or parsing to determine which events or changes are new within a timeline. 
+A webhook is an HTTP-based callback function that allows lightweight, usually event-driven communication between two APIs. Webhooks are used by a wide variety of web apps to receive small amounts of data from other apps when specific events occur. This is especially useful for integration with third-party APIs. They have a message—or payload—and are sent to a unique URL configured by the consumer. Webhooks are an advantage in an API as they are almost always faster than polling for an updated status or parsing to determine which events or changes are new within a timeline. 
 
-- Services **SHOULD** implement push notifications, HTTP callbacks, and other event notifications via webhooks.
+
+- Services **MAY** implement push notifications, HTTP callbacks, and other event notifications via webhooks.
 - Services **MAY** implement HTTP callback endpoints as a webhook consumer from other systems and/or APIs.
 
 ```note
@@ -13,11 +14,11 @@ Push notification via HTTP Callbacks, often called Web Hooks, to publicly-addres
 
 ## Webhook Consumer
 
-Webhook consumption is necessary to integrate with other first-party and third-party systems. Often building specific API endpoints is necessary to receive webhook-specific payloads, headers and authorization in which the API producer cannot control or change. These webhook specific integration endpoints are usually not RESTful resources and may be required to deviate from expected design patterns within this API Style Guide. As a result webhook consumers should recognize this and organize webhook consuming endpoints accordingly.
+Webhook consumption often requires building API endpoints to receive webhook-specific request schemas, headers and authorization that is different from current API style and standards as webhook requests are owned by its producer and not the consumer. As a result webhook consumers should recognize this and organize webhook consuming endpoints accordingly.
 
 Webhook consuming endpoints:
 - **MAY NOT** follow API Standards or best practices when it does not pose inherit security risks or affect the rest of the API design consistency and experience.
-- **MUST** be marked as **internal** usage only in the design specification. Internal usage implies that the endpoint should only be used by the API Producer themselves, including the configuration of that endpoint by them against a third party system if needed. Internal usage does not imply the endpoint is not publicly addressable (i.e. in Open API Spec, this would translate to `x-internal: true`). <a name="sps-webhooks-internal" href="#sps-webhooks-internal"><i class="fa fa-check-circle" title="#sps-webhooks-internal"></i></a>
+- **MUST** be marked as **internal** usage only in the design specification. Internal usage implies that the endpoint should only be used by the API owner themselves, including the configuration of that endpoint by them against a third party system if needed. Internal usage does not imply the endpoint is not publicly addressable (i.e. in Open API Spec, this would translate to `x-internal: true`). <a name="sps-webhooks-internal" href="#sps-webhooks-internal"><i class="fa fa-check-circle" title="#sps-webhooks-internal"></i></a>
 - **SHOULD** be `POST` endpoints unless specifically needing an alternative by the webhook producer. <a name="sps-webhooks-post" href="#sps-webhooks-post"><i class="fa fa-check-circle" title="#sps-webhooks-post"></i></a>
 - **MUST** be sent over `HTTPS` without exception.
 - **MUST** be secured with a unique secret key or token that prevents general requests to the webhook endpoint not from the webhook producer.
@@ -31,8 +32,11 @@ Example:
 POST /_webhooks/sendgrid/email-sent             # variations of different events for sendgrid email SaaS offering
 POST /_webhooks/sendgrid/email-opened
 POST /_webhooks/sendgrid/email-clicked
+POST /_webhooks/sendgrid                        # some webhoosk producers may want a single endpoint to send all events too
+                                                # the request payload typically would indicate the event type
 POST /_webhooks/email-event                     # a more generic event that might be used in more confiurable webhook producers
                                                 # where a single hook and event structure makes sense (same payload schema)
+                                    
 // INCORRECT
 GET /_webhooks/sendgrid/email-sent              # should be a POST request      
 POST /_webhooks/                                # requires at least one identifier after /_webhooks/
