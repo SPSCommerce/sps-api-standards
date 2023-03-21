@@ -16,6 +16,7 @@ security:
 - MyBearer: []
 tags:
 - name: Users
+- name: Webhooks
 paths:
   /v1/users:
     get:
@@ -362,7 +363,26 @@ paths:
                 context:
                 - code: CONNECTION_TIMEOUT
                   message: A downstream dependency connection timed out.
-components:
+
+  /_webhooks/sendgrid/email-opened:
+    post:
+      tags:
+      - Webhooks
+      summary: Sendgrid Push Notification on Email Open
+      x-internal: true
+      description: Event payload with email and open details.
+      operationId: sendgrid-email-opened
+      parameters:
+        - name: username
+          in: query
+          required: true   # requring this would normal fail, but should pass because this is a _webhook exception
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Item was successfully updated.
+
+components:   
   schemas:
     PagingOffset:
       type: object

@@ -21,6 +21,18 @@ describe("sps-paths-kebab-case", () => {
         await spectral.validateSuccess(spec, ruleName);
     });
 
+    test("succeeds with special _webhooks case", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths:
+                /v1/_webhooks/fancy:
+                    get:
+                        summary: hello
+        `;
+       
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
     test("fails with camel case", async () => {
         const spec = `
             openapi: 3.1.0

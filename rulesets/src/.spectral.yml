@@ -7,7 +7,23 @@ extends:
   - request-response.ruleset.yml
   - serialization.ruleset.yml
   - url-structure.ruleset.yml 
+  - webhooks.ruleset.yml
 
 rules:
   #  not keeping this, just off for testing in this repo
   oas3-unused-component: off
+
+# Note: Duplicated here for testing from the "root.ruleset.yml" since overrides do not inherit
+overrides:
+  - files:
+      - "**#/paths/~1_webhooks"
+    rules:
+      sps-request-support-json: off
+      sps-schema-names-pascal-case: off
+      sps-paths-params-camel-case: off
+      sps-query-params-not-required: off
+      sps-headers-hyphenated-pascal-case: off
+      sps-no-x-headers: off
+      sps-paths-kebab-case: off
+      
+      
