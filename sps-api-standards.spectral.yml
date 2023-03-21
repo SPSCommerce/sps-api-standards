@@ -138,7 +138,8 @@ rules:
   # operation ids are essential for changelogs and other evolutions over time
   operation-operationId: error
   operation-operationId-unique: error
-  oas3-valid-media-example: off # buggy with examples, problem in spectral: https://github.com/stoplightio/spectral/issues/2081
+  # buggy with examples, problem in spectral: https://github.com/stoplightio/spectral/issues/2081
+  oas3-valid-media-example: off
   sps-request-support-json:
     description: Every request MUST support `application/json` media type
     formats: [oas3]
@@ -270,7 +271,7 @@ rules:
   sps-paths-kebab-case:
     message: "A resource containing multiple words MUST be separated using kebab-case (lower case and separated with hyphens)."
     severity: error
-    given: $.paths.*~
+    given: $.paths[?(/^((?!_webhooks).)*$/i.test(@property))]~
     then:
       function: pattern
       functionOptions:
@@ -372,6 +373,52 @@ rules:
       function: pattern
       functionOptions:
         notMatch: \?
+  sps-webhooks-internal:
+    description: "Webhooks MUST be marked as internal using 'x-internal: true'."
+    formats: [oas3]
+    severity: error
+    given: $.paths[?(/^.*\/_webhooks\/.*$/i.test(@property))].*
+    then:
+      field: x-internal
+      function: truthy
+  sps-webhooks-post:
+    description: Webhooks SHOULD be POST requests.
+    formats: [oas3]
+    severity: warn
+    given: $.paths[?(/^.*\/_webhooks\/.*$/i.test(@property))].*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^post$"
+  sps-webhooks-path:
+    description: Webhook endpoints should be under the the path '/_webhooks/' to be identified as internal usage only.
+    formats: [oas3]
+    severity: error
+    given: $.paths[?(/^.*webhook.*$/i.test(@property))]~
+    then:
+      function: pattern
+      functionOptions:
+        match: ^.*\/_webhooks\/.*$
 documentationUrl: https://spscommerce.github.io/sps-api-standards
 extends:
   - spectral:oas
+# NOTE: this is copied to ".spectral.yml" as well for testing locally (this is the version that is deployed)
+overrides:
+  # disable linting validation for all webhooks, since we are at the mercy of the webhook provider
+  # overrides do not inherit through "extends", so only directly using the SPS ruleset do these override apply
+  # https://meta.stoplight.io/docs/spectral/branches/develop/293426e270fac-overrides
+  - files:
+      # NOTE: after paths, you cannot use "**" wildcard as a prefix... :(
+      # But everything after is automatically a wildcard (just not before)
+      - "**#/paths/~1_webhooks"
+      - "**#/paths/~1v1~1_webhooks"
+      - "**#/paths/~1v2~1_webhooks"
+      - "**#/paths/~1v3~1_webhooks"
+    rules:
+      sps-request-support-json: off
+      sps-schema-names-pascal-case: off
+      sps-paths-params-camel-case: off
+      sps-query-params-not-required: off
+      sps-headers-hyphenated-pascal-case: off
+      sps-no-x-headers: off
+      sps-paths-kebab-case: off
