@@ -122,14 +122,23 @@ rules:
       functionOptions:
         notMatch: //
 
-  sps-paths-limit-sub-resources:
-    message: The hierarchy of nested resources SHOULD NOT exceed more than 3 resources
+  sps-paths-limit-path-parameters:
+    message: The URL path should not contain more than 3 dynamic path parameters.
     severity: warn
     given: $.paths.*~
     then:
       function: pattern
       functionOptions:
-        match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
+        notMatch: ^(.*{{1}.*){4,}
+  
+  sps-paths-limit-sub-resources:
+    message: The hierarchy of nested resources SHOULD NOT contain more than 8 resource names in the path.
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: ^(.*\/{1}.*){9,}
 
   sps-paths-with-http-methods:
     message: "A resource SHOULD NOT contain HTTP methods."
