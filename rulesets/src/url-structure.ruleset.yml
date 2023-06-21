@@ -10,14 +10,14 @@ rules:
         max: 100
 
   sps-hosts-https-only:
-    message: "Servers MUST be https and no other protocol is allowed."
+    message: "Servers MUST be https and no other protocol is allowed unless using localhost."
     formats: [oas3]
     severity: error
     given: $.servers..url
     then:
       function: pattern
       functionOptions:
-        match: "/^https:/"
+        match: ^(https:|http://localhost)
 
   sps-hosts-lowercase:
     message: "Server URL SHOULD BE lowercase."
@@ -37,7 +37,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: api.spscommerce.com|api.sps-internal.com
+        match: api.spscommerce.com|api.sps-internal.com|localhost
   
   sps-path-no-environment:
     message: "API paths MUST NOT indicate environment names."
@@ -49,14 +49,14 @@ rules:
         notMatch: /prod/|/preprod/|/dev/|/test/|/integration/|/stage/
 
   sps-hosts-no-port:
-    message: "Port MUST NOT be specified or required to use the API."
+    message: "Port MUST NOT be specified or required to use the API, except for 'localhost' testing in a spec."
     formats: [oas3]
     severity: error
     given: $.servers..url
     then:
       function: pattern
       functionOptions:
-        notMatch: (https?://.*):(\d*)\/?(.*)  
+        notMatch: (?!https?://localhost)(https?://.*):(\d*)\/?(.*) 
 
   sps-paths-expose-technology:
     message: "A resource MUST NOT leak or expose format or technology-specific information at any point in the path."
@@ -122,14 +122,23 @@ rules:
       functionOptions:
         notMatch: //
 
-  sps-paths-limit-sub-resources:
-    message: The hierarchy of nested resources SHOULD NOT exceed more than 3 resources
+  sps-paths-limit-path-parameters:
+    message: The URL path should not contain more than 3 dynamic path parameters.
     severity: warn
     given: $.paths.*~
     then:
       function: pattern
       functionOptions:
-        match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
+        notMatch: ^(.*{{1}.*){4,}
+  
+  sps-paths-limit-sub-resources:
+    message: The hierarchy of nested resources SHOULD NOT contain more than 8 resource names in the path.
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: ^(.*\/{1}.*){9,}
 
   sps-paths-with-http-methods:
     message: "A resource SHOULD NOT contain HTTP methods."

@@ -8,6 +8,8 @@ externalDocs:
   description: <--External Documentation-->
   url: https://url.here
 servers:
+- url: http://localhost:5000
+  description: local
 - url: https://integration.api.spscommerce.com
   description: integration
 - url: https://api.spscommerce.com
