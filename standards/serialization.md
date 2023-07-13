@@ -244,17 +244,17 @@ If there is an industry standard that requires us to do otherwise, enums **MAY**
 ```
 // INCORRECT
 {
-    createdDate: "May 16 2021 14:12:07",    // date format incorrect, name of the field indicates Date but value has DateTime
-    createdDateTime: "May 16 2021",         // specified value does not contain time portion
-    created: "2021-05-16T14:12:07"          // name of the field does not indicate that it is DateTime field
-    localDateTime: "2021-05-16T14:12:07"    // while valid ISO 8601 format for local time zone, it is not appropriate for these API standards.
+    createdDate: "May 16 2021 14:12:07",        // date format incorrect, name of the field indicates Date but value has DateTime
+    createdDateTime: "May 16 2021",             // specified value does not contain time portion
+    created: "2021-05-16T14:12:07"              // name of the field does not indicate that it is DateTime field
+    localDateTime: "2021-05-16T14:12:07",        // while valid ISO 8601 format for local time zone, it is not appropriate for these API standards.
+    zoneDateTime: "2021-05-16T14:12:07−05:00",  // should use UTC time zone specified by Z at the end of the string
 }
  
 // CORRECT
 {
     preciseDateTime: "2021-05-16T14:12:07.123Z",     // standard date time with sub-second precision
     createdDateTime: "2021-05-16T14:12:07Z",         // standard date time with second precision
-    timezoneDateTime: "2021-05-16T14:12:07−05:00",   // accurate with a timezone offset, though UTC prefered
 }
 ```
 
