@@ -236,7 +236,7 @@ If there is an industry standard that requires us to do otherwise, enums **MAY**
 [JSON](https://json.org) itself **does not** specify how dates should be represented, but most organizations use the date specification described in JavaScript.
 
 - All dates posted in requests and returned in response **MUST** conform to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard (format `YYYY-MM-DDTHH:mm:ss.sssZ`).
-- All dates **MUST** include the correct time zone.
+- All dates **MUST** include the time zone, and **SHOULD** be represented in UTC time zone.
 - All date fields **SHOULD** have the level of specificity and accuracy in their name:
     - `xxxDateTime` for fields with accuracy to time level
     - `xxxDate` for fields with accuracy to date level
@@ -244,14 +244,17 @@ If there is an industry standard that requires us to do otherwise, enums **MAY**
 ```
 // INCORRECT
 {
-    createdDate: "May 16 2021 14:12:07", // date format incorrect, name of the field indicates Date but value has DateTime
-    createdDateTime: "May 16 2021", // specified value does not contain time portion
-    created: "2021-05-16T14:12:07" // name of the field does not indicate that it is DateTime field
+    createdDate: "May 16 2021 14:12:07",    // date format incorrect, name of the field indicates Date but value has DateTime
+    createdDateTime: "May 16 2021",         // specified value does not contain time portion
+    created: "2021-05-16T14:12:07"          // name of the field does not indicate that it is DateTime field
+    localDateTime: "2021-05-16T14:12:07"    // while valid ISO 8601 format for local time zone, it is not appropriate for these API standards.
 }
  
 // CORRECT
 {
-    createdDateTime: "2021-05-16T14:12:07−05:00"
+    preciseDateTime: "2021-05-16T14:12:07.123Z",     // standard date time with sub-second precision
+    createdDateTime: "2021-05-16T14:12:07Z",         // standard date time with second precision
+    timezoneDateTime: "2021-05-16T14:12:07−05:00",   // accurate with a timezone offset, though UTC prefered
 }
 ```
 
