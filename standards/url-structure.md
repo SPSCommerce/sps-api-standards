@@ -184,30 +184,20 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 
 ### Shortcuts
 
-It is often not only acceptable but encouraged to add additional shortcuts to your API if portions of the path become superfluous or with the usage of unnecessary IDs based on your implementation. 
+It can be necessary to add additional shortcuts to your API if portions of the path become superfluous or contain the usage of unnecessary IDs based on your implementation. 
 
-- Nested collection resources with globally unique identifiers in their context **MAY NOT** require the specification of all parent unique identifiers in the resource path.
+- Nested collection resources (and root resources) **MAY** apply inherit filters of the same object accessible at other convenient nested paths, but **SHOULD NOT** shortcut all resources as this is an indication that the resource may not be organized correctly in the first place.  
 
 ```
-/articles/1/comments/2/ratings/5    // if the rating identifier is globally unique for all articles and comments, 
-                                    // then passing the article identifier and comment identifier is not only annoying for consumers of the API,
-                                    // but does also require validation of those identifiers within the context on the server.
+// Example 1:       Comments are accessible and filtered under articles nested path,
+//                  but also accessible across all articles (inherit authorization may 
+//                  filter comments to those created by the requestor by default).
+/articles/1/comments     // Path may work for both retrieving as well as creating new comments for specific articles.
+/comments                // Access all comments for all articles.        
  
-/articles/comments/ratings/5        // shortcutting the superfluous identifiers when possible is acceptable.
-```
-
-- Nested collection resources **SHOULD** apply inherit filters of the same object accessible at other convenient nested paths. 
-
-```
-// Example 1 - Comments are accessible and filtered under articles nested path,
-// but also accessible across all articles (inherit authorization may filter comments to those created by the requestor by default).
-/articles/1/comments            // Path may work for both retrieving as well as creating new comments for specific articles.
-/comments                      
- 
-// Example 2 - Authors are accessible and filtered under all comments for the article.
-// Authors are also accessible and searchable at the root across all articles.
+// Example 2:       Authors are accessible and filtered under all comments for the article.
 /articles/1/comments/authors    // Path likely only works for retrieving authors, creation of authors happens only under the root /authors endpoint.
-/authors
+/authors                        // Authors are also accessible and searchable at the root across all articles.
 ```
 
 ### Static Collections
