@@ -189,15 +189,13 @@ It can be necessary to add additional shortcuts to your API if portions of the p
 - Nested collection resources (and root resources) **MAY** apply inherit filters of the same object accessible at other convenient nested paths, but **SHOULD NOT** shortcut all resources as this is an indication that the resource may not be organized correctly in the first place.  
 
 ```
-// Example 1:       Comments are accessible and filtered under articles nested path,
-//                  but also accessible across all articles (inherit authorization may 
-//                  filter comments to those created by the requestor by default).
+// CORRECT
+// Comments are accessible and filtered under articles nested path,
+// but also accessible across all articles (inherit authorization may 
+// filter comments to those created by the requestor by default).
+
 /articles/1/comments     // Path may work for both retrieving as well as creating new comments for specific articles.
 /comments                // Access all comments for all articles.        
- 
-// Example 2:       Authors are accessible and filtered under all comments for the article.
-/articles/1/comments/authors    // Path likely only works for retrieving authors, creation of authors happens only under the root /authors endpoint.
-/authors                        // Authors are also accessible and searchable at the root across all articles.
 ```
 
 ### Static Collections
