@@ -265,7 +265,7 @@ Query parameters specified on a REST API resource endpoint generally represent a
 
 ```
 // INCORRECT
-/articles?access_token=''
+/articles?access_token=123
 /articles?user=bob
 ```
 
