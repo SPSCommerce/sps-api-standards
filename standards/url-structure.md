@@ -254,13 +254,19 @@ Query parameters specified on a REST API resource endpoint generally represent a
 - Query parameters **MUST** be optional. If necessary then they default to sensible choices that balance consumer expectations and API performance. <a name="sps-query-params-not-required" href="#sps-query-params-not-required"><i class="fa fa-check-circle" title="#sps-query-params-not-required"></i></a>
 - Query parameters that have defaulted values across many resource endpoints **SHOULD** keep defaults consistent across the API as long as there are no implications on performance in doing so. Where deviation is necessary, it should result in specific annotations to mention this in the Open API documentation. Consider inverting a query parameter name (i.e. "published" vs "unpublished") if different defaults are required on different endpoints in order to be consistent with the defaulted values.
 - Additional query parameters not used by the API **MUST** be disregarded without error to make compatibility and transitions simpler and adhere to standards of tolerance.
-- Personally identifiable information and other sensitive data **SHOULD NOT** be present in the Query Parameters as they can be easily inadvertently exposed. This data should be transmitted via HTTP Request Body. <a name="sps-query-params-no-api-keys" href="#sps-query-params-no-api-keys"><i class="fa fa-check-circle" title="#sps-query-params-no-api-keys"></i></a>
+- Personally identifiable information and other sensitive data such as Auth Tokens **SHOULD NOT** be present in the Query Parameters as they can be easily inadvertently exposed. This data should be transmitted via HTTP Request Body. <a name="sps-query-params-no-api-keys" href="#sps-query-params-no-api-keys"><i class="fa fa-check-circle" title="#sps-query-params-no-api-keys"></i></a>
 
 ```
 // CORRECT
 /articles?name=blue
 /articles?name=blue&name=red&name=green
 /articles?myName=blue&thisDoesNotMatter=true
+```
+
+```
+// INCORRECT
+/articles?access_token=''
+/articles?user=bob
 ```
 
 ## Fragments
