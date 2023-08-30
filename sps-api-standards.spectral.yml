@@ -19,6 +19,85 @@ rules:
         values:
           - application/problem+xml
           - application/problem+json
+  # domain references (URN-like values)
+  sps-ref-property-name:
+    description: Property with the name 'ref' MUST be of type 'sps-ref' following URN-like reference formats.
+    severity: error
+    formats: [oas3]
+    given: '$..properties..[?((@property=== "ref" || @property === "Ref") && @.$ref == null && @.allOf == null && @.oneOf == null)]'
+    resolved: false
+    then:
+      - field: "format"
+        function: truthy
+      - field: "format"
+        function: pattern
+        functionOptions:
+          match: 'sps-ref'
+  sps-ref-schema:
+    description: Properties following 'sps-ref' format MUST use the standardized schema - maxLength (255), minLength(7), pattern (includes 'sps'), type (string).
+    message: '{{property}} is not provided or not following required schema values.'
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property=== "format" && @ == "sps-ref")]^'
+    then:
+      - function: schema
+        functionOptions:
+          schema:
+            type: object
+            required:
+              - maxLength
+              - minLength
+              - type
+              - pattern
+            properties:
+              maxLength:
+                type: integer
+                minimum: 255
+                maximum: 255
+              minLength:
+                type: integer
+                minimum: 7
+                maximum: 7
+              type:
+                type: string
+              pattern:
+                type: string
+      - field: pattern
+        function: pattern
+        functionOptions:
+          match: 'sps'
+      - field: type
+        function: pattern
+        functionOptions:
+          match: '^string$'
+  sps-ref-in-url:
+    description: Parameters for sps-ref formatted URN-like references SHOULD NOT be used in query or path parameters.
+    severity: warn
+    formats: [oas3]
+    given: '$.paths.*.*.parameters[?((@.in=="query" || @.in=="path") && (@.name == "ref" || @.name == "Ref"))]'
+    then:
+      field: name
+      function: falsy
+  # fingerprint property usage and naming
+  sps-fingerprint-naming:
+    description: Rather than property names refering to the implementation for 'hash' or 'hashkey', you MUST use the property name 'fingerprint'.
+    message: '{{property}} is not using property name fingerprint.'
+    severity: error
+    formats: [oas3]
+    given: '$.components.schemas..properties.*~'
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '^hashkey|hashKey|hash$'
+  sps-fingerprint-type:
+    description: Fingerprint values MUST use a data type of `string`.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "fingerprint")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: '^string$'
   sps-request-get-no-body:
     description: A `GET` request MUST NOT accept a request body
     severity: error
@@ -59,6 +138,8 @@ rules:
   # operation ids are essential for changelogs and other evolutions over time
   operation-operationId: error
   operation-operationId-unique: error
+  # buggy with examples, problem in spectral: https://github.com/stoplightio/spectral/issues/2081
+  oas3-valid-media-example: off
   sps-request-support-json:
     description: Every request MUST support `application/json` media type
     formats: [oas3]
@@ -126,16 +207,16 @@ rules:
     then:
       function: length
       functionOptions:
-        max: 75
+        max: 100
   sps-hosts-https-only:
-    message: "Servers MUST be https and no other protocol is allowed."
+    message: "Servers MUST be https and no other protocol is allowed unless using localhost."
     formats: [oas3]
     severity: error
     given: $.servers..url
     then:
       function: pattern
       functionOptions:
-        match: "/^https:/"
+        match: ^(https:|http://localhost)
   sps-hosts-lowercase:
     message: "Server URL SHOULD BE lowercase."
     formats: [oas3]
@@ -153,7 +234,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: api.spscommerce.com|api.sps-internal.com
+        match: api.spscommerce.com|api.sps-internal.com|localhost
   sps-path-no-environment:
     message: "API paths MUST NOT indicate environment names."
     severity: error
@@ -163,14 +244,14 @@ rules:
       functionOptions:
         notMatch: /prod/|/preprod/|/dev/|/test/|/integration/|/stage/
   sps-hosts-no-port:
-    message: "Port MUST NOT be specified or required to use the API."
+    message: "Port MUST NOT be specified or required to use the API, except for 'localhost' testing in a spec."
     formats: [oas3]
     severity: error
     given: $.servers..url
     then:
       function: pattern
       functionOptions:
-        notMatch: (https?://.*):(\d*)\/?(.*)
+        notMatch: (?!https?://localhost)(https?://.*):(\d*)\/?(.*)
   sps-paths-expose-technology:
     message: "A resource MUST NOT leak or expose format or technology-specific information at any point in the path."
     severity: error
@@ -190,7 +271,7 @@ rules:
   sps-paths-kebab-case:
     message: "A resource containing multiple words MUST be separated using kebab-case (lower case and separated with hyphens)."
     severity: error
-    given: $.paths.*~
+    given: $.paths[?(/^((?!_webhooks).)*$/i.test(@property))]~
     then:
       function: pattern
       functionOptions:
@@ -228,14 +309,22 @@ rules:
       function: pattern
       functionOptions:
         notMatch: //
-  sps-paths-limit-sub-resources:
-    message: The hierarchy of nested resources SHOULD NOT exceed more than 3 resources
+  sps-paths-limit-path-parameters:
+    message: The URL path should not contain more than 3 dynamic path parameters.
     severity: warn
     given: $.paths.*~
     then:
       function: pattern
       functionOptions:
-        match: ^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,3}\/?$
+        notMatch: ^(.*{{1}.*){4,}
+  sps-paths-limit-sub-resources:
+    message: The hierarchy of nested resources SHOULD NOT contain more than 8 resource names in the path.
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: ^(.*\/{1}.*){9,}
   sps-paths-with-http-methods:
     message: "A resource SHOULD NOT contain HTTP methods."
     severity: error
@@ -292,6 +381,52 @@ rules:
       function: pattern
       functionOptions:
         notMatch: \?
+  sps-webhooks-internal:
+    description: "Webhooks MUST be marked as internal using 'x-internal: true'."
+    formats: [oas3]
+    severity: error
+    given: $.paths[?(/^.*\/_webhooks\/.*$/i.test(@property))].*
+    then:
+      field: x-internal
+      function: truthy
+  sps-webhooks-post:
+    description: Webhooks SHOULD be POST requests.
+    formats: [oas3]
+    severity: warn
+    given: $.paths[?(/^.*\/_webhooks\/.*$/i.test(@property))].*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^post$"
+  sps-webhooks-path:
+    description: Webhook endpoints should be under the the path '/_webhooks/' to be identified as internal usage only.
+    formats: [oas3]
+    severity: error
+    given: $.paths[?(/^.*webhook.*$/i.test(@property))]~
+    then:
+      function: pattern
+      functionOptions:
+        match: ^.*\/_webhooks\/.*$
 documentationUrl: https://spscommerce.github.io/sps-api-standards
 extends:
   - spectral:oas
+# NOTE: this is copied to ".spectral.yml" as well for testing locally (this is the version that is deployed)
+overrides:
+  # disable linting validation for all webhooks, since we are at the mercy of the webhook provider
+  # overrides do not inherit through "extends", so only directly using the SPS ruleset do these override apply
+  # https://meta.stoplight.io/docs/spectral/branches/develop/293426e270fac-overrides
+  - files:
+      # NOTE: after paths, you cannot use "**" wildcard as a prefix... :(
+      # But everything after is automatically a wildcard (just not before)
+      - "**#/paths/~1_webhooks"
+      - "**#/paths/~1v1~1_webhooks"
+      - "**#/paths/~1v2~1_webhooks"
+      - "**#/paths/~1v3~1_webhooks"
+    rules:
+      sps-request-support-json: off
+      sps-schema-names-pascal-case: off
+      sps-paths-params-camel-case: off
+      sps-query-params-not-required: off
+      sps-headers-hyphenated-pascal-case: off
+      sps-no-x-headers: off
+      sps-paths-kebab-case: off

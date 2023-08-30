@@ -171,7 +171,7 @@ PATCH /articles/1
 - Numbers **SHOULD** be referenced in JSON as integer types and be represented in a 32-bit signed integer, values between `((2^31) - 1)` and `-(2^31)` in the associated API schema.
     - When an integer type is used as a 32-bit integer it **SHOULD** provide an explicit minimum and a maximum in the associated API schema.
     - When requiring a 64-bit integer (a.k.a "long") it **SHOULD** be serialized as a string and specified as a formatted "int64" to ensure maximum compatibility across programming languages, particularly with JavaScript.
-    - In the circumstance where serializing a number as a 64-bit integer is required, you MAY provide the 64-bit value as both a string and a number to ensure its accessibility.
+    - In the circumstance where serializing a number as a 64-bit integer is required, you **MAY** provide the 64-bit value as both a string and a number to ensure its accessibility.
     
 ```
 {
@@ -191,7 +191,7 @@ PATCH /articles/1
     number: "10",           // 32-bit integers should be serialized as numbers.
     decimal: 10.2          // floating-point numbers should be serialized as strings to avoid precision loss.
     taxAddition: "8.75%",   // symbols should be left out of the string serialized percentage values.
-    percentage: 8,          // floating-point numbers should be serialized as strings to avoid precision loss.
+    percentage: 8           // floating-point numbers should be serialized as strings to avoid precision loss.
 }
  
 // CORRECT
@@ -199,7 +199,7 @@ PATCH /articles/1
     id: "234",
     number: 10,
     decimal: "10.2",
-    percentage: "9.75",
+    percentage: "9.75"
 }
 ```
 
@@ -236,7 +236,7 @@ If there is an industry standard that requires us to do otherwise, enums **MAY**
 [JSON](https://json.org) itself **does not** specify how dates should be represented, but most organizations use the date specification described in JavaScript.
 
 - All dates posted in requests and returned in response **MUST** conform to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard (format `YYYY-MM-DDTHH:mm:ss.sssZ`).
-- All dates **MUST** include the correct time zone.
+- All dates **MUST** include the time zone, and **SHOULD** be represented in UTC time zone.
 - All date fields **SHOULD** have the level of specificity and accuracy in their name:
     - `xxxDateTime` for fields with accuracy to time level
     - `xxxDate` for fields with accuracy to date level
@@ -244,14 +244,17 @@ If there is an industry standard that requires us to do otherwise, enums **MAY**
 ```
 // INCORRECT
 {
-    createdDate: "May 16 2021 14:12:07", // date format incorrect, name of the field indicates Date but value has DateTime
-    createdDateTime: "May 16 2021", // specified value does not contain time portion
-    created: "2021-05-16T14:12:07" // name of the field does not indicate that it is DateTime field
+    createdDate: "May 16 2021 14:12:07",        // date format incorrect, name of the field indicates Date but value has DateTime
+    createdDateTime: "May 16 2021",             // specified value does not contain time portion
+    created: "2021-05-16T14:12:07"              // name of the field does not indicate that it is DateTime field
+    localDateTime: "2021-05-16T14:12:07",        // while valid ISO 8601 format for local time zone, it is not appropriate for these API standards.
+    zoneDateTime: "2021-05-16T14:12:07−05:00",  // should use UTC time zone specified by Z at the end of the string
 }
  
 // CORRECT
 {
-    createdDateTime: "2021-05-16T14:12:07−05:00"
+    preciseDateTime: "2021-05-16T14:12:07.123Z",     // standard date time with sub-second precision
+    createdDateTime: "2021-05-16T14:12:07Z",         // standard date time with second precision
 }
 ```
 
