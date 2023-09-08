@@ -279,14 +279,14 @@ RESPONSE
     "paging": {
         "limit": int,           // amount of items requested in the results of a single request, updated for the response to the max limit or the default as necessary
                                 //   -> Required, Defaults to API defined default / max or if within range the user provided limit request parameter               
-        "next": {
+        "next": {               // required, set to "null" to indicate last page.
             "cursor": "string", // base64 opaque string indicating the metadata and state used to determine the set of results to return to retrieve the next page.
-                                //   -> Required
+                                //   -> Required if next is present
             "url": "string"     // represents the complete URL to navigate to the next result set of data given the state of your current request (including offset, limit, cursor where appropriate)
-                                //   -> Required
+                                //   -> Required if next is present
                                 //   -> Example: https://api.spscommerce.com/v1/books?limit=2&cursor=dXNlcklkOjM=
          },
-        "previous": {           // optional for cursor-based pagination. set to null to indicate no previous page.
+        "previous": {           // required, set to "null" to indicate no previous page.
             "cursor": "string", // base64 opaque string indicating the metadata and state used to determine the set of results to return to retrieve the previous page.
                                 //   -> Required if previous is present
             "url": string       // represents the complete URL to navigate to the previous result set of data given the state of your current request (including offset, limit, cursor where appropriate).
@@ -310,7 +310,8 @@ RESPONSE
         "next": {
             "cursor": "dXNlcklkOjM=",  
             "url": "https://api.spscommerce.com/v1/books?limit=2&cursor=dXNlcklkOjM="      
-         }
+         },
+         "previous": null
     }
 }
  
@@ -325,7 +326,7 @@ RESPONSE
         "next": {
             "cursor": "userId:3",                                                   // a cursor MUST be base64 encoded to prevent manual manipulation
             "url": "https://api.spscommerce.com/v1/books?limit=2&cursor=userId:3"   // the associated URL must have the matching cursor that is opaque specified
-         }
+         }                                                                          // also missing the "previous" object which is set to "null" to indicate no previous page (not ignored).
     }
 }
 ```
@@ -366,7 +367,8 @@ RESPONSE
                                                 # Take a note, that a cursor usually contains additional information to help API understand direction and order.
                                                  
             "url": "https://api.spscommerce.com/v1/example?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
-         }
+         },
+         "previous": null
     }
 }
   
