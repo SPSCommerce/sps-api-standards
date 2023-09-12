@@ -8,7 +8,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 
 ## Root Element
 
-- All collection-based endpoint responses **MUST** include the collection under the `results` root element. 
+- All collection-based endpoint responses **MUST** include the collection under the `results` root element.
 
 ```
 // CORRECT
@@ -17,7 +17,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
         {... DOMAIN OBJECT ...}     // schema of the your domain object can be anything you want
     ]
 }
- 
+
 // INCORRECT
 [
     {... DOMAIN OBJECT ...}         // this format prevents future changes to the contract without forcing a breaking change
@@ -30,7 +30,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 
 ### General
 
-- All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below. 
+- All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below.
 
 ```
 // CORRECT
@@ -52,7 +52,7 @@ POST https://api.spscommerce.com/v1/books
 // REQUEST
 {
     ...
-    "paging": {               
+    "paging": {
         "limit": int,
         "offset": int,
         "cursor": string
@@ -65,12 +65,12 @@ POST https://api.spscommerce.com/v1/books
 ```
 // INCORRECT
 POST https://api.spscommerce.com/v1/books
-     ?limit=int                            
-     &offset=int                               
+     ?limit=int
+     &offset=int
      &cursor=string
 // REQUEST
 {
-    "paging": {               
+    "paging": {
         "limit": int,
         "offset": int,
         "cursor": string
@@ -84,10 +84,10 @@ POST https://api.spscommerce.com/v1/books
 // RESPONSE
 HTTP/1.1 200
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         ... DEFINED AS PART OF OFFSET-BASED OR CURSOR-BASED PAGINATION
     }
 }
@@ -101,10 +101,10 @@ GET https://api.spscommerce.com/v1/example?limit=25&offset=0
 // RESPONSE
 HTTP/1.1 200
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         ...
         "next": {
             "url": "https://api.spscommerce.com/v1/example?limit=25&offset=25"
@@ -156,16 +156,17 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 
 ### Guidelines
 
-- All collection-based endpoints **SHOULD** support offset-based over cursor-based pagination unless technology or performance makes cursor-based pagination more advantageous.
-- Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used. 
+- While simple to implement, consider using cursor-based pagination instead
+  - Offset-based pagination does not scale as you get further down the index calculating the offset on large sets of data.
+- Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
 
 ```
 // RESPONSE
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         "totalCount": int,      // the total count of all unique available records (results) across all paginated queries of the endpoint
                                 //   -> Not Required
         "limit": int,           // amount of items requested in the results of a single request, updated for the response to the max limit or the default as necessary
@@ -176,15 +177,15 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 }
 ```
 
-- Offset-based collection endpoints may **OPTIONALLY** make use of `next` and `previous` specifications for URLs. 
+- Offset-based collection endpoints may **OPTIONALLY** make use of `next` and `previous` specifications for URLs.
 
 ```
 // RESPONSE
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         "totalCount": int,
         "limit": int,
         "offset": int,
@@ -202,7 +203,7 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 ```
 
 ```note
- Complete URLs can be difficult to intercept behind a number of proxies/gateways for specification on URL fields, such as `next`/`previous` elements. Ensure your consuming the correct headers for construction. Also, consider the dynamic nature of the URL from different entry points across the same environments or different environments. Difficulties may also exist in dynamic documentation generation. Possible headers behind internal proxies or platforms include: `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`. Your application would still need to determine the subpath based on the request context of the application (i.e. after the host). 
+ Complete URLs can be difficult to intercept behind a number of proxies/gateways for specification on URL fields, such as `next`/`previous` elements. Ensure your consuming the correct headers for construction. Also, consider the dynamic nature of the URL from different entry points across the same environments or different environments. Difficulties may also exist in dynamic documentation generation. Possible headers behind internal proxies or platforms include: `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`. Your application would still need to determine the subpath based on the request context of the application (i.e. after the host).
 ```
 
 ### Example
@@ -212,39 +213,39 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 GET https://api.spscommerce.com/v1/example?limit=25&offset=0
 RESPONSE
 {
-    "results": [                  
+    "results": [
         {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         "totalCount": 100,
         "limit": 25,
         "offset": 0
     }
 }
-  
+
 // SCENARIO 2: Get the second page of results
 GET https://api.spscommerce.com/v1/example?limit=25&offset=25
 RESPONSE
 {
-    "results": [                  
+    "results": [
         {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         "totalCount": 100,
         "limit": 25,
         "offset": 25
     }
 }
-  
+
 // SCENARIO 3: Get the last page of results (skip a page)
 // determine based on (totalCount - limit)
-GET https://api.spscommerce.com/v1/example?limit=25&offset=75  
+GET https://api.spscommerce.com/v1/example?limit=25&offset=75
 RESPONSE
 {
-    "results": [                  
+    "results": [
         {... DOMAIN OBJECT ...}
     ],
-    "paging": {               
+    "paging": {
         "totalCount": 100,
         "limit": 25,
         "offset": 75
@@ -258,7 +259,7 @@ RESPONSE
 
 Cursor-based Pagination works extremely well when:
 
-- Offset-based pagination does not scale as you get further down the index calculating the offset on large sets of data.
+- All collection-based endpoints **SHOULD** support cursor-based over offset-based pagination unless technology or performance makes offset-based pagination more advantageous.
 - A highly transactional database or lots of activity can make it difficult to use offsets effectively through a dataset. The paging window is subtly stabilized using a cursor or known established `next` page.
 
 The performance advantages may be a larger requirement than the capabilities you lose:
@@ -268,17 +269,17 @@ The performance advantages may be a larger requirement than the capabilities you
 
 ### Guidelines
 
-- Cursor-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used. 
+- Cursor-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
 
 ```
 RESPONSE
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
     "paging": {
         "limit": int,           // amount of items requested in the results of a single request, updated for the response to the max limit or the default as necessary
-                                //   -> Required, Defaults to API defined default / max or if within range the user provided limit request parameter               
+                                //   -> Required, Defaults to API defined default / max or if within range the user provided limit request parameter
         "next": {               // required, set to "null" to indicate last page.
             "cursor": "string", // base64 opaque string indicating the metadata and state used to determine the set of results to return to retrieve the next page.
                                 //   -> Required if next is present
@@ -296,33 +297,33 @@ RESPONSE
 }
 ```
 
-- When using pagination cursors, the cursor **MUST** be `Base64` encoded to be opaque. 
+- When using pagination cursors, the cursor **MUST** be `Base64` encoded to be opaque.
 
 ```
 // CORRECT
 RESPONSE
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
     "paging": {
-        "limit": int,        
+        "limit": int,
         "next": {
-            "cursor": "dXNlcklkOjM=",  
-            "url": "https://api.spscommerce.com/v1/books?limit=2&cursor=dXNlcklkOjM="      
+            "cursor": "dXNlcklkOjM=",
+            "url": "https://api.spscommerce.com/v1/books?limit=2&cursor=dXNlcklkOjM="
          },
          "previous": null
     }
 }
- 
+
 // INCORRECT
 RESPONSE
 {
-    "results": [                   
-        {... DOMAIN OBJECT ...}    
+    "results": [
+        {... DOMAIN OBJECT ...}
     ],
     "paging": {
-        "limit": int,        
+        "limit": int,
         "next": {
             "cursor": "userId:3",                                                   // a cursor MUST be base64 encoded to prevent manual manipulation
             "url": "https://api.spscommerce.com/v1/books?limit=2&cursor=userId:3"   // the associated URL must have the matching cursor that is opaque specified
@@ -332,7 +333,7 @@ RESPONSE
 ```
 
 ```note
-**Consideration**: The cursor tokens used are always `Base64` strings to ensure they are opaque (meaning they appear dangerous to change to the consumer). In actuality, they store an encoded state about the cursor in it, or a cursor from a point of integration in a database or S3 for example. The cursor contract inside the Base64 string is entirely specific to the API in question. Often it can indicate the parameter being ordered alongside the next cursor ID to return results from. 
+**Consideration**: The cursor tokens used are always `Base64` strings to ensure they are opaque (meaning they appear dangerous to change to the consumer). In actuality, they store an encoded state about the cursor in it, or a cursor from a point of integration in a database or S3 for example. The cursor contract inside the Base64 string is entirely specific to the API in question. Often it can indicate the parameter being ordered alongside the next cursor ID to return results from.
 
 Additional concepts: [Evolving API Pagination at Slack](https://slack.engineering/evolving-api-pagination-at-slack/).
 ```
@@ -354,33 +355,33 @@ Additional concepts: [Evolving API Pagination at Slack](https://slack.engineerin
 GET https://api.spscommerce.com/v1/users?limit=2
 RESPONSE
 {
-    "results": [                  
+    "results": [
         { "userId": 1, "username": "john", "email": "email1@spscommerce.com" },
         { "userId": 2, "username": "allyn", "email": "email2@spscommerce.com" }
     ],
-    "paging": {               
+    "paging": {
         "limit": 2,
         "next": {
             "cursor": "bmV4dF91c2VySWQ6Mw==",   # base64.encode("next_userId:3")
                                                 # The format can be anything you like for your API, such as "next_userId_3", or even "3" if the API returns just next pages of users.
                                                 # Cursor can indicate multiple columns and asc/desc if desirable: base64.encode("Username:desc__Userid:asc__UserId:12").
                                                 # Take a note, that a cursor usually contains additional information to help API understand direction and order.
-                                                 
+
             "url": "https://api.spscommerce.com/v1/example?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
          },
          "previous": null
     }
 }
-  
+
 // Scenario 2: Subsequent Request with a provided cursor
 GET https://api.spscommerce.com/v1/users?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
 RESPONSE
 {
-    "results": [                  
+    "results": [
         { "userId": 3, "username": "travis", "email": "email3@spscommerce.com" },
         { "userId": 4, "username": "aaron", "email": "email4@spscommerce.com" }
     ],
-    "paging": {               
+    "paging": {
         "limit": 2,
         "next": {
             "cursor": "bmV4dF91c2VySWQ6Mw==",  # base64.encode("next_userId:5"), if the limit is adjusted manually in the subsequent request, that will obviously impact the before/after
@@ -399,10 +400,10 @@ RESPONSE
 To limit or narrow down the results of a collection endpoint you may provide filtering capabilities, where a filter is part of the query parameters.
 
 - Filtering is not a requirement on all collection-based endpoints.
-- Filtering query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional. 
+- Filtering query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional.
 - The resource identifier in a collection **SHOULD NOT** be used to filter collection results, resource identifier should be in the URI.
 - Filtering **SHOULD** only occur on endpoints that are collections using the schema described above.
-- Filtering attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`. 
+- Filtering attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`.
     - Limit filter references to three levels of object hierarchy in accordance with `GET-based` HTTP Methods ([Request Response](request-response.md)).
 - Filtering **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
 - Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md).
@@ -410,8 +411,8 @@ To limit or narrow down the results of a collection endpoint you may provide fil
     - Overly verbose filtering that contains an undesirable number of parameters that cannot be redesigned **SHOULD** consider using a non-REST style `POST` endpoint as described under [Actions in URL Structure](url-structure.md).
         - `POST` requests for non-REST style filtering **SHOULD** specify parameters at the root of the request body with the same names that would be used for query parameters normally.
         - `POST` requests for non-REST style filtering **SHOULD** specify parameters with multiple values using JSON array format, rather than using the same property name twice.
-        - `POST` requests for non-REST style filtering **SHOULD** result in the same response payload expectations and schema for collections as normally expected (including pagination). 
-        
+        - `POST` requests for non-REST style filtering **SHOULD** result in the same response payload expectations and schema for collections as normally expected (including pagination).
+
         ```
         // REQUEST
         // example GET request translated to POST search endpoint below
@@ -427,7 +428,7 @@ To limit or narrow down the results of a collection endpoint you may provide fil
             ],
             "limit": 25
         }
-        
+
         // RESPONSE
         HTTP/1.1 200 OK
         Content-Type: application/json
@@ -438,13 +439,13 @@ To limit or narrow down the results of a collection endpoint you may provide fil
         ```
 
 - Filtering query parameters **MUST** be included as part of the pagination next/previous URLs, similar to how `limit` is included as an additional limiting query parameter.
-- Filtering **MUST** be limited to equality checks of JSON attributes represented in the response payload. 
+- Filtering **MUST** be limited to equality checks of JSON attributes represented in the response payload.
     - Attributes not represented in the response payload **SHOULD NOT** be available for filtering.
     - Attribute names **MUST** follow standard naming and serialization patterns as defined elsewhere for their keys (see [Serialization](serialization.md)).
 - Filtering capability and support **MUST** be documented within your API spec to clearly indicate how a consumer can filter your resource. Given that filtering support can drastically vary from endpoint to endpoint, incredible detail and clarity must be provided within the documentation of your API spec.
 
 ```warning
-Take into consideration the performance of your filtering capability. It may be undesirable to support certain filtering capabilities if it has a substantial impact on your API performance. 
+Take into consideration the performance of your filtering capability. It may be undesirable to support certain filtering capabilities if it has a substantial impact on your API performance.
 ```
 
 ```note
@@ -480,17 +481,17 @@ GET /articles?limit=25&offset=25&title=Book          // combines filters with pa
 GET /articles?categories=Fiction                     // that exist in at least the "Fiction" category.
 GET /articles?categories=Fiction&categories=Drama    // that exist in the category "Fiction" OR the category "Drama".
 GET /articles?reviews.createdBy=jdoe                 // with "reviews" being a list of complex objects, that has a "createdBy" name field, this filters the articles that have reviews with createdBy equal to the value.
- 
+
 // INCORRECT
 GET /articles?isbn_Number=My%20Book                  // invalid casing
 GET /articles?author.name.designation.type="MR"      // object selection pattern is too deep
 GET /articles?author.age=5*                          // cannot wildcard an integer field type
 GET /articles?titles=My%20Book,Their%20Book          // cannot use a CSV for filtering multiple attributes.
-DELETE /articles?title=My%20Book                     // filtering parameters SHOULD NOT be used for any method other than GET, especially not for bulk delete operations.  
+DELETE /articles?title=My%20Book                     // filtering parameters SHOULD NOT be used for any method other than GET, especially not for bulk delete operations.
 ```
 
 ```warning
-The implementation of even simple filtering within your API can lead to drastic performance degradation if not considered carefully on the impact. 
+The implementation of even simple filtering within your API can lead to drastic performance degradation if not considered carefully on the impact.
 ```
 
 ### Advanced
@@ -511,7 +512,7 @@ RSQL is based on FIQL and is considered a superset of it, making it and FIQL usa
 - Each query parameter value or any field value inside FIQL/RSQL expression **MUST** be URL encoded. FIQL/RSQL expression itself generally does not require encoding as there are no unsafe characters.
 - FIQL/RSQL expressions **MUST** use logical AND operators as `;` (semicolon) and OR operators as `,` (comma), regardless of newer RSQL language alternatives for the same operators, to preserve consistency between APIs.
 - Advanced filtering **MAY** be applied to particular query parameters to filter based on a subset of attributes in the format `attributeFilter` (where keyword `attribute` is your attribute name), commonly referred to as hybrid filtering (hybrid between simple and advanced).
-    - Using "simple" or "advanced" filtering without the hybrid approach **SHOULD** be the preferred choice. Hybrid filtering is not desirable but may be necessary based on the constraints of your implementation and requirements (including performance). 
+    - Using "simple" or "advanced" filtering without the hybrid approach **SHOULD** be the preferred choice. Hybrid filtering is not desirable but may be necessary based on the constraints of your implementation and requirements (including performance).
         - Hybrid filtering is intended to support scenarios where API producers are unable to provide advanced filtering capability on all aspects of the payload response attributes and want to provide scope clarity in the attribute filter name.
     - Hybrid filtering attribute values **MUST** be valid advanced filtering expressions (FIQL/RSQL).
     - Hybrid filtering **MAY** be offered on multiple attributes, but **MUST** never exist if a root "filter" query parameter is available.
@@ -523,7 +524,7 @@ RSQL is based on FIQL and is considered a superset of it, making it and FIQL usa
 GET /articles
 RESPONSE
 {
-    "results": [                  
+    "results": [
         {
             "title": "Title",
             "reviewRating": 5,
@@ -533,34 +534,34 @@ RESPONSE
                 "lastName": "Doe",
                 "age": 50
             },
-             
+
         }
     ],
-    "paging": {               
+    "paging": {
         "totalCount": 1,
         "limit": 25,
         "offset": 0
     }
 }
- 
+
 // CORRECT
 GET /articles?filter=reviewRating=gt=4                          // articles with a review rating greater than 4
 GET /articles?filter=title==Title;author.lastName==Doe          // articles with the title "title" and author last name "Doe"
 GET /articles?filter=author.age=gt=42;author.firstName==John    // articles with an author of age greater than 42 AND first name "John"
 GET /articles?filter=author.age=gt=42,author.firstName==John    // articles with an author of age greater than 42 OR first name "John"
 GET /articles?authorFilter=lastName==Doe&title=Title            // hybrid filter that offers advanced filtering syntax ONLY for author object, and simple filtering otherwise.
- 
+
 // ADVANCED CORRECT EXAMPLE
 GET /articles?filter=(categories=in=(Fiction,Drama),title==Butterflies*),(categories=out=(NonFiction),author.age=gt=12)
 // articles with title starting with "Butterflies" in the Fiction OR Drama category
 // OR
 // articles with an author who's age is greater than 12 not in the NonFiction category.
- 
+
 // INCORRECT
 GET /articles?filters=reviewRating=gt=4                      // "filter" query parameter must not be pluralized
 GET /articles?filter=reviewRating=gt=4&filter=title==test    // cannot use more than one "filter" query parameter
 GET /articles?filter=author.name.designation.type=="MR"      // object selection pattern is too deep
-DELETE /articles?title=My%20Book                             // filtering parameters SHOULD NOT be used for any method other than GET, especially not for bulk delete operations.  
+DELETE /articles?title=My%20Book                             // filtering parameters SHOULD NOT be used for any method other than GET, especially not for bulk delete operations.
 ```
 
 ### FIQL/RSQL
@@ -601,7 +602,7 @@ Sorting on collection endpoints should be done by specifying the attributes that
 - Sorting query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional.
 - Default sort order **SHOULD** be considered as `undefined` and non-deterministic from the API consumer's perspective when no sorting query parameters are provided.
     - A default sort order **MUST** be applied internally for implementation purposes to provide consistently paged responses.
-    - A default sort order modification is not considered an API breaking change unless the behavior is documented as such. 
+    - A default sort order modification is not considered an API breaking change unless the behavior is documented as such.
 - Sorting **SHOULD** only occur on endpoints that are collections using the schema described above.
 - Sorting **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
 - Sorting query parameters **MUST** be included as part of the pagination next/previous URLs, similar to how `limit` is included as an additional query parameter.
@@ -609,7 +610,7 @@ Sorting on collection endpoints should be done by specifying the attributes that
 - Specifying an attribute name in the ordering parameter **MUST** sort by that attribute ascending (ASC). Specifying a `-` sign in front modifies to descending (DESC) on the same attribute.
 - Attributes specified for sorting **MUST** match attributes returned in the response payload.
 - Multiple attributes **MUST** be sorted on in a given request if provided by multiple `ordering` attributes, prioritized based on the order they are specified.
-- Sorting attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`. 
+- Sorting attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`.
 
 ```
 // CORRECT
@@ -618,7 +619,7 @@ GET /articles?ordering=-title                               // order articles by
 GET /articles?ordering=title&ordering=-reviewRating         // order articles first by title ASC, then by reviewRating DESC
 GET /articles?limit=25&offset=25&title=Book&ordering=title  // get 25 articles per page, starting at article 25, order the articles by title ASC
 GET /articles?ordering=author.firstName                     // order articles by authors first name ASC
- 
+
 // INCORRECT
 GET /articles?ordering=title,-reviewRating                  // ordering multiple attributes is not applied via CSV
 GET /articles?orderings=title&orderings=-reviewRating       // never use pluralized "orderings"
