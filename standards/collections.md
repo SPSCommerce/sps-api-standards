@@ -259,7 +259,7 @@ RESPONSE
 
 Cursor-based Pagination works extremely well when:
 
-- All collection-based endpoints **MUST** support cursor-based pagination, offset-based pagination may be supported additionally if technology, requirements, and/or performance makes offset-based pagination more advantageous.
+- All collection-based endpoints **MUST** support cursor-based pagination. Offset-based pagination may be supported additionally if technology, requirements, and/or performance makes offset-based pagination more advantageous.
 - Offset-based pagination does not scale as you get further down the index calculating the offset on large sets of data.
 - A highly transactional database or lots of activity can make it difficult to use offsets effectively through a dataset. The paging window is subtly stabilized using a cursor or known established `next` page.
 
