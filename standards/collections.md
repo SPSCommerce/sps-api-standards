@@ -156,8 +156,7 @@ Reference the advantages of cursor-based pagination for some reasons why you may
 
 ### Guidelines
 
-- While simple to implement, consider using cursor-based pagination instead
-  - Offset-based pagination does not scale as you get further down the index calculating the offset on large sets of data.
+- All collection-based endpoints **REQUIRE** cursor-based pagination. Offset-based pagination does not scale as you get further down the index calculating the offset on large sets of data.
 - Offset-based collection endpoint responses **MUST** include the root element `paging` whenever `results` are used.
 
 ```
