@@ -177,6 +177,9 @@ rules:
       functionOptions:
         type: camel
         disallowDigits: true
+        separator:
+          char: .
+          allowLeading: false
 
   sps-query-params-not-required:
     message: "Query parameters MUST be optional."

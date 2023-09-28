@@ -68,4 +68,34 @@ describe("sps-query-params-camel-case", () => {
        
         await spectral.validateFailure(spec, ruleName, "Error", 1);
     });
+
+    test("succeeds with query parameter camelCase complex object with period", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths:
+                /v1/users:
+                    get:
+                        summary: hello
+                        parameters:
+                        - name: object.filterThing
+                          in: query
+        `;
+       
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
+    test("fails with query parameter camelCase complex object with dash", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths:
+                /v1/users:
+                    get:
+                        summary: hello
+                        parameters:
+                        - name: object-filterThing
+                          in: query
+        `;
+       
+        await spectral.validateFailure(spec, ruleName, "Error", 1);
+    });
 });
