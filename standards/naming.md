@@ -210,25 +210,26 @@ RESPONSE
 
 ```
 // INCORRECT EXAMPLE
-GET /v1/books/5196ab21
+GET /v1/documents/5196ab21
 RESPONSE
 {
     "id": "5196ab21",                  
-    "ref": "sps:Book:123456",               // The Object ID Portion of this URN-like value does not match the "id" property.
-                                            // The URN-like value for "entity" must be in lowercase as "book"
-    "name": "The Best Book",
-    "author": "author:3793213e"             // In the URN-like value, there is no provided namespace. At least a namespace, entity, and id are required. 
-                                            // Additionally, the property name should contain the "Ref" suffix as "authorRef".
+    "ref": "sps:Documents:shipment:123456", // The Object ID Portion of this URN-like value does not match the "id" property.
+                                            // The URN-like value for "entity" must be in lowercase as "document"
+    "name": "Document 1",
+    "org": "org:3793213e"                   // In the URN-like value, there is no provided namespace. At least a namespace, entity, and id are required. 
+                                            // Additionally, the property name should contain the "Ref" suffix as "orgRef".
+                                            // Since there is no sub-entity, there should be an extra ":" delimiter.
 }
 
 // CORRECT EXAMPLE
-GET /v1/books/5196ab21
+GET /v1/documents/5196ab21
 RESPONSE
 {
     "id": "5196ab21", 
-    "ref": "sps:book:5196ab21",             // All self-referencing URN-like values on a resource must contain the namespace prefix "sps".             
-    "name": "The Best Book",
-    "authorRef": "sps:author:3793213e"      // "author" is recognized in this example as a significant entity in the API domain, and has an URN.
+    "ref": "sps:document:shipment:5196ab21", // All self-referencing URN-like values on a resource must contain the namespace prefix "sps".             
+    "name": "Document 1",
+    "orgRef": "sps:org::3793213e"           // "org" is recognized in this example as a significant entity in the API domain, and has an URN, but no sub-entity.
 }
 ```
 
