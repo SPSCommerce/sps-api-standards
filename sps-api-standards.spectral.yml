@@ -70,14 +70,6 @@ rules:
         function: pattern
         functionOptions:
           match: '^string$'
-  sps-ref-in-url:
-    description: Parameters for sps-ref formatted URN-like references SHOULD NOT be used in query or path parameters.
-    severity: warn
-    formats: [oas3]
-    given: '$.paths.*.*.parameters[?((@.in=="query" || @.in=="path") && (@.name == "ref" || @.name == "Ref"))]'
-    then:
-      field: name
-      function: falsy
   # fingerprint property usage and naming
   sps-fingerprint-naming:
     description: Rather than property names refering to the implementation for 'hash' or 'hashkey', you MUST use the property name 'fingerprint'.
