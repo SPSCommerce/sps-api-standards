@@ -196,39 +196,40 @@ RESPONSE
 ## Domain References
 
 - Unique references to other significant entities within your API Domain, but in a different root resource **SHOULD** use a [URN (Uniform Resource Name)](https://en.wikipedia.org/wiki/Uniform_Resource_Name)-like references where appropriate. <a name="sps-ref-property-name" href="#sps-ref-property-name"><i class="fa fa-check-circle" title="#sps-ref-property-name"></i></a>
-    - URN-like refers to using the convention of specifying agreed upon namespaces, entities followed by the object identifier, but without the `urn` prefix or formal registration of the namespace ID with IANA according to [RFC8141](https://datatracker.ietf.org/doc/rfc8141/). This provides interoperability and durability benefits within your API and endpoint ecosystem.
-    - URN-like references **MUST** be the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration. A simplified example would be: `{namespace}:{entity}:{id}` (e.g. `sps:book:b96cb3ead9a9`). <a name="sps-ref-schema" href="#sps-ref-schema"><i class="fa fa-check-circle" title="#sps-ref-schema"></i></a>
+    - URN-like refers to using the convention of specifying agreed upon namespaces and entities followed by the object identifier, but without the `urn` prefix or formal registration of the namespace ID with IANA according to [RFC8141](https://datatracker.ietf.org/doc/rfc8141/). This provides interoperability and durability benefits within your API and endpoint ecosystem.
+    - URN-like references **MUST** be the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration, with a much more opinionated structure. A simplified example would be: `{namespace}:{entity}:{sub-entity}:{id}` (e.g. `sps:document:shipment:b96cb3ead9a9`). <a name="sps-ref-schema" href="#sps-ref-schema"><i class="fa fa-check-circle" title="#sps-ref-schema"></i></a>
         - URN-like references **MUST** have a max-length of 255 characters.
         - URN-like references **MUST** be case-sensitive.
         - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties. At SPS Commerce this value **MUST** be `sps`.
         - URN-like `{namespace}` **MUST** only contain lowercase alpha characters `[a-z]` with a maximum length of 10 characters.
-        - URN-like `{entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters.
+        - URN-like `{entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters. `{entity}` **SHOULD** be specified as singular.
+        - URN-like `{sub-entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters, but can be empty. It **SHOULD** represent a more specific variation of the `{entity}` from a polymorphic standpoint rather than represent a hierarchy.  The sub-entity is an optional value that can be omitted. When omitting the sub-entity, the `:` delimiter **MUST** still be included (e.g. `sps:document::b96cb3ead9a9`).
         - URN-like `{id}` **MUST** abide by the requirements and restrictions indicated for [identifiers](#identifiers).
     - URN-like references **MUST** use the naming `ref` in the same way `id` is used for unique identifiers. `ref` can be used as a standalone property name indicating the unique name for the current entity, while `ref` can be used as a suffix to indicate the unique resource name for another entity.
     - Responses containing self-reference property `ref` **MUST** always include an associated `id` property that matches the `{id}` portion of the URN-like `ref` value.
-    - URN-like references **SHOULD NOT** be passed in the URL path of a request (use the Object ID instead). <a name="sps-ref-in-url" href="#sps-ref-in-url"><i class="fa fa-check-circle" title="#sps-ref-in-url"></i></a>
 
 ```
 // INCORRECT EXAMPLE
-GET /v1/books/5196ab21
+GET /v1/documents/5196ab21
 RESPONSE
 {
     "id": "5196ab21",                  
-    "ref": "sps:Book:123456",               // The Object ID Portion of this URN-like value does not match the "id" property.
-                                            // The URN-like value for "entity" must be in lowercase as "book"
-    "name": "The Best Book",
-    "author": "author:3793213e"             // In the URN-like value, there is no provided namespace. At least a namespace, entity, and id are required. 
-                                            // Additionally, the property name should contain the "Ref" suffix as "authorRef".
+    "ref": "sps:Documents:shipment:123456", // The Object ID Portion of this URN-like value does not match the "id" property.
+                                            // The URN-like value for "entity" must be in lowercase as "document"
+    "name": "Document 1",
+    "org": "org:3793213e"                   // In the URN-like value, there is no provided namespace. At least a namespace, entity, and id are required. 
+                                            // Additionally, the property name should contain the "Ref" suffix as "orgRef".
+                                            // Since there is no sub-entity, there should be an extra ":" delimiter.
 }
 
 // CORRECT EXAMPLE
-GET /v1/books/5196ab21
+GET /v1/documents/5196ab21
 RESPONSE
 {
     "id": "5196ab21", 
-    "ref": "sps:book:5196ab21",             // All self-referencing URN-like values on a resource must contain the namespace prefix "sps".             
-    "name": "The Best Book",
-    "authorRef": "sps:author:3793213e"      // "author" is recognized in this example as a significant entity in the API domain, and has an URN.
+    "ref": "sps:document:shipment:5196ab21", // All self-referencing URN-like values on a resource must contain the namespace prefix "sps".             
+    "name": "Document 1",
+    "orgRef": "sps:org::3793213e"           // "org" is recognized in this example as a significant entity in the API domain, and has an URN, but no sub-entity.
 }
 ```
 
