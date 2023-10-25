@@ -51,7 +51,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 - Success **MUST** be reported with a status code in the `2xx` range.
 - Reason phrases **MUST NOT** be modified or customized. The default reason phrases deliver an industry-standard experience for API consumers. Use the response payload as necessary to communicate further reasoning.
 - HTTP status codes in the `2xx` range **MUST** be returned only if the complete code execution path is successful. There is no such thing as partial success.
-    - Bulk request operations **MUST** return a 200 status code with a response body indicating failures as part of the payload for each processed entity, unless all processing failures due to a system issue, in which case it's appropriate to issue a standard `5xx` error message.
+    - [Bulk synchronous](bulkd.md) request operations **MUST** return a `200`` status code with a response body indicating failures as part of the payload for each processed entity.
 - Failures **MUST** be reported in the `4xx` or `5xx` range. This is true for both system errors and application errors.
 - All status codes used in the `4xx` or `5xx` range **MUST** return standardized error responses as outlined under [Errors](errors.md).
 - A server returning a status code in the `2xx` range **MUST NOT** return any error models defined in [Errors](errors.md), or any HTTP status code, as part of the response body. 
@@ -843,7 +843,7 @@ DELETE /articles/3
 204 OK
 ```
 
-The [request body of a `DELETE` is not allowed](https://stackoverflow.com/questions/299628/is-an-entity-body-allowed-for-an-http-delete-request). At times an individual may intend to perform a bulk `DELETE` action and want to provide a request body or need information about the response of a `DELETE`. You will find that in this case, a `PATCH` request against the collection is an appropriate alternative.
+The [request body of a `DELETE` is not allowed](https://stackoverflow.com/questions/299628/is-an-entity-body-allowed-for-an-http-delete-request). At times an individual may intend to perform a [bulk `DELETE`](bulk.md) action and want to provide a request body or need information about the response of a `DELETE`. You will find that in this case, a `PATCH` request against the collection is an appropriate alternative.
 
 ```
 // REQUEST
@@ -889,7 +889,7 @@ Content-Type: application/json
 ```
 
 ```note
-**Consider**: The JSON `PATCH` format is a standardized format and schema for defining a series of patch-related updates to a single JSON document, or resource: [http://jsonpatch.com](http://jsonpatch.com/). 
+**Consider**: For updating multiple entities in bulk on a given resource refer to [bulk operations](bulk.md).
 ```
 
 ### HEAD
