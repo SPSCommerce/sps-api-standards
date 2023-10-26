@@ -11,7 +11,7 @@ Bulk operations **MUST** be synchronous when applied to an existing resource. Th
 - Bulk operations **MUST** be specific to a single resource type and NOT allow for updating multiple resource types in a single request.
 - Bulk operations **MUST** be implemented as a PATCH request against a collection resource.
 - Bulk operations **MUST** return a `200 (OK)` response code if all operations were received and a result is available for each operation, regardless of success. Bulk operations **MUST NOT** use status code `207 (Multi-Status)` response code as this incurs other implications for the response schema in relationship to Web DAV.
-- Bulk operations **MUST** accept a constrained number of operations in the request body that is indicated in the documentation of the endpoint. By default this value **MAY** be 100 operations, but should be adjusting according to the needs of the endpoint and the entity-size. Requests beyond the limit **MUST** return a `400` response code and standard [error format body](errors.md) similar to:
+- Bulk operations **MUST** accept a constrained number of operations in the request body that is indicated in the documentation of the endpoint. By default this value **MAY** be 100 operations, but should be adjusted according to the needs of the endpoint and the entity-size. Requests beyond the limit **MUST** return a `400` response code and standard [error format body](errors.md) similar to:
 ```
 // RESPONSE
 HTTP/1.1 400
