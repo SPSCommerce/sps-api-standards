@@ -51,7 +51,7 @@ Content-Type: application/problem+json
             "id": "string" | null,                                          // the associated id of the entity, if available
             "ref": "sps-ref" | null,                                        // the associated sps-ref URN entity, if applicable
             "status": "SUCCEEDED" | "FAILED",                               // status of individual operation
-            "detail": "string",                                             // indicates details on the operation result, such as a error message.
+            "detail": "string",                                             // indicates details on the operation result, such as an error message.
         }
     ]
 }
