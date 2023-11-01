@@ -1,5 +1,59 @@
 rules:   
 
+  # domain references (URN-like values)
+  sps-ref-property-name:
+    description: Property with the name 'ref' MUST be of type 'sps-ref' following URN-like reference formats.
+    severity: error
+    formats: [oas3]
+    given: '$..properties..[?((@property=== "ref" || @property === "Ref") && @.$ref == null && @.allOf == null && @.oneOf == null)]'
+    resolved: false
+    then:
+      - field: "format"
+        function: truthy
+      - field: "format"
+        function: pattern
+        functionOptions:
+          match: 'sps-ref'
+
+  sps-ref-schema:
+    description: Properties following 'sps-ref' format MUST use the standardized schema - maxLength (255), minLength(7), pattern (includes 'sps'), type (string).
+    message: '{{property}} is not provided or not following required schema values.'
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property=== "format" && @ == "sps-ref")]^'
+    then:
+      - function: schema
+        functionOptions:  
+          schema:
+            type: object
+            required:
+              - maxLength
+              - minLength
+              - type
+              - pattern
+            properties:
+              maxLength:
+                type: integer
+                minimum: 255
+                maximum: 255
+              minLength:
+                type: integer
+                minimum: 7
+                maximum: 7
+              type:
+                type: string
+              pattern:
+                type: string
+      - field: pattern
+        function: pattern
+        functionOptions:
+          match: 'sps'
+      - field: type
+        function: pattern
+        functionOptions:
+          match: '^string$'
+
+  # fingerprint property usage and naming
   sps-fingerprint-naming:
     description: Rather than property names refering to the implementation for 'hash' or 'hashkey', you MUST use the property name 'fingerprint'.
     message: '{{property}} is not using property name fingerprint.'
@@ -15,12 +69,8 @@ rules:
     description: Fingerprint values MUST use a data type of `string`.
     severity: error
     formats: [oas3]
-    given: '$.components.schemas..properties..[?(@property=== "fingerprint")].type'
+    given: '$..[?(@property === "fingerprint")].type'
     then:
       function: pattern
       functionOptions:
         match: '^string$'
-
-
-    
-    

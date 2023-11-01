@@ -42,6 +42,51 @@ describe("sps-hosts-spscommerce-domain", () => {
         await spectral.validateSuccess(spec, ruleName);
     });
 
+    test("succeeds on localhost https", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths: {}
+            servers:
+                - url: https://localhost:4000
+        `;
+       
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
+    test("succeeds on localhost http", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths: {}
+            servers:
+                - url: http://localhost:5000
+        `;
+       
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
+
+    test("succeeds on network environment", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths: {}
+            servers:
+                - url: https://network.api.spscommerce.com
+        `;
+       
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
+    test("succeeds on subdomain environment", async () => {
+        const spec = `
+            openapi: 3.1.0
+            paths: {}
+            servers:
+                - url: https://integration.network.api.spscommerce.com
+        `;
+       
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
     test("fails with other domain", async () => {
         const spec = `
             openapi: 3.1.0

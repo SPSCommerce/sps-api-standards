@@ -108,7 +108,7 @@ clever
 enabled
 ```
 
-- Fields that indicate repeated values or arrays always **MUST** use proper plural forms.
+- Fields that indicate repeated values or arrays **MUST** use proper plural forms.
 
 ```
 // INCORRECT
@@ -118,17 +118,7 @@ collectedItem: []
 collectedItems: []
 ```
 
-- Any identifier of a resource **SHOULD** have Id after the entity name when referenced from another entity.
-
-```
-// INCORRECT
-documentCode
- 
-// CORRECT
-documentId
-```
-
-- Attribute names **MUST** consider the appropriate tense (past, present, future) based on their context and domain model. 
+- Property names **MUST** consider the appropriate tense (past, present, future) based on their context and domain model. 
 
 ```
 // CONSIDERATION EXAMPLES
@@ -136,35 +126,110 @@ start, starting, started
 run, running, ran
 ```
 
-- Attribute names **SHOULD** describe their parent entity, otherwise, the attribute name **SHOULD** be prefixed with a domain-specific entity name that it is associated with. 
+- Property names **SHOULD** implicitly relate to their parent entity, otherwise, the property name **SHOULD** be prefixed with a domain-specific entity name that it is associated with. 
 
 ```
 // INCORRECT EXAMPLE
-GET /v1/books/2345
+GET /v1/books/5196ab21
 RESPONSE
 {
-    "bookId": 2345,                             // since the request for the resource was a "book", the attribute should just be "id"
+    "bookId": "5196ab21",                       // since the request for the resource was a "book", the attribute should just be "id"
     "name": "The Best Book",
     "author": {                    
-        "authorId":456,                         // the parent entity is an author, so it should be "id" for the attribute name.
+        "authorId": "3793213e",                 // the parent entity is an author, so it should be "id" for the attribute name.
         "authorName": "John Doe",               // the parent entity is an author, so it should be "name" for the attribute name.
         "publisherName": "My Publishing House"  // this name attribute MUST have a prefix for another entity, since its not the name of this entity "author"
-        "agentId": 2                            // this name is appropriate with Id following its associated entity name.
     }
 }
  
 // CORRECT EXAMPLE
-GET /v1/books/2345
+GET /v1/books/5196ab21
 RESPONSE
 {
-    "id": 2345,                            
+    "id": "5196ab21",                            
     "name": "The Best Book",
     "author": {                    
-        "id":456,                      
+        "id": "3793213e",                      
         "name": "John Doe",            
-        "publisherName": "My Publishing House",
-        "agentId": 2
+        "publisherName": "My Publishing House"
     }
+}
+```
+
+## Identifiers
+
+- An entity with a unique identifier **MUST** be labeled as `id`.
+
+```
+// CORRECT
+{
+    "id": "b96cb3ead9a9",                            
+    "name": "The Best Book"
+}
+```
+
+- Any unique identifier of an entity **MUST** have Id after the entity name when referenced from another entity.
+
+```
+// CORRECT
+{
+    "id": "b96cb3ead9a9",
+    "name": "The Best Book",
+    "authorId": "3793213e"      // usage of "authorId" references this is the id for a different entity.
+}
+```
+
+- Unique identifiers **SHOULD** be string values and considered opaque as described in [serialization of numbers](serialization.md#number).
+
+```
+// INCORRECT
+{
+    "id": 2
+}
+
+// CORRECT
+{
+    "id": "b96cb3ead9a9"
+}
+```
+
+## Domain References
+
+- Unique references to other significant entities within your API Domain, but in a different root resource **SHOULD** use a [URN (Uniform Resource Name)](https://en.wikipedia.org/wiki/Uniform_Resource_Name)-like references where appropriate. <a name="sps-ref-property-name" href="#sps-ref-property-name"><i class="fa fa-check-circle" title="#sps-ref-property-name"></i></a>
+    - URN-like refers to using the convention of specifying agreed upon namespaces and entities followed by the object identifier, but without the `urn` prefix or formal registration of the namespace ID with IANA according to [RFC8141](https://datatracker.ietf.org/doc/rfc8141/). This provides interoperability and durability benefits within your API and endpoint ecosystem.
+    - URN-like references **MUST** be the form of standard `URNs` without the `urn:` prefix to avoid confusion of official registration, with a much more opinionated structure. A simplified example would be: `{namespace}:{entity}:{sub-entity}:{id}` (e.g. `sps:document:shipment:b96cb3ead9a9`). <a name="sps-ref-schema" href="#sps-ref-schema"><i class="fa fa-check-circle" title="#sps-ref-schema"></i></a>
+        - URN-like references **MUST** have a max-length of 255 characters.
+        - URN-like references **MUST** be case-sensitive.
+        - URN-like `{namespace}` **MUST** be a single value applied across all API endpoint response for the usage of self-referencing `ref` properties. At SPS Commerce this value **MUST** be `sps`.
+        - URN-like `{namespace}` **MUST** only contain lowercase alpha characters `[a-z]` with a maximum length of 10 characters.
+        - URN-like `{entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters. `{entity}` **SHOULD** be specified as singular.
+        - URN-like `{sub-entity}` **MUST** only contain lowercase alpha-numeric characters `[a-z0-9]` with a maximum length of 20 characters, but can be empty. It **SHOULD** represent a more specific variation of the `{entity}` from a polymorphic standpoint rather than represent a hierarchy.  The sub-entity is an optional value that can be omitted. When omitting the sub-entity, the `:` delimiter **MUST** still be included (e.g. `sps:document::b96cb3ead9a9`).
+        - URN-like `{id}` **MUST** abide by the requirements and restrictions indicated for [identifiers](#identifiers).
+    - URN-like references **MUST** use the naming `ref` in the same way `id` is used for unique identifiers. `ref` can be used as a standalone property name indicating the unique name for the current entity, while `ref` can be used as a suffix to indicate the unique resource name for another entity.
+    - Responses containing self-reference property `ref` **MUST** always include an associated `id` property that matches the `{id}` portion of the URN-like `ref` value.
+
+```
+// INCORRECT EXAMPLE
+GET /v1/documents/5196ab21
+RESPONSE
+{
+    "id": "5196ab21",                  
+    "ref": "sps:Documents:shipment:123456", // The Object ID Portion of this URN-like value does not match the "id" property.
+                                            // The URN-like value for "entity" must be in lowercase as "document"
+    "name": "Document 1",
+    "org": "org:3793213e"                   // In the URN-like value, there is no provided namespace. At least a namespace, entity, and id are required. 
+                                            // Additionally, the property name should contain the "Ref" suffix as "orgRef".
+                                            // Since there is no sub-entity, there should be an extra ":" delimiter.
+}
+
+// CORRECT EXAMPLE
+GET /v1/documents/5196ab21
+RESPONSE
+{
+    "id": "5196ab21", 
+    "ref": "sps:document:shipment:5196ab21", // All self-referencing URN-like values on a resource must contain the namespace prefix "sps".             
+    "name": "Document 1",
+    "orgRef": "sps:org::3793213e"           // "org" is recognized in this example as a significant entity in the API domain, and has an URN, but no sub-entity.
 }
 ```
 
@@ -177,7 +242,9 @@ Refer to further information in [Serialization](serialization.md) with regard to
 | Name               | Type           | Description |
 | ------------------ | -------------- | ----------- |
 | id                 | String         | A unique identifier for the parent entity.  |
+| ref                | String         | A unique reference for the parent entity / resource using unique resource names.  |
 | orgId              | String         | A unique identifier for an organization, typically a UUID. |
+| orgRef             | String         | A unique reference for an organization using its domain qualified unique resource name containing the orgId. |
 | name               | String         | The official name of the parent entity. |
 | description        | String         | Text describing the parent entity. |
 | requestId          | String         | Used to represent a unique tracing identified associated with the platform. |

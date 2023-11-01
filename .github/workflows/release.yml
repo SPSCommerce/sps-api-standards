@@ -57,10 +57,10 @@ jobs:
         uses: mikefarah/yq@v4.25.1
         with:
           cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.ruleset.yml >> sps-api-standards.spectral.yml
-      - name: use node.js 16
+      - name: use node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - name: install release plugins
         run: npm install -g semantic-release @semantic-release/git -D
       - name: semantic release

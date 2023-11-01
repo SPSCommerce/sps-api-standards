@@ -184,30 +184,18 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
 
 ### Shortcuts
 
-It is often not only acceptable but encouraged to add additional shortcuts to your API if portions of the path become superfluous or with the usage of unnecessary IDs based on your implementation. 
+It can be necessary to add additional shortcuts to your API if portions of the path become superfluous or contain the usage of unnecessary IDs based on your implementation. 
 
-- Nested collection resources with globally unique identifiers in their context **MAY NOT** require the specification of all parent unique identifiers in the resource path.
-
-```
-/articles/1/comments/2/ratings/5    // if the rating identifier is globally unique for all articles and comments, 
-                                    // then passing the article identifier and comment identifier is not only annoying for consumers of the API,
-                                    // but does also require validation of those identifiers within the context on the server.
- 
-/articles/comments/ratings/5        // shortcutting the superfluous identifiers when possible is acceptable.
-```
-
-- Nested collection resources **SHOULD** apply inherit filters of the same object accessible at other convenient nested paths. 
+- Nested collection resources (and root resources) **MAY** apply inherit filters of the same object accessible at other convenient nested paths, but **SHOULD NOT** shortcut all resources as this is an indication that the resource may not be organized correctly in the first place.  
 
 ```
-// Example 1 - Comments are accessible and filtered under articles nested path,
-// but also accessible across all articles (inherit authorization may filter comments to those created by the requestor by default).
-/articles/1/comments            // Path may work for both retrieving as well as creating new comments for specific articles.
-/comments                      
- 
-// Example 2 - Authors are accessible and filtered under all comments for the article.
-// Authors are also accessible and searchable at the root across all articles.
-/articles/1/comments/authors    // Path likely only works for retrieving authors, creation of authors happens only under the root /authors endpoint.
-/authors
+// CORRECT
+// Comments are accessible and filtered under articles nested path,
+// but also accessible across all articles (inherit authorization may 
+// filter comments to those created by the requestor by default).
+
+/articles/1/comments     // Path may work for both retrieving as well as creating new comments for specific articles.
+/comments                // Access all comments for all articles.        
 ```
 
 ### Static Collections
@@ -254,13 +242,19 @@ Query parameters specified on a REST API resource endpoint generally represent a
 - Query parameters **MUST** be optional. If necessary then they default to sensible choices that balance consumer expectations and API performance. <a name="sps-query-params-not-required" href="#sps-query-params-not-required"><i class="fa fa-check-circle" title="#sps-query-params-not-required"></i></a>
 - Query parameters that have defaulted values across many resource endpoints **SHOULD** keep defaults consistent across the API as long as there are no implications on performance in doing so. Where deviation is necessary, it should result in specific annotations to mention this in the Open API documentation. Consider inverting a query parameter name (i.e. "published" vs "unpublished") if different defaults are required on different endpoints in order to be consistent with the defaulted values.
 - Additional query parameters not used by the API **MUST** be disregarded without error to make compatibility and transitions simpler and adhere to standards of tolerance.
-- Personally identifiable information and other sensitive data **SHOULD NOT** be present in the Query Parameters as they can be easily inadvertently exposed. This data should be transmitted via HTTP Request Body. <a name="sps-query-params-no-api-keys" href="#sps-query-params-no-api-keys"><i class="fa fa-check-circle" title="#sps-query-params-no-api-keys"></i></a>
+- Personally identifiable information and other sensitive data, such as Auth Tokens, **SHOULD NOT** be present in the Query Parameters as they can be easily inadvertently exposed. This data should be transmitted via HTTP Request Body. <a name="sps-query-params-no-api-keys" href="#sps-query-params-no-api-keys"><i class="fa fa-check-circle" title="#sps-query-params-no-api-keys"></i></a>
 
 ```
 // CORRECT
 /articles?name=blue
 /articles?name=blue&name=red&name=green
 /articles?myName=blue&thisDoesNotMatter=true
+```
+
+```
+// INCORRECT
+/articles?access_token=123
+/articles?user=bob
 ```
 
 ## Fragments
