@@ -18,6 +18,7 @@ To easily review, read and reference these standards refer to documentation publ
 1. [Collections](standards/collections.md) - Results Body, Pagination, Searching, Filtering and Sorting.
 1. [Authentication](standards/authentication.md) - Auth Headers and Standard Responses.
 1. [Errors](standards/errors.md) - Standard Error Schema and Common Responses.
+1. [Asynchronous](standards/async.md) - Asynchronous API Requests and Reponses.
 
 ## Contributing
 
