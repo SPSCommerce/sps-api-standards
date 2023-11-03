@@ -82,6 +82,8 @@ rules:
     given: $.paths[?(/^((?!_webhooks).)*$/i.test(@property))]~
     then: 
       function: pattern
+      # (.+_.) looks for any instance of an underscore followed by any character
+      # (\/[a-z]+[A-Z]) looks for any instance of a forward slash followed by a lowercase character followed by an uppercase character
       functionOptions:
         notMatch: (.+_.)|(\/[a-z]+[A-Z])
 
