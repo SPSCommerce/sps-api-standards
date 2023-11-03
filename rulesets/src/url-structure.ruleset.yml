@@ -83,7 +83,7 @@ rules:
     then: 
       function: pattern
       functionOptions:
-        match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
+        notMatch: (.+_.)|(\/[a-z]+[A-Z])
 
   # Performance issue with spectral-cli and the regex provided - https://github.com/SPSCommerce/sps-api-standards/issues/26
   # sps-paths-no-special-characters:
