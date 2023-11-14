@@ -9,10 +9,10 @@ The concept of bulk operations on RESTful endpoints is quite foreign, in the sen
 Bulk operations **MUST** be synchronous when applied to an existing resource. This means that the client will receive a response to the bulk request only after all operations have been completed. This is in contrast to asynchronous operations, where the client receives a response immediately after the request is received, and then must poll for the result of the operation. Asynchronous bulk operations are applied to new resources specifically for bulk or import to enable subsequent status updates through additional endpoints.
 
 - Bulk operations **MUST** be specific to a single resource type and NOT allow for updating multiple resource types in a single request.
-- Bulk operations **MUST** be implemented as a PATCH request against a collection resource.
-- Bulk operations **MUST** return a `200 (OK)` response code if all operations were received and a result is available for each operation, regardless of success. Bulk operations **MUST NOT** use status code `207 (Multi-Status)` response code as this incurs other implications for the response schema in relationship to Web DAV.
+- Bulk operations **MUST** be implemented as a PATCH request against a collection resource that not idempotent.
+- Bulk operations **MUST** return a `200 (OK)` response code if all operations were received and a result is available for each operation. Bulk operations **MUST NOT** use status code `207 (Multi-Status)` response code as this incurs other implications for the response schema in relationship to WebDAV. System level errors may still result in a `500 (Internal Server Error)` response code where the request could not be processed or was prevented from trying operations.
 - Bulk operations **MUST** accept a constrained number of operations in the request body that is indicated in the documentation of the endpoint. By default this value **MAY** be 100 operations, but should be adjusted according to the needs of the endpoint and the entity-size. Requests beyond the limit **MUST** return a `400` response code and standard [error format body](errors.md) similar to:
-```
+```json
 // RESPONSE
 HTTP/1.1 400
 Content-Type: application/problem+json
@@ -25,12 +25,16 @@ Content-Type: application/problem+json
 }
 ```
 
-- Bulk operations **MUST** include a request body schema following: 
+#### Request
+
+- Bulk operations **MUST** include a request body schema 
 ```json
 {
-    "operations": [
-        {
-            "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // indicate intent of operation
+    "transaction": "ATOMIC" | "ISOLATED",                                   // default: "ATOMIC", optional. transactionality of the request
+    "operations": [                                                         
+        {                                                                   
+            "operationId": "string" | null,                                 // optional consumer generated id to associate with the operation for comparison to result.
+            "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // indicate intent of operation (can use subset, but do not extend)
             "ifMatch": "string" | null,                                     // if-match is an optional ETag that can be passed for optimistic concurrency
             "entity": {
                 ... MATCHING ENTITY...                                      // must match entity schema resource from the collection
@@ -40,33 +44,58 @@ Content-Type: application/problem+json
 }
 ```
 
-- Bulk operations **MUST** include a response body schema following:
+- Bulk operation requests **MAY** be designated as `ATOMIC` or `ISOLATED` via the `transaction` field.
+    - The default transaction type **MUST** be `ISOLATED`.
+    - The transaction type **MAY** be optionally left out of the request schema in implementation.
+    - `ATOMIC` transactions will either succeed or fail together.
+    - `ISOLATED` transactions will allow for individual operations to succeed or fail independently.
+- `operationId` **MAY** be used to associate the operation in the request with the resulting operation in the response. This is useful for tracking the outcome of each operation in the response where it might be ambiguous to reference via `entityId`.
+- `action` enumeration **MUST NOT** be extended, but **MAY** be a subset of the enumeration values where not all actions are required.
+- `etag` **MUST** be used supported in the request schema if it is used for other RESTful operations on the same resource.
+- Operation collections in a request **MAY** include entities of the same ID, in which case the operations are performed in the order they are received. In this case the use of `ETag` may not work as expected for subsequent concurrency checks. Operation ID should be used by consumer in this case to identify the outcome of each operation, especially if transaction type is `ISOLATED`.
+
+#### Response
+
+- Bulk operations **MUST** include a response body schema as follows, which is not extensible:
 ```json
 {
     "status": "SUCCEEDED" | "FAILED" | "PARTIAL",                           // overall status of bulk operation, partial indicating 
     "operations": [                                                         // there are some operations that failed and succeeded
         {
-            "ordinal": 0,                                                   // position in original ordered operation collection
+            "operationId": "string",                                        // matching operation id from the request body if provided, otherwise use index value as a string
             "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // repeat action type
-            "id": "string" | null,                                          // the associated id of the entity, if available
-            "ref": "sps-ref" | null,                                        // the associated sps-ref URN entity, if applicable
+            "entityId": "string" | null,                                    // the associated id of the entity, if available
+            "entityRef": "sps-ref" | null,                                  // the associated sps-ref URN entity, if applicable
             "status": "SUCCEEDED" | "FAILED",                               // status of individual operation
-            "detail": "string",                                             // indicates details on the operation result, such as an error message.
+            "detail": {                                                     // optional detail information about the operation, like error details.
+                "message": "string",                                        // if detail object is provided, it must include a message
+                "code": "string" | null,                                    // codes can be similar to those used in Error Response, or custom for other purposes
+                "field": "string" | null,                                   // field indicates an associated field in the entity to highlight
+                "value": "string" | null                                    // the value of the associated field highlighted in the detail
+            }
         }
     ]
 }
 ```
 
+- `status` enumeration **MUST NOT** be extended or filtered.
+- `operations` collection **SHOULD** be in the same order as the request body operations.
+- `operationId` in the response **MUST** match the `operationId` of the request body where provided, otherwise it should fallback to the index of the operation in the request body as a string value.
+- `entityId` and `entityRef` should both be used to identify the primary ID or an associated [ref](naming.md) value for the entity. These are optional and can be left out if not applicable.
+- `detail` field **MAY** be included as a complex object following the identified schema. If it is include, then it **MUST** include a `message` field. It **MUST NOT** be extended.
+
+#### Example
+
 The following example demonstrates various operations in a bulk request and response:
 
-```
+```json
 // REQUEST
 PATCH /articles
 Content-Type: application/json
 {
     "operations": [
         {
-            "action": "CREATE_UPDATE"
+            "action": "CREATE_UPDATE",
             "ifMatch": "33a64df551425fcc55e4d42a148795d9f25f89d4",
             "entity": {
                 "id": "bfd8f0c0-be67-4f81-bf82-e55e552609f4",
@@ -75,7 +104,8 @@ Content-Type: application/json
             }
         },
         {
-            "action": "CREATE"  
+            "action": "CREATE",
+            "operationId": "my-unique-id-or-uuid", 
             "entity": {
                 "id": null,
                 "name": "my name",
@@ -83,14 +113,14 @@ Content-Type: application/json
             }
         },
         {
-            "action": "DELETE" 
+            "action": "DELETE",
             "ifMatch": "44a64df551425fcc55e4d42a148795d9f25f89c5",     
             "entity": {
                 "id": "d9bd5d91-fc25-4410-ae42-c8f631e8e9ff",
                 "name": null,
                 "description": null
             }
-        },
+        }
     ]
 }
  
@@ -101,28 +131,38 @@ Content-Type: application/json
     "status": "PARTIAL",                                 
     "operations": [
         {
-            "ordinal": 0,
+            "operationId": "0",
             "action": "CREATE_UPDATE",
-            "id": "bfd8f0c0-be67-4f81-bf82-e55e552609f4",
-            "ref": "sps:...",
+            "entityId": "bfd8f0c0-be67-4f81-bf82-e55e552609f4",
+            "entityRef": "sps:thing:bfd8f0c0-be67-4f81-bf82-e55e552609f4",
             "status": "SUCCEEDED",                         
-            "detail": "Article was updated.",  
+            "detail": {
+                "message": "Article was updated.",
+                "code": null,
+                "field": null,
+                "value": null
+            }
         },
         {
-            "ordinal": 1,
+            "operationId": "my-unique-id-or-uuid",
             "action": "CREATE",
-            "id": null,
-            "ref": null,
+            "entityId": null,
+            "entityRef": null,
             "status": "FAILED",                         
-            "detail": "Could not create article, since the name already exists.",  
+            "detail": {
+                "message": "Could not create article, since the name already exists.",
+                "code": "UNIQUE_NAME_VIOLATION",
+                "field": "name",
+                "value": "my name"
+            }  
         },
         {
-            "ordinal": 2,
+            "operationId": "2",
             "action": "DELETE",
-            "id": "d9bd5d91-fc25-4410-ae42-c8f631e8e9ff",
-            "ref": "sps:...",
+            "entityId": "d9bd5d91-fc25-4410-ae42-c8f631e8e9ff",
+            "entityRef": "sps:thing:d9bd5d91-fc25-4410-ae42-c8f631e8e9ff",
             "status": "SUCCEEDED",                         
-            "detail": null,  
+            "detail": null
         }
     ]
 }
