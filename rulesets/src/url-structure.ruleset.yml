@@ -82,8 +82,10 @@ rules:
     given: $.paths[?(/^((?!_webhooks).)*$/i.test(@property))]~
     then: 
       function: pattern
+      # (\/[a-z]+_.) looks for any instance of a forward slash followed by a lowercase character followed by an underscore
+      # (\/([a-z]|[A-Z])+[A-Z])looks for any instance of a forward slash followed by a lowercase of uppercase character followed by an uppercase character
       functionOptions:
-        match: "^(\\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
+        notMatch: (\/[a-z]+_.)|(\/([a-z]|[A-Z])+[A-Z])
 
   # Performance issue with spectral-cli and the regex provided - https://github.com/SPSCommerce/sps-api-standards/issues/26
   # sps-paths-no-special-characters:
