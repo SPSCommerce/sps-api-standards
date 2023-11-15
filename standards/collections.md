@@ -385,8 +385,8 @@ RESPONSE
     "paging": {
         "limit": 2,
         "next": {
-            "cursor": "bmV4dF91c2VySWQ6Mw==",  # base64.encode("next_userId:5"), if the limit is adjusted manually in the subsequent request, that will obviously impact the before/after
-            "url": "https://api.spscommerce.com/v1/example?limit=2&cursor=bmV4dF91c2VySWQ6Mw=="
+            "cursor": "bmV4dF91c2VySWQ6NQ==",  # base64.encode("next_userId:5"), if the limit is adjusted manually in the subsequent request, that will obviously impact the before/after
+            "url": "https://api.spscommerce.com/v1/example?limit=2&cursor=bmV4dF91c2VySWQ6NQ=="
          },
         "previous": {
             "cursor": "cHJldl91c2VySWQ6Mw==",  # base64.encode("prev_userId:3"), if the limit is adjusted manually in the subsequent request, that will obviously impact the before/after
