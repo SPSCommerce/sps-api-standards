@@ -10,7 +10,7 @@ Bulk operations **MUST** be synchronous when applied to an existing resource. Th
 
 - Bulk operations **MUST** be specific to a single resource type and NOT allow for updating multiple resource types in a single request.
 - Bulk operations **MUST** be implemented as a PATCH request against a collection resource that not idempotent.
-- Bulk operations **MUST** return a `200 (OK)` response code if all operations were received and a result is available for each operation. Bulk operations **MUST NOT** use status code `207 (Multi-Status)` response code as this incurs other implications for the response schema in relationship to WebDAV. System level errors may still result in a `500 (Internal Server Error)` response code where the request could not be processed or was prevented from trying operations.
+- Bulk operations **MUST** return a `200 (OK)` response code if all operations were received and a result is available for each operation. Bulk operations **MUST NOT** use status code `207 (Multi-Status)` response code as this incurs other implications for the response schema in relationship to WebDAV. System level errors may still result in a `500 (Internal Server Error)` response code where the request could not be processed or was prevented from trying specific operations.
 - Bulk operations **MUST** accept a constrained number of operations in the request body that is indicated in the documentation of the endpoint. By default this value **MAY** be 100 operations, but should be adjusted according to the needs of the endpoint and the entity-size. Requests beyond the limit **MUST** return a `400` response code and standard [error format body](errors.md) similar to:
 ```json
 // RESPONSE
@@ -30,23 +30,23 @@ Content-Type: application/problem+json
 - Bulk operations **MUST** include a request body schema 
 ```json
 {
-    "transaction": "ATOMIC" | "ISOLATED",                                   // optional indication of transactionality. default is "ISOLATED"
+    "transactionMode": "ATOMIC" | "ISOLATED",                               // OPTIONAL (enum): indication of transactionality of operations. default is "ISOLATED"
     "operations": [                                                         
         {                                                                   
-            "operationId": "string" | null,                                 // optional consumer generated id to associate with the operation for comparison to result.
-            "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // indicate intent of operation (can use subset, but do not extend)
-            "ifMatch": "string" | null,                                     // if-match is an optional ETag that can be passed for optimistic concurrency
+            "operationId": "string" | null,                                 // OPTIONAL (string): consumer generated id to associate with the operation for comparison to result.
+            "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // REQUIRED (enum): indicate intent of operation (can use subset, but do not extend)
+            "ifMatch": "string" | null,                                     // OPTIONAL (string): if-match is an optional ETag value that can be passed for optimistic concurrency
             "entity": {
-                ... MATCHING ENTITY...                                      // must match entity schema resource from the collection
-            }                                                               // schema on entity is static and not dynamic
-        },
+                ... MATCHING ENTITY...                                      // REQUIRED (object): must match entity schema resource from the collection (not dynamic)
+            }                                                            
+        }
     ]
 }
 ```
 
-- Bulk operation requests **MAY** be designated as `ATOMIC` or `ISOLATED` via the `transaction` field.
-    - The default transaction type **MUST** be `ISOLATED`.
-    - The transaction type **MAY** be optionally left out of the request schema in implementation.
+- Bulk operation requests **MAY** be designated as `ATOMIC` or `ISOLATED` via the `transactionMode` field.
+    - The default transaction mode type **MUST** be `ISOLATED`.
+    - The transaction mode type **MAY** be optionally left out of the request schema in implementation.
     - `ATOMIC` transactions will either succeed or fail together.
     - `ISOLATED` transactions will allow for individual operations to succeed or fail independently.
 - `operationId` **MAY** be used to associate the operation in the request with the resulting operation in the response. This is useful for tracking the outcome of each operation in the response where it might be ambiguous to reference via `entityId`.
@@ -59,19 +59,24 @@ Content-Type: application/problem+json
 - Bulk operations **MUST** include a response body schema as follows, which is not extensible:
 ```json
 {
-    "status": "SUCCEEDED" | "FAILED" | "PARTIAL",                           // overall status of bulk operation, partial indicating 
-    "operations": [                                                         // there are some operations that failed and succeeded
+    "status": "SUCCEEDED" | "FAILED" | "PARTIAL",                           // REQUIRED (enum): overall status of bulk operation
+    "operations": [                                                         // REQUIRED (array): results of each operation from the request.
         {
-            "operationId": "string",                                        // matching operation id from the request body if provided, otherwise use index value as a string
-            "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // repeat action type
-            "entityId": "string" | null,                                    // the associated id of the entity, if available
-            "entityRef": "sps-ref" | null,                                  // the associated sps-ref URN entity, if applicable
-            "status": "SUCCEEDED" | "FAILED",                               // status of individual operation
-            "detail": {                                                     // optional detail information about the operation, like error details
-                "message": "string",                                        // if detail object is provided, it must include a message
-                "code": "string" | null,                                    // codes can be similar to those used in Error Response, or custom for other purposes, optional in schema
-                "field": "string" | null,                                   // field indicates an associated field in the entity to highlight, optional in schema
-                "value": "string" | null                                    // the value of the associated field highlighted in the detail, optional in schema
+            "operationId": "string",                                        // REQUIRED (string): matching operation id from the request body if provided, otherwise use index value as a string
+            "action": "CREATE" | "UPDATE" | "CREATE_UPDATE" | "DELETE",     // REQUIRED (enum): repeat action type
+            "entityId": "string" | null,                                    // OPTIONAL (string): the associated id of the entity, if available
+            "entityRef": "sps-ref" | null,                                  // OPTIONAL (string): the associated sps-ref URN entity, if applicable
+            "result": {                                                     // REQUIRED (object): result of the operation
+                "status": "SUCCEEDED" | "FAILED",                           // REQUIRED (enum): status of individual operation
+                "detail": "string" | null,                                  // OPTIONAL (string): Description or detailed human-readable message about the success or failure of the operation.
+                "context": [                                                // OPTIONAL (array): List of objects providing additional context and detail on sub-reasons for any errors or failures.
+                    {
+                        "message": "string",                                // REQUIRED (string): Human-readable details or specific error about the request result.
+                        "code": "string" | null,                            // OPTIONAL (string): Short, machine-readable, name of the validation result that occurred, such as an error code.
+                        "field": "string" | null,                           // OPTIONAL (string): field indicates an associated field in the entity to highlight
+                        "value": "string" | null                            // OPTIONAL (string): the value of the associated field highlighted in the detail
+                    }
+                ] | null
             }
         }
     ]
