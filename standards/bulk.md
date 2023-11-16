@@ -30,7 +30,7 @@ Content-Type: application/problem+json
 - Bulk operations **MUST** include a request body schema 
 ```json
 {
-    "transaction": "ATOMIC" | "ISOLATED",                                   // default: "ATOMIC", optional. transactionality of the request
+    "transaction": "ATOMIC" | "ISOLATED",                                   // optional indication of transactionality. default is "ISOLATED"
     "operations": [                                                         
         {                                                                   
             "operationId": "string" | null,                                 // optional consumer generated id to associate with the operation for comparison to result.
@@ -51,8 +51,8 @@ Content-Type: application/problem+json
     - `ISOLATED` transactions will allow for individual operations to succeed or fail independently.
 - `operationId` **MAY** be used to associate the operation in the request with the resulting operation in the response. This is useful for tracking the outcome of each operation in the response where it might be ambiguous to reference via `entityId`.
 - `action` enumeration **MUST NOT** be extended, but **MAY** be a subset of the enumeration values where not all actions are required.
-- `etag` **MUST** be used supported in the request schema if it is used for other RESTful operations on the same resource.
-- Operation collections in a request **MAY** include entities of the same ID, in which case the operations are performed in the order they are received. In this case the use of `ETag` may not work as expected for subsequent concurrency checks. Operation ID should be used by consumer in this case to identify the outcome of each operation, especially if transaction type is `ISOLATED`.
+- `ifMatch` **MUST** be supported in the request schema if ETags are used for other RESTful operations on the same resource.
+- Operation collections in a request **INCLUDE** include entities of the same `id` only once. If the collection contains multiple entities with the same `id`, then the request **MUST** return a `400 Bad Request` status code and error body.
 
 #### Response
 
@@ -67,11 +67,11 @@ Content-Type: application/problem+json
             "entityId": "string" | null,                                    // the associated id of the entity, if available
             "entityRef": "sps-ref" | null,                                  // the associated sps-ref URN entity, if applicable
             "status": "SUCCEEDED" | "FAILED",                               // status of individual operation
-            "detail": {                                                     // optional detail information about the operation, like error details.
+            "detail": {                                                     // optional detail information about the operation, like error details
                 "message": "string",                                        // if detail object is provided, it must include a message
-                "code": "string" | null,                                    // codes can be similar to those used in Error Response, or custom for other purposes
-                "field": "string" | null,                                   // field indicates an associated field in the entity to highlight
-                "value": "string" | null                                    // the value of the associated field highlighted in the detail
+                "code": "string" | null,                                    // codes can be similar to those used in Error Response, or custom for other purposes, optional in schema
+                "field": "string" | null,                                   // field indicates an associated field in the entity to highlight, optional in schema
+                "value": "string" | null                                    // the value of the associated field highlighted in the detail, optional in schema
             }
         }
     ]
@@ -82,7 +82,7 @@ Content-Type: application/problem+json
 - `operations` collection **SHOULD** be in the same order as the request body operations.
 - `operationId` in the response **MUST** match the `operationId` of the request body where provided, otherwise it should fallback to the index of the operation in the request body as a string value.
 - `entityId` and `entityRef` should both be used to identify the primary ID or an associated [ref](naming.md) value for the entity. These are optional and can be left out if not applicable.
-- `detail` field **MAY** be included as a complex object following the identified schema. If it is include, then it **MUST** include a `message` field. It **MUST NOT** be extended.
+- `detail` field **MAY** be included as a complex object following the identified schema. If it is include, then it **MUST** include a `message` field. It **MUST NOT** be extended. The additional fields around `code`, `field`, and `value` are optional and **MAY** be left out if not applicable to your resource
 
 #### Example
 
