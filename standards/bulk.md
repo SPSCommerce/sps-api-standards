@@ -52,7 +52,7 @@ Content-Type: application/problem+json
 - `operationId` **MAY** be used to associate the operation in the request with the resulting operation in the response. This is useful for tracking the outcome of each operation in the response where it might be ambiguous to reference via `entityId`.
 - `action` enumeration **MUST NOT** be extended, but **MAY** be a subset of the enumeration values where not all actions are required.
 - `ifMatch` **MUST** be supported in the request schema if ETags are used for other RESTful operations on the same resource.
-- Operation collections in a request **INCLUDE** include entities of the same `id` only once. If the collection contains multiple entities with the same `id`, then the request **MUST** return a `400 Bad Request` status code and error body.
+- Operation collections in a request **MUST** include entities of the same `id` only once. If the collection contains multiple entities with the same `id`, then the request **MUST** return a `400 Bad Request` status code and error body.
 
 #### Response
 
@@ -140,12 +140,10 @@ Content-Type: application/json
             "action": "CREATE_UPDATE",
             "entityId": "bfd8f0c0-be67-4f81-bf82-e55e552609f4",
             "entityRef": "sps:thing:bfd8f0c0-be67-4f81-bf82-e55e552609f4",
-            "status": "SUCCEEDED",                         
-            "detail": {
-                "message": "Article was updated.",
-                "code": null,
-                "field": null,
-                "value": null
+            "result": {
+                "status": "SUCCEEDED",                         
+                "detail": "Article was updated.",
+                "context": null
             }
         },
         {
@@ -153,21 +151,29 @@ Content-Type: application/json
             "action": "CREATE",
             "entityId": null,
             "entityRef": null,
-            "status": "FAILED",                         
-            "detail": {
-                "message": "Could not create article, since the name already exists.",
-                "code": "UNIQUE_NAME_VIOLATION",
-                "field": "name",
-                "value": "my name"
-            }  
+            "result": {
+                "status": "FAILED", 
+                "detail": "Could not create article.",                    
+                "context": [
+                    {
+                        "message": "An article with the same name already exists.",
+                        "code": "UNIQUE_NAME_VIOLATION",
+                        "field": "name",
+                        "value": "my name"
+                    }
+                ]   
+            } 
         },
         {
             "operationId": "2",
             "action": "DELETE",
             "entityId": "d9bd5d91-fc25-4410-ae42-c8f631e8e9ff",
             "entityRef": "sps:thing:d9bd5d91-fc25-4410-ae42-c8f631e8e9ff",
-            "status": "SUCCEEDED",                         
-            "detail": null
+            "result": {
+                "status": "SUCCEEDED",                         
+                "detail": null,
+                "context": null
+            }
         }
     ]
 }
