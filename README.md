@@ -13,6 +13,7 @@ To easily review, read and reference these standards refer to documentation publ
 
 1. [URL Structure](standards/url-structure.md) - URLs, Resources, Hierarchies and Query Parameters.
 1. [Request & Response](standards/request-response.md) - Verbs/Methods, Headers and Status Codes.
+1. [Bulk Operations](standards/bulk.md) - Handling bulk operations with RESTful compromises.
 1. [Naming](standards/naming.md) - General, Text, Property Names and Standard Properties.
 1. [Serialization](standards/serialization.md) - Casing, Types, Quantities, Intervals and Durations.
 1. [Collections](standards/collections.md) - Results Body, Pagination, Searching, Filtering and Sorting.
