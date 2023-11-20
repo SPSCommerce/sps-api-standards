@@ -71,6 +71,6 @@ jobs:
       - name: azure pipelines publishing
         uses: Azure/pipelines@v1
         with:
-          azure-devops-project-url: https://dev.azure.com/spscommerce/sps-shared
+          azure-devops-project-url: https://dev.azure.com/spscommerce/api-lifecycle
           azure-pipeline-name: 'sps-api-standards-cdn-publish'
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
