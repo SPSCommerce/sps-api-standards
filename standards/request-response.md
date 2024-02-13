@@ -504,7 +504,7 @@ SPS-CORS-Error: bad origin
 - A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable to this API.
 - The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
     - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
-    -__prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `SPS-Execution-Context` this is interpreted as the default value.
+    - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `SPS-Execution-Context` this is interpreted as the default value.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
 - The header value **MUST** be at minimum 1 character in length and  **MUST NOT** exceed a maximum length of 100 characters.
 - The header value **SHOULD** contain human-readable tag for the context.
@@ -666,7 +666,7 @@ For each HTTP method with only the status codes specified below, API developers 
 
 | Status Code               | GET | POST | PUT | PATCH | DELETE | HEAD | OPTIONS |
 |---------------------------|-----|------|-----|-------|--------|------|---------|
-| 200 OK                    |  X  |  X   |     |       |        |  X   |   X     |
+| 200 OK                    |  X  |  X   |     |   X   |        |  X   |   X     |
 | 201 Created               |     |  X   |     |       |        |      |         |
 | 202 Accepted              |     |  X   |  X  |   X   |   X    |      |         |
 | 204 No Content            |     |      |  X  |   X   |   X    |      |   X     |
