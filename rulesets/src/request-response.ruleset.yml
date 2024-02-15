@@ -10,23 +10,48 @@ rules:
     then:
       function: enumeration
       functionOptions:
-        values:
-          - "200"
-          - "201"
-          - "202"
-          - "204"
-          - "400"
-          - "401"
-          - "403"
-          - "404"
-          - "405"
-          - "406"
-          - "409"
-          - "412"
-          - "415"
-          - "428"
-          - "429"
-          - "500"
+        values: ["200", "201", "202", "204", "400", "401", "403", "404", "405", "406", "409", "412", "415", "428", "429", "500"]
+
+  # sps-missing-2xx-response:
+  #   description: "Every endpoint must have at least one 2xx success response"
+  #   severity: error
+  #   given: "$.paths[*][*].responses"
+  #   then:
+  #     function: schema
+  #     functionOptions:
+  #       schema:
+  #         type: object
+  #         patternProperties:
+  #           "^2[0-9]{2}$":
+  #             type: object
+  #         not:
+  #           type: object
+  #           additionalProperties:
+  #             not:
+  #               type: object
+  #         minProperties: 1
+
+    # given: $.paths[*][*].responses[?(@property.match(/^2[0-9]{2}$/))]
+    # then:
+    #   function: truthy
+
+  #   sps-missing-5xx-response:
+  #     description: "Every endpoint must have at least one 5xx error response"
+  #     severity: error
+  #     given: $.paths...responses.*~
+  #     then:
+  #       function: schema
+  #       functionOptions:
+  #         schema:
+  #           type: object
+  #           properties:
+  #             responses:
+  #               type: object
+  #               patternProperties:
+  #                 "^5[0-9]{2}$": {}
+  #           required:
+  #             - responses
+  #           minProperties: 1
 
   ##### HTTP Headers #####
   sps-headers-hyphenated-pascal-case:
@@ -63,20 +88,39 @@ rules:
   ##### MIME Types #####
 
   ##### HTTP Methods #####
-  sps-http-methods:
-    description: Operations MUST use only the HTTP methods as outlined in the document.
+  sps-invalid-http-method:
+  # TODO: what's a better way to phrase this description
+    description: Operations MUST use only the common HTTP methods as outlined in the document, and must be in lower-case
     severity: error
-    given: "$.paths[*][*].method"
+    given: $.paths[*].*~
     then:
       field: "method"
       function: enumeration
       functionOptions:
-        values: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+        values: ["get", "post", "put", "patch", "delete", "head", "options"]
 
   sps-request-get-no-body:
     description: A `GET` request MUST NOT accept a request body
     severity: error
-    formats: [oas3]
-    given: $.paths..get.requestBody
+    given: $.paths[*][get].requestBody
     then:
       function: undefined
+
+  sps-response-get-missing-body:
+    description: A `GET` operation must return a response body
+    severity: error
+    given: $.paths[*][get].responses[*]
+    then:
+      field: "content"
+      function: "truthy"
+      message: "GET operations must include a response body."
+
+  sps-invalid-get-response-code:
+    description: "GET operations should not use status codes 201, 202, 204, 409, 412"
+    severity: warn
+    given: $.paths[*][get].responses
+    then:
+      function: "pattern"
+      functionOptions:
+        notMatch: "^(201|202|204|409|412)$"
+      message: "GET operations should not use status codes 201, 202, 204, 409, 412"

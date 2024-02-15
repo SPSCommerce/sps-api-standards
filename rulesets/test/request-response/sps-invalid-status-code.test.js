@@ -39,8 +39,8 @@ describe("sps-invalid-status-code", () => {
                 get:
                     summary: Example endpoint
                     responses:
-                        "207":
-                            description: Successful response
+                        "100":
+                            description: Weird response
                             content:
                                 application/json:
                                     schema:
