@@ -1,6 +1,15 @@
 rules:
   ##### General #####
-
+  sps-invalid-response-body:
+    description: Response bodies must be objects, not arrays
+    severity: error
+    given: "$.paths[*][*].responses[*].content.application/json.schema"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          not:
+            type: array
 
   ##### HTTP Status Codes #####
   sps-invalid-status-code:
@@ -109,7 +118,7 @@ rules:
   sps-response-get-missing-body:
     description: A `GET` operation must return a response body
     severity: error
-    given: $.paths[*][get].responses[*]
+    given: $.paths[*].get.responses[*]
     then:
       field: "content"
       function: "truthy"
@@ -118,9 +127,49 @@ rules:
   sps-invalid-get-response-code:
     description: "GET operations should not use status codes 201, 202, 204, 409, 412"
     severity: warn
-    given: $.paths[*][get].responses
+    given: $.paths[*].get.responses
     then:
       function: "pattern"
       functionOptions:
         notMatch: "^(201|202|204|409|412)$"
       message: "GET operations should not use status codes 201, 202, 204, 409, 412"
+
+  sps-response-get-missing-code:
+    description: GET operations must always return both 200 and 404 status codes
+    severity: error
+    given: $.paths[*].get.responses
+    then:
+      - field: "200"
+        function: truthy
+      - field: "404"
+        function: truthy
+
+  sps-invalid-post-response-code:
+    description: POST operations should not return 204 or 412 status codes
+    given: $.paths[*].post.responses
+    severity: warn
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(204|412)$"
+
+  sps-invalid-put-response-code:
+    description: PUT operations should not return 200 or 201 status codes
+    severity: warn
+    given: $.paths[*].put.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(200|201)$"
+
+  sps-invalid-delete-response-code:
+    description: DELETE operations should not return 200 or 201 status codes
+    severity: warn
+    given: $.paths[*].delete.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(200|201)$"

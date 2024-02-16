@@ -84,6 +84,18 @@ paths:
                   message: Attribute 'reason' must not be null.
                   field: reason
                   source: body
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                title: Not Found
+                status: 404
+                requestId: b6d9a290-9f20-465b-bcd3-4a5166eeb3d7
+                detail: Requested resource 'resource/23' not found.
+                instance: https://example.com/account/12345/resource/23
         "500":
           description: Internal Server Error
           content:
