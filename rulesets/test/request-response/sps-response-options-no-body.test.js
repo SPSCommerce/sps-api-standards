@@ -1,24 +1,22 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-response-delete-no-body", () => {
+describe("sps-response-options-no-body", () => {
     let spectral = null;
-    const ruleName = "sps-response-delete-no-body";
+    const ruleName = "sps-response-options-no-body";
     const ruleset = "src/request-response.ruleset.yml";
 
     beforeEach(async () => {
         spectral = new SpectralTestHarness(ruleset);
     });
 
-    test("valid DELETE", async () => {
+    test("valid OPTIONS response", async () => {
         const spec = `
         openapi: 3.1.0
         paths:
           /example:
-            delete:
-              summary: Example DELETE endpoint
+            options:
+              summary: Example OPTIONS endpoint
               responses:
-                '202':
-                  description: Accepted
                 '204':
                   description: No Content
                 '404':
@@ -35,16 +33,16 @@ describe("sps-response-delete-no-body", () => {
           await spectral.validateSuccess(spec, ruleName);
     });
 
-    test("invalid DELETE with response body", async () => {
+    test("invalid OPTIONS response with body", async () => {
       const spec = `
       openapi: 3.1.0
       paths:
         /example:
-          delete:
-            summary: Example DELETE endpoint
+          options:
+            summary: Example OPTIONS endpoint
             responses:
-              '202':
-                description: Accepted
+              '200':
+                description: OK
                 content:
                   application/json:
                     schema:
@@ -52,8 +50,6 @@ describe("sps-response-delete-no-body", () => {
                       properties:
                         message:
                           type: string
-              '204':
-                description: No Content
               '404':
                 description: Not Found
                 content:
@@ -67,5 +63,4 @@ describe("sps-response-delete-no-body", () => {
   
         await spectral.validateFailure(spec, ruleName, "Error", 1);
     });
-    
 });

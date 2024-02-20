@@ -179,14 +179,14 @@ rules:
     severity: error
     given: $.paths[*].delete.requestBody
     then:
-      function: falsy
+      function: undefined
 
-  # sps-response-delete-no-body:
-  #   description: DELETE operations must not have a response body
-  #   severity: error
-  #   given: $.paths[*].delete.responses[*].content
-  #   then:
-  #     function: falsy
+  sps-response-delete-no-body:
+    description: DELETE operations must not have a response body
+    severity: error
+    given: $.paths.*.delete.responses[202,204].content
+    then:
+      function: falsy
 
   sps-invalid-patch-response-code:
     description: PATCH operations should not return 201 status code
@@ -201,6 +201,60 @@ rules:
   sps-request-patch-missing-body:
     description: PATCH operations must have a request body
     severity: error
-    given: $.paths[*].patch.requestBody
+    given: $.paths[*].patch
     then:
-      function: truthy
+      field: requestBody
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+
+  sps-invalid-head-response-code:
+    description: HEAD operations should not return 201, 202, 204, 409, 412 status codes
+    severity: warn
+    given: $.paths[*].head.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(201|202|204|409|412)$"
+
+  sps-request-head-no-body:
+    description: A `HEAD` request MUST NOT accept a request body
+    severity: error
+    given: $.paths[*][head].requestBody
+    then:
+      function: undefined
+
+  sps-response-head-no-body:
+    description: HEAD operations should not return a response body for success
+    given: $.paths.*.head.responses[200].content
+    severity: error
+    message: HEAD operations should not return a response body
+    then:
+      function: falsy
+
+  sps-invalid-options-response-code:
+    description: OPTIONS operations should not return 201, 202, 409, 412 status codes
+    severity: warn
+    given: $.paths[*].options.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(201|202|409|412)$"
+
+  sps-request-options-no-body:
+    description: An `OPTIONS` request MUST NOT accept a request body
+    severity: error
+    given: $.paths[*][options].requestBody
+    then:
+      function: undefined
+
+  sps-response-options-no-body:
+    description: OPTIONS operations should not return a response body for success
+    given: $.paths.*.options.responses[200, 204].content
+    severity: error
+    message: OPTIONS operations should not return a response body
+    then:
+      function: falsy
