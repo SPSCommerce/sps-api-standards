@@ -1,15 +1,13 @@
 rules:
   ##### General #####
-  # sps-invalid-response-body:
-  #   description: Response bodies must be objects, not arrays
-  #   severity: error
-  #   given: "$.paths[*][*].responses[*].content.application/json.schema"
-  #   then:
-  #     function: schema
-  #     functionOptions:
-  #       schema:
-  #         not:
-  #           type: array
+  sps-invalid-response-body:
+    description: Response bodies must be an object type.
+    severity: error
+    given: $.paths[*][*].responses[*].content.*.schema.type
+    then:
+      function: pattern
+      functionOptions:
+        match: "object"
 
   ##### HTTP Status Codes #####
   sps-invalid-status-code:
@@ -129,10 +127,10 @@ rules:
     severity: warn
     given: $.paths[*].get.responses
     then:
+      field: "@key"
       function: "pattern"
       functionOptions:
         notMatch: "^(201|202|204|409|412)$"
-      message: "GET operations should not use status codes 201, 202, 204, 409, 412"
 
   sps-response-get-missing-code:
     description: GET operations must always return both 200 and 404 status codes

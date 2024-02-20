@@ -31,7 +31,7 @@ describe("sps-invalid-get-response-code", () => {
           await spectral.validateSuccess(spec, ruleName);
     });
 
-    xtest("invalid GET response code", async () => {
+    test("invalid GET response code", async () => {
       const spec = `
       openapi: 3.1.0
       paths:

@@ -55,7 +55,7 @@ describe("sps-invalid-response-body", () => {
         await spectral.validateSuccess(spec, ruleName);
   });
 
-    xtest("invalid response body", async () => {
+    test("invalid response body array", async () => {
       const spec = `
       openapi: 3.1.0
       paths:
@@ -71,6 +71,44 @@ describe("sps-invalid-response-body", () => {
                       type: array
                       items:
                         type: string
+        `;
+  
+        await spectral.validateFailure(spec, ruleName, "Error", 1);
+    });
+
+    test("invalid response body type string", async () => {
+      const spec = `
+      openapi: 3.1.0
+      paths:
+        /example:
+          get:
+            summary: Example GET endpoint
+            responses:
+              '200':
+                description: Successful operation
+                content:
+                  application/json:
+                    schema:
+                      type: string
+        `;
+  
+        await spectral.validateFailure(spec, ruleName, "Error", 1);
+    });
+
+    test("invalid response body type number", async () => {
+      const spec = `
+      openapi: 3.1.0
+      paths:
+        /example:
+          get:
+            summary: Example GET endpoint
+            responses:
+              '200':
+                description: Successful operation
+                content:
+                  application/json:
+                    schema:
+                      type: nubmber
         `;
   
         await spectral.validateFailure(spec, ruleName, "Error", 1);
