@@ -393,8 +393,8 @@ paths:
           schema:
             type: string
       responses:
-        "204":
-          description: Item was successfully updated.
+        "202":
+          description: Item was accepted.
 
 components:   
   schemas:

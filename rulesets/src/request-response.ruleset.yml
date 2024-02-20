@@ -1,15 +1,15 @@
 rules:
   ##### General #####
-  sps-invalid-response-body:
-    description: Response bodies must be objects, not arrays
-    severity: error
-    given: "$.paths[*][*].responses[*].content.application/json.schema"
-    then:
-      function: schema
-      functionOptions:
-        schema:
-          not:
-            type: array
+  # sps-invalid-response-body:
+  #   description: Response bodies must be objects, not arrays
+  #   severity: error
+  #   given: "$.paths[*][*].responses[*].content.application/json.schema"
+  #   then:
+  #     function: schema
+  #     functionOptions:
+  #       schema:
+  #         not:
+  #           type: array
 
   ##### HTTP Status Codes #####
   sps-invalid-status-code:
@@ -173,3 +173,34 @@ rules:
       function: pattern
       functionOptions:
         notMatch: "^(200|201)$"
+
+  sps-request-delete-no-body:
+    description: DELETE operations must not accept a request body
+    severity: error
+    given: $.paths[*].delete.requestBody
+    then:
+      function: falsy
+
+  # sps-response-delete-no-body:
+  #   description: DELETE operations must not have a response body
+  #   severity: error
+  #   given: $.paths[*].delete.responses[*].content
+  #   then:
+  #     function: falsy
+
+  sps-invalid-patch-response-code:
+    description: PATCH operations should not return 201 status code
+    severity: warn
+    given: $.paths[*].patch.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^201$"
+
+  sps-request-patch-missing-body:
+    description: PATCH operations must have a request body
+    severity: error
+    given: $.paths[*].patch.requestBody
+    then:
+      function: truthy
