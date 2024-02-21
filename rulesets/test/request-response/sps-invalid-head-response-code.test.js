@@ -1,33 +1,32 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-invalid-head-response-code", () => {
-    let spectral = null;
-    const ruleName = "sps-invalid-head-response-code";
-    const ruleset = "src/request-response.ruleset.yml";
+  let spectral = null;
+  const ruleName = "sps-invalid-head-response-code";
+  const ruleset = "src/request-response.ruleset.yml";
 
-    beforeEach(async () => {
-        spectral = new SpectralTestHarness(ruleset);
-    });
+  beforeEach(async () => {
+    spectral = new SpectralTestHarness(ruleset);
+  });
 
-    test("valid HEAD response code", async () => {
-        const spec = `
-        openapi: 3.1.0
-        paths:
-          /example:
-            head:
-              summary: Example HEAD endpoint
-              responses:
-                '200':
-                  description: OK
-                '404':
-                  description: Not Found
-          `;
-    
-          await spectral.validateSuccess(spec, ruleName);
-    });
+  test("valid HEAD response code", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /example:
+          head:
+            summary: Example HEAD endpoint
+            responses:
+              '200':
+                description: OK
+              '404':
+                description: Not Found
+    `;
+    await spectral.validateSuccess(spec, ruleName);
+  });
 
-    test("invalid HEAD response code 201", async () => {
-      const spec = `
+  test("invalid HEAD response code 201", async () => {
+    const spec = `
       openapi: 3.1.0
       paths:
         /example:
@@ -39,12 +38,11 @@ describe("sps-invalid-head-response-code", () => {
               '404':
                 description: Not Found
         `;
-  
-        await spectral.validateFailure(spec, ruleName, "Warning", 1);
-    });
+    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+  });
 
-    test("invalid HEAD response code 202", async () => {
-      const spec = `
+  test("invalid HEAD response code 202", async () => {
+    const spec = `
       openapi: 3.1.0
       paths:
         /example:
@@ -56,8 +54,6 @@ describe("sps-invalid-head-response-code", () => {
               '404':
                 description: Not Found
         `;
-  
-        await spectral.validateFailure(spec, ruleName, "Warning", 1);
-    });
-    
+    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+  });
 });

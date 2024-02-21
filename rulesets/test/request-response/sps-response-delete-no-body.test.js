@@ -1,42 +1,42 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-response-delete-no-body", () => {
-    let spectral = null;
-    const ruleName = "sps-response-delete-no-body";
-    const ruleset = "src/request-response.ruleset.yml";
+  let spectral = null;
+  const ruleName = "sps-response-delete-no-body";
+  const ruleset = "src/request-response.ruleset.yml";
 
-    beforeEach(async () => {
-        spectral = new SpectralTestHarness(ruleset);
-    });
+  beforeEach(async () => {
+    spectral = new SpectralTestHarness(ruleset);
+  });
 
-    test("valid DELETE", async () => {
-        const spec = `
-        openapi: 3.1.0
-        paths:
-          /example:
-            delete:
-              summary: Example DELETE endpoint
-              responses:
-                '202':
-                  description: Accepted
-                '204':
-                  description: No Content
-                '404':
-                  description: Not Found
-                  content:
-                    application/json:
-                      schema:
-                        type: object
-                        properties:
-                          message:
-                            type: string
-          `;
-    
-          await spectral.validateSuccess(spec, ruleName);
-    });
+  test("valid DELETE", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /example:
+          delete:
+            summary: Example DELETE endpoint
+            responses:
+              '202':
+                description: Accepted
+              '204':
+                description: No Content
+              '404':
+                description: Not Found
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+    `;
 
-    test("invalid DELETE with response body", async () => {
-      const spec = `
+    await spectral.validateSuccess(spec, ruleName);
+  });
+
+  test("invalid DELETE with response body", async () => {
+    const spec = `
       openapi: 3.1.0
       paths:
         /example:
@@ -63,9 +63,8 @@ describe("sps-response-delete-no-body", () => {
                       properties:
                         message:
                           type: string
-        `;
-  
-        await spectral.validateFailure(spec, ruleName, "Error", 1);
-    });
-    
+    `;
+
+    await spectral.validateFailure(spec, ruleName, "Error", 1);
+  });
 });

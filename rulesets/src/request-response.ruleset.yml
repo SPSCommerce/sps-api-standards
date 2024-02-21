@@ -17,48 +17,25 @@ rules:
     then:
       function: enumeration
       functionOptions:
-        values: ["200", "201", "202", "204", "400", "401", "403", "404", "405", "406", "409", "412", "415", "428", "429", "500"]
-
-  # sps-missing-2xx-response:
-  #   description: "Every endpoint must have at least one 2xx success response"
-  #   severity: error
-  #   given: "$.paths[*][*].responses"
-  #   then:
-  #     function: schema
-  #     functionOptions:
-  #       schema:
-  #         type: object
-  #         patternProperties:
-  #           "^2[0-9]{2}$":
-  #             type: object
-  #         not:
-  #           type: object
-  #           additionalProperties:
-  #             not:
-  #               type: object
-  #         minProperties: 1
-
-    # given: $.paths[*][*].responses[?(@property.match(/^2[0-9]{2}$/))]
-    # then:
-    #   function: truthy
-
-  #   sps-missing-5xx-response:
-  #     description: "Every endpoint must have at least one 5xx error response"
-  #     severity: error
-  #     given: $.paths...responses.*~
-  #     then:
-  #       function: schema
-  #       functionOptions:
-  #         schema:
-  #           type: object
-  #           properties:
-  #             responses:
-  #               type: object
-  #               patternProperties:
-  #                 "^5[0-9]{2}$": {}
-  #           required:
-  #             - responses
-  #           minProperties: 1
+        values:
+          [
+            "200",
+            "201",
+            "202",
+            "204",
+            "400",
+            "401",
+            "403",
+            "404",
+            "405",
+            "406",
+            "409",
+            "412",
+            "415",
+            "428",
+            "429",
+            "500",
+          ]
 
   ##### HTTP Headers #####
   sps-headers-hyphenated-pascal-case:
@@ -67,7 +44,7 @@ rules:
     given: "$..parameters[?(@.in == 'header')].name"
     message: "'HTTP' headers MUST follow 'Hyphenated-Pascal-Case' notation"
     type: style
-    then: 
+    then:
       function: pattern
       functionOptions:
         match: "/^([A-Z][a-z0-9]-)*([A-Z][a-z0-9])+/"
@@ -80,8 +57,8 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: '^(x|X)-'
- 
+        notMatch: "^(x|X)-"
+
   sps-no-x-response-headers:
     description: "Do not use headers with X-"
     severity: warn
@@ -90,14 +67,13 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: '^(x|X)-'
+        notMatch: "^(x|X)-"
 
   ##### MIME Types #####
 
   ##### HTTP Methods #####
   sps-invalid-http-method:
-  # TODO: what's a better way to phrase this description
-    description: Operations MUST use only the common HTTP methods as outlined in the document, and must be in lower-case
+    description: Operations MUST use only the common HTTP methods as outlined in the standards guide, and must be in lower-case
     severity: error
     given: $.paths[*].*~
     then:

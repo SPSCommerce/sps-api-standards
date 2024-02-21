@@ -1,31 +1,31 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-request-delete-no-body", () => {
-    let spectral = null;
-    const ruleName = "sps-request-delete-no-body";
-    const ruleset = "src/request-response.ruleset.yml";
+  let spectral = null;
+  const ruleName = "sps-request-delete-no-body";
+  const ruleset = "src/request-response.ruleset.yml";
 
-    beforeEach(async () => {
-        spectral = new SpectralTestHarness(ruleset);
-    });
+  beforeEach(async () => {
+    spectral = new SpectralTestHarness(ruleset);
+  });
 
-    test("valid DELETE", async () => {
-        const spec = `
-        openapi: 3.1.0
-        paths:
-          /example:
-            delete:
-              summary: Example DELETE endpoint
-              responses:
-                '204':
-                  description: No Content
-          `;
-    
-          await spectral.validateSuccess(spec, ruleName);
-    });
+  test("valid DELETE", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /example:
+          delete:
+            summary: Example DELETE endpoint
+            responses:
+              '204':
+                description: No Content
+      `;
 
-    test("invalid DELETE", async () => {
-      const spec = `
+    await spectral.validateSuccess(spec, ruleName);
+  });
+
+  test("invalid DELETE", async () => {
+    const spec = `
       openapi: 3.1.0
       paths:
         /example:
@@ -42,9 +42,8 @@ describe("sps-request-delete-no-body", () => {
             responses:
               '204':
                 description: No Content
-        `;
-  
-        await spectral.validateFailure(spec, ruleName, "Error", 1);
-    });
-    
+    `;
+
+    await spectral.validateFailure(spec, ruleName, "Error", 1);
+  });
 });
