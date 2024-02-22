@@ -32,10 +32,10 @@ rules:
       - field: "format"
         function: pattern
         functionOptions:
-          match: 'sps-ref'
+          match: "sps-ref"
   sps-ref-schema:
     description: Properties following 'sps-ref' format MUST use the standardized schema - maxLength (255), minLength(7), pattern (includes 'sps'), type (string).
-    message: '{{property}} is not provided or not following required schema values.'
+    message: "{{property}} is not provided or not following required schema values."
     severity: error
     formats: [oas3]
     given: '$..[?(@property=== "format" && @ == "sps-ref")]^'
@@ -65,22 +65,22 @@ rules:
       - field: pattern
         function: pattern
         functionOptions:
-          match: 'sps'
+          match: "sps"
       - field: type
         function: pattern
         functionOptions:
-          match: '^string$'
+          match: "^string$"
   # fingerprint property usage and naming
   sps-fingerprint-naming:
     description: Rather than property names refering to the implementation for 'hash' or 'hashkey', you MUST use the property name 'fingerprint'.
-    message: '{{property}} is not using property name fingerprint.'
+    message: "{{property}} is not using property name fingerprint."
     severity: error
     formats: [oas3]
-    given: '$.components.schemas..properties.*~'
+    given: "$.components.schemas..properties.*~"
     then:
       function: pattern
       functionOptions:
-        notMatch: '^hashkey|hashKey|hash$'
+        notMatch: "^hashkey|hashKey|hash$"
   sps-fingerprint-type:
     description: Fingerprint values MUST use a data type of `string`.
     severity: error
@@ -89,8 +89,8 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: '^string$'
-  sps-request-get-no-body:
+        match: "^string$"
+  sps-request-get-invalid-body:
     description: A `GET` request MUST NOT accept a request body
     severity: error
     formats: [oas3]
@@ -115,7 +115,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: '^(x|X)-'
+        notMatch: "^(x|X)-"
   sps-no-x-response-headers:
     description: "Do not use headers with X-"
     severity: warn
@@ -124,7 +124,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: '^(x|X)-'
+        notMatch: "^(x|X)-"
   # ignoring contact information as that is typically handled at a higher level of concern than each API spec individually
   info-contact: off
   # operation ids are essential for changelogs and other evolutions over time
@@ -173,25 +173,25 @@ rules:
   sps-schema-names-pascal-case:
     severity: warn
     description: Schema names SHOULD be written in PascalCase
-    message: '{{property}} is not PascalCase: {{error}}'
+    message: "{{property}} is not PascalCase: {{error}}"
     recommended: true
     type: style
-    given: '$.components.schemas.*~'
+    given: "$.components.schemas.*~"
     then:
       function: pattern
       functionOptions:
-        match: '^[A-Z][a-zA-Z0-9]*$'
+        match: "^[A-Z][a-zA-Z0-9]*$"
   sps-response-names-pascal-case:
     severity: warn
     description: Response names SHOULD be written in PascalCase
-    message: '{{property}} is not PascalCase: {{error}}'
+    message: "{{property}} is not PascalCase: {{error}}"
     recommended: true
     type: style
-    given: '$.components.responses.*~'
+    given: "$.components.responses.*~"
     then:
       function: pattern
       functionOptions:
-        match: '^[A-Z][a-zA-Z0-9]*$'
+        match: "^[A-Z][a-zA-Z0-9]*$"
   sps-limit-path-size:
     message: APIs SHOULD NOT expand their total URL length beyond a few hundred characters.
     severity: warn

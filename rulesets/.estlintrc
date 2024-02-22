@@ -1,7 +1,4 @@
 {
     "root": true,
-    "extends": ["@spscommerce/eslint-config-typescript"],
-    "globals": {
-      "JSX": true
-    }
+    "extends": ["@spscommerce/eslint-config-typescript"]
 }

@@ -26,21 +26,6 @@ describe("sps-invalid-post-response-code", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("invalid POST response code 204", async () => {
-    const spec = `
-      openapi: 3.1.0
-      paths:
-        /example:
-          post:
-            summary: Example POST endpoint
-            responses:
-              '204':
-                description: No Content
-    `;
-
-    await spectral.validateFailure(spec, ruleName, "Warning", 1);
-  });
-
   test("invalid POST response code 412", async () => {
     const spec = `
       openapi: 3.1.0

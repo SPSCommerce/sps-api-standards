@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-request-head-no-body", () => {
+describe("sps-request-head-invalid-body", () => {
   let spectral = null;
-  const ruleName = "sps-request-head-no-body";
+  const ruleName = "sps-request-head-invalid-body";
   const ruleset = "src/request-response.ruleset.yml";
 
   beforeEach(async () => {

@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-response-delete-no-body", () => {
+describe("sps-response-delete-invalid-body", () => {
   let spectral = null;
-  const ruleName = "sps-response-delete-no-body";
+  const ruleName = "sps-response-delete-invalid-body";
   const ruleset = "src/request-response.ruleset.yml";
 
   beforeEach(async () => {
