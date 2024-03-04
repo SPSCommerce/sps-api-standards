@@ -61,7 +61,7 @@ When responding to API requests, the following status code ranges **MUST** be us
 
 ### Supported Status Codes
 
-- All REST APIs **MUST** use only the following status codes. APIs **MUST NOT** return a status code that is not defined here to express contractual or defined output of the endpoint. API Consumers may receive other status codes not presented because other infrastructure and proxies live in between the API and the consumer or other operational and platform constraints may return certain status codes. 
+- All REST APIs **MUST** use only the following status codes. APIs **MUST NOT** return a status code that is not defined here to express contractual or defined output of the endpoint. API Consumers may receive other status codes not presented because other infrastructure and proxies live in between the API and the consumer or other operational and platform constraints may return certain status codes. <a name="sps-invalid-status-code" href="#sps-invalid-status-code"><i class="fa fa-check-circle" title="#sps-invalid-status-code"></i></a>
 - APIs may not use all status codes defined, or only require a subset for their operations.
 - When an API must respond to a request that has potentially multiple valid status code responses, the API **SHOULD** respond with the "more-specific" status code. The "more-specific" status code is generally the highest number in the associated range.
 
@@ -454,7 +454,7 @@ Access-Control-Allow-Methods: *
 - Custom Headers **MUST** abide by the same rules and guidelines as standard headers.
 - Custom Header names **MUST NOT** be longer than 50 characters.
 - Custom Header names **MUST** only contain alpha, numeric, and dash characters: [a-zA-Z0-9-]
-- Custom Headers **MUST** start with the prefix `SPS-` (Note: do not prefix with `X-`). 
+- Custom Headers **MUST** start with the prefix `SPS-` (Note: do not prefix with `X-`). <a name="sps-no-x-headers" href="#sps-no-x-headers"><i class="fa fa-check-circle" title="#sps-no-x-headers"></i></a>
 - Custom Headers **SHOULD NOT** include sensitive data that applies to customers/employees or is subject to legal, regulatory, contractual, and business requirements.
 
 ```
@@ -504,7 +504,7 @@ SPS-CORS-Error: bad origin
 - A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable to this API.
 - The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
     - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
-    -__prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `SPS-Execution-Context` this is interpreted as the default value.
+    - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `SPS-Execution-Context` this is interpreted as the default value.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
 - The header value **MUST** be at minimum 1 character in length and  **MUST NOT** exceed a maximum length of 100 characters.
 - The header value **SHOULD** contain human-readable tag for the context.
@@ -641,7 +641,7 @@ Location: /articles/3
 
 ### Overview
 
-- Operations **MUST** use only the HTTP methods as outlined.
+- Operations **MUST** use only the HTTP methods as outlined. <a name="sps-invalid-http-method" href="#sps-invalid-http-method"><i class="fa fa-check-circle" title="#sps-invalid-http-method"></i></a>
 - Custom HTTP Methods **MUST NOT** be used.
 - Operations **MUST** respect the identified idempotency and body for each method.
 - Operations **SHOULD** use consistent schema's across different HTTP Methods when specifying the same addressable resource.
@@ -666,10 +666,10 @@ For each HTTP method with only the status codes specified below, API developers 
 
 | Status Code               | GET | POST | PUT | PATCH | DELETE | HEAD | OPTIONS |
 |---------------------------|-----|------|-----|-------|--------|------|---------|
-| 200 OK                    |  X  |  X   |     |       |        |  X   |   X     |
+| 200 OK                    |  X  |  X   |     |   X   |        |  X   |   X     |
 | 201 Created               |     |  X   |     |       |        |      |         |
 | 202 Accepted              |     |  X   |  X  |   X   |   X    |      |         |
-| 204 No Content            |     |      |  X  |   X   |   X    |      |   X     |
+| 204 No Content            |     |  X   |  X  |   X   |   X    |      |   X     |
 | 409 Conflict              |     |  X   |  X  |   X   |   X    |      |         |
 | 412 Precondition Failed   |     |      |  X  |   X   |   X    |      |         |
 
@@ -677,8 +677,8 @@ For each HTTP method with only the status codes specified below, API developers 
 
 The purpose of the `GET` method is to retrieve a resource.
 
-- HTTP `GET` Method **MUST NOT** accept a request body.
-- HTTP `GET` Method **MUST** return a response body.
+- HTTP `GET` Method **MUST NOT** accept a request body. <a name="sps-request-get-invalid-body" href="#sps-request-get-invalid-body"><i class="fa fa-check-circle" title="#sps-request-get-invalid-body"></i></a>
+- HTTP `GET` Method **MUST** return a response body. <a name="sps-response-get-missing-body" href="#sps-response-get-missing-body"><i class="fa fa-check-circle" title="#sps-response-get-missing-body"></i></a>
     - The response body **SHOULD NOT** produce a complex response that requires unreasonable hierarchy traversal. Beyond three levels of an object reference becomes unwieldy and **SHOULD** be avoided for API designs in favor of additional resources.
 - HTTP `GET` Method **MUST NOT** modify the state of the API resources as it is for retrieval purposes only.
 - HTTP `GET` Method **MUST** be idempotent.
@@ -686,7 +686,8 @@ The purpose of the `GET` method is to retrieve a resource.
 - HTTP `GET` Method may return ETag Header and support conditional headers such as `If-None-Match` for targeted caching of resources based on state.
 - HTTP `GET` Method returning a collection:
     - **MUST** return a `200` status code when returning the results of an empty collection (not a `404` or `204`).
-    - **MUST** return a complex object following the [collection](collections.md) standards, and not an array as the root body object.
+    - **MUST** return a complex object following the [collection](collections.md) standards, and not an array as the root body object. <a name="sps-invalid-response-body" href="#sps-invalid-response-body"><i class="fa fa-check-circle" title="#sps-invalid-response-body"></i></a>
+
 
 ```
 // REQUEST
@@ -829,8 +830,8 @@ Content-Type: application/json
 
 The primary purpose of `DELETE` is to remove an addressable entity in its entirety.
 
-- HTTP `DELETE` Method **MUST NOT** accept a request body.
-- HTTP `DELETE` Method **MUST** return a status code of `204` when successfully responding with no response body.
+- HTTP `DELETE` Method **MUST NOT** accept a request body. <a name="sps-request-delete-invalid-body" href="#sps-request-delete-invalid-body"><i class="fa fa-check-circle" title="#sps-request-delete-invalid-body"></i></a>
+- HTTP `DELETE` Method **MUST** return a status code of `204` when successfully responding with no response body. <a name="sps-response-delete-invalid-body" href="#sps-response-delete-invalid-body"><i class="fa fa-check-circle" title="#sps-response-delete-invalid-body"></i></a>
 - HTTP `DELETE` Method **SHOULD** be idempotent in repeated deletions when the state is effectively available to identify previous delete requests and may return status code `204` instead of `404` as long as the resource no longer exists with the desired state.
 - HTTP `DELETE` Method **SHOULD** return a `409` when a resource cannot be deleted because that would result in an invalid state for that resource representation, including related children resources that may be required to be deleted first, where cascade deletion is not present.
 - HTTP `DELETE` Method **SHOULD** take advantage of the same `ETag` state validation, if required, for `DELETE` requests as described under HTTP `PUT` Method.
@@ -898,8 +899,8 @@ The HTTP `HEAD` request is used to check the attributes (e.g. availability, size
 
 - HTTP `HEAD` Method **MUST** be idempotent.
 - HTTP `HEAD` Method **SHOULD** return the same status code as a GET Method would return under the same addressable resource. 
-- HTTP `HEAD` Method **SHOULD** return a `200` even though there is no response body if that matches the typical status code returned by the `GET` Method request.
-- HTTP `HEAD` Method **MUST NOT** contain a request or response body.
+- HTTP `HEAD` Method **SHOULD** return a `200` even though there is no response body if that matches the typical status code returned by the `GET` Method request. <a name="sps-request-head-invalid-body" href="#sps-request-head-invalid-body"><i class="fa fa-check-circle" title="#sps-request-head-invalid-body"></i></a>
+- HTTP `HEAD` Method **MUST NOT** contain a request or response body. <a name="sps-response-head-invalid-body" href="#sps-response-head-invalid-body"><i class="fa fa-check-circle" title="#sps-response-head-invalid-body"></i></a>
 - HTTP `HEAD` Method **MUST NOT** be used to update the state of any resource or to retrieve the actual resource itself.
 - HTTP `HEAD` Method **MUST NOT** be used with any sensitive data.
 - HTTP `HEAD` Method responses **MUST** be cacheable.
@@ -918,7 +919,7 @@ The `OPTIONS` method is used to describe communication options for the target re
 
 - HTTP `OPTIONS` Method **MUST** be idempotent.
 - HTTP `OPTIONS` Method **MUST** only provide information on how to interact with a resource.
-- HTTP `OPTIONS` Method **MUST NOT** contain a request or response body.
+- HTTP `OPTIONS` Method **MUST NOT** contain a request or response body. <a name="sps-request-options-invalid-body" href="#sps-request-options-invalid-body"><i class="fa fa-check-circle" title="#sps-request-options-invalid-body"></i></a>
 - HTTP `OPTIONS` Method **MUST NOT** be used to update the state of any resource or to retrieve the actual resource itself.
 - HTTP `OPTIONS` Method **MUST NOT** be used with any sensitive data.
 - HTTP `OPTIONS` Method responses **MUST NOT** be intended to be cached.

@@ -1,20 +1,49 @@
-rules:   
-
-  sps-request-get-no-body:
-    description: A `GET` request MUST NOT accept a request body
+rules:
+  ##### General #####
+  sps-invalid-response-body:
+    description: Response bodies must be an object type.
     severity: error
-    formats: [oas3]
-    given: $.paths..get.requestBody
+    given: $.paths[*][*].responses[*].content.*.schema.type
     then:
-      function: undefined
+      function: pattern
+      functionOptions:
+        match: "object"
 
+  ##### HTTP Status Codes #####
+  sps-invalid-status-code:
+    description: An API MUST return HTTP response codes in conformance with RFC-2616 and common usage.
+    severity: error
+    given: $.paths...responses.*~
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+          [
+            "200",
+            "201",
+            "202",
+            "204",
+            "400",
+            "401",
+            "403",
+            "404",
+            "405",
+            "406",
+            "409",
+            "412",
+            "415",
+            "428",
+            "429",
+            "500",
+          ]
+
+  ##### HTTP Headers #####
   sps-headers-hyphenated-pascal-case:
     description: All `HTTP` headers MUST use `Hyphenated-Pascal-Case` notation
     severity: error
     given: "$..parameters[?(@.in == 'header')].name"
-    message: "'HTTP' headers MUST follow 'Hyphenated-Pascal-Case' notation"
     type: style
-    then: 
+    then:
       function: pattern
       functionOptions:
         match: "/^([A-Z][a-z0-9]-)*([A-Z][a-z0-9])+/"
@@ -27,7 +56,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: '^(x|X)-'
+        notMatch: "^(x|X)-"
 
   sps-no-x-response-headers:
     description: "Do not use headers with X-"
@@ -37,4 +66,165 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: '^(x|X)-'
+        notMatch: "^(x|X)-"
+
+  ##### MIME Types #####
+
+  ##### HTTP Methods #####
+  sps-invalid-http-method:
+    description: Operations MUST use only the common HTTP methods as outlined in the standards guide, and must be in lower-case
+    severity: error
+    given: $.paths[*].*~
+    then:
+      field: "method"
+      function: enumeration
+      functionOptions:
+        values: ["get", "post", "put", "patch", "delete", "head", "options"]
+
+  sps-request-get-invalid-body:
+    description: A `GET` request MUST NOT accept a request body
+    severity: error
+    given: $.paths[*][get].requestBody
+    then:
+      function: undefined
+
+  sps-response-get-missing-body:
+    description: A `GET` operation must return a response body
+    severity: error
+    given: $.paths[*].get.responses[*]
+    then:
+      field: "content"
+      function: "truthy"
+
+  sps-invalid-get-response-code:
+    description: "GET operations should not use status codes 201, 202, 204, 409, 412"
+    severity: warn
+    given: $.paths[*].get.responses
+    then:
+      field: "@key"
+      function: "pattern"
+      functionOptions:
+        notMatch: "^(201|202|204|409|412)$"
+
+  sps-response-get-missing-code:
+    description: GET operations must always return both 200 and 404 status codes
+    severity: error
+    given: $.paths[*].get.responses
+    then:
+      - field: "200"
+        function: truthy
+      - field: "404"
+        function: truthy
+
+  sps-invalid-post-response-code:
+    description: POST operations should not return 412 status codes
+    given: $.paths[*].post.responses
+    severity: warn
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "412"
+
+  sps-invalid-put-response-code:
+    description: PUT operations should not return 200 or 201 status codes
+    severity: warn
+    given: $.paths[*].put.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(200|201)$"
+
+  sps-invalid-delete-response-code:
+    description: DELETE operations should not return 200 or 201 status codes
+    severity: warn
+    given: $.paths[*].delete.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(200|201)$"
+
+  sps-request-delete-invalid-body:
+    description: DELETE operations must not accept a request body
+    severity: error
+    given: $.paths[*].delete.requestBody
+    then:
+      function: undefined
+
+  sps-response-delete-invalid-body:
+    description: DELETE operations must not have a response body
+    severity: error
+    given: $.paths.*.delete.responses[202,204].content
+    then:
+      function: falsy
+
+  sps-invalid-patch-response-code:
+    description: PATCH operations should not return 201 status code
+    severity: warn
+    given: $.paths[*].patch.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^201$"
+
+  sps-request-patch-missing-body:
+    description: PATCH operations must have a request body
+    severity: error
+    given: $.paths[*].patch
+    then:
+      field: requestBody
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+
+  sps-invalid-head-response-code:
+    description: HEAD operations should not return 201, 202, 204, 409, 412 status codes
+    severity: warn
+    given: $.paths[*].head.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(201|202|204|409|412)$"
+
+  sps-request-head-invalid-body:
+    description: A `HEAD` request MUST NOT accept a request body
+    severity: error
+    given: $.paths[*][head].requestBody
+    then:
+      function: undefined
+
+  sps-response-head-invalid-body:
+    description: HEAD operations should not return a response body for success
+    given: $.paths.*.head.responses[200].content
+    severity: error
+    then:
+      function: falsy
+
+  sps-invalid-options-response-code:
+    description: OPTIONS operations should not return 201, 202, 409, 412 status codes
+    severity: warn
+    given: $.paths[*].options.responses
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "^(201|202|409|412)$"
+
+  sps-request-options-invalid-body:
+    description: An `OPTIONS` request MUST NOT accept a request body
+    severity: error
+    given: $.paths[*][options].requestBody
+    then:
+      function: undefined
+
+  sps-response-options-invalid-body:
+    description: OPTIONS operations should not return a response body for success
+    given: $.paths.*.options.responses[200, 204].content
+    severity: error
+    then:
+      function: falsy
