@@ -36,14 +36,14 @@ jobs:
           cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.ruleset.yml >> sps-api-standards.spectral.yml
       - name: view merged rulesets
         run: cat sps-api-standards.spectral.yml
-      
+
   release:
     name: release
     needs: [test]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: checkout 
+      - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -57,10 +57,10 @@ jobs:
         uses: mikefarah/yq@v4.25.1
         with:
           cmd: yq eval-all '. as $item ireduce ({}; . *+ $item)' rulesets/src/*.ruleset.yml >> sps-api-standards.spectral.yml
-      - name: use node.js 18
+      - name: use node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
       - name: install release plugins
         run: npm install -g semantic-release @semantic-release/git -D
       - name: semantic release
@@ -72,5 +72,5 @@ jobs:
         uses: Azure/pipelines@v1
         with:
           azure-devops-project-url: https://dev.azure.com/spscommerce/api-lifecycle
-          azure-pipeline-name: 'sps-api-standards-cdn-publish'
+          azure-pipeline-name: "sps-api-standards-cdn-publish"
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
