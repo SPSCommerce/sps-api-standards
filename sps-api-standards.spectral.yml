@@ -162,7 +162,7 @@ rules:
       field: "content"
       function: "truthy"
   sps-invalid-get-response-code:
-    description: "GET operations should not use status codes 201, 202, 204, 409, 412"
+    description: GET operations should not use status codes 201, 202, 204, 409, 412
     severity: warn
     given: $.paths[*].get.responses
     then:
@@ -170,14 +170,12 @@ rules:
       function: "pattern"
       functionOptions:
         notMatch: "^(201|202|204|409|412)$"
-  sps-response-get-missing-code:
-    description: GET operations must always return both 200 and 404 status codes
+  sps-response-get-missing-success-code:
+    description: GET operations must always return 200 status code
     severity: error
     given: $.paths[*].get.responses
     then:
       - field: "200"
-        function: truthy
-      - field: "404"
         function: truthy
   sps-invalid-post-response-code:
     description: POST operations should not return 412 status codes
