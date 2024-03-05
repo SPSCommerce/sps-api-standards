@@ -94,7 +94,7 @@ rules:
   sps-invalid-response-body:
     description: Response bodies must be an object type.
     severity: error
-    given: $.paths[*][*].responses[*].content.*.schema.type
+    given: $.paths[*][*].responses[*].content.application/json.schema.type
     then:
       function: pattern
       functionOptions:
