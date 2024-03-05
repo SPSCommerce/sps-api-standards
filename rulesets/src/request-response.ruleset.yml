@@ -97,7 +97,7 @@ rules:
       function: "truthy"
 
   sps-invalid-get-response-code:
-    description: "GET operations should not use status codes 201, 202, 204, 409, 412"
+    description: GET operations should not use status codes 201, 202, 204, 409, 412
     severity: warn
     given: $.paths[*].get.responses
     then:
