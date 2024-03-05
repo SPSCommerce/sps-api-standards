@@ -31,6 +31,26 @@ describe("sps-invalid-response-body", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
+  test("valid response body with rsx format", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /example:
+          get:
+            summary: Example GET endpoint
+            responses:
+              '200':
+                description: Successful response
+                content:
+                  application/vnd.sps-rsx.v7.7+xml:
+                    schema:
+                      type: string
+                      format: binary
+      `;
+
+    await spectral.validateSuccess(spec, ruleName);
+  });
+
   test("valid response body with array property", async () => {
     const spec = `
       openapi: 3.1.0
