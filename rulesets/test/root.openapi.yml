@@ -8,66 +8,66 @@ externalDocs:
   description: <--External Documentation-->
   url: https://url.here
 servers:
-- url: http://localhost:5000
-  description: local
-- url: https://integration.api.spscommerce.com
-  description: integration
-- url: https://api.spscommerce.com
-  description: prod
+  - url: http://localhost:5000
+    description: local
+  - url: https://integration.api.spscommerce.com
+    description: integration
+  - url: https://api.spscommerce.com
+    description: prod
 security:
-- MyBearer: []
+  - MyBearer: []
 tags:
-- name: Users
-- name: Webhooks
+  - name: Users
+  - name: Webhooks
 paths:
   /v1/users:
     get:
       tags:
-      - Users
+        - Users
       summary: Get Users
       description: "Retrieves a list of users that is filterable based on its properties. \nThis search uses FIQL syntax for advanced search options against any attribute in the system. \n\n<table>\n  <tr>\n    <th>Operator</th>\n    <th>Description</th>\n    <th>Example</th>\n  </tr>\n  <tr>\n    <td>==</td>\n    <td>Equal To</td>\n    <td>/v1/users?filter=systemId==123456</td>\n  </tr>\n  <tr>\n    <td>!=</td>\n    <td>Not Equal To</td>\n    <td>/v1/users?filter=responsibility.name!=INTERNAL-REVIEW</td>\n  </tr>\n  <tr>\n    <td>=gt=</td>\n    <td>Greater Than</td>\n    <td>/v1/users?filter=age=gt=33</td>\n  </tr>\n  <tr>\n    <td>=ge=</td>\n    <td>Greater Or Equal To</td>\n    <td>/v1/users?filter=age=ge=30</td>\n  </tr>\n  <tr>\n    <td>=lt=</td>\n    <td>Less Than</td>\n    <td>/v1/items?filter=age=lt=30</td>\n  </tr>\n  <tr>\n    <td>=le=</td>\n    <td>Less Or Equal To</td>\n    <td>/v1/users?filter=age=le=20</td>\n  </tr>\n  <tr>\n    <td>=contains=</td>\n    <td>Contains</td>\n    <td>/v1/users?filter=firstName=contains=Jo</td>\n  </tr>\n  <tr>\n    <td>=startswith=</td>\n    <td>Starts With</td>\n    <td>/v1/users?filter=lastName=startswith=Do</td>\n  </tr>\n  <tr>\n    <td>;</td>\n    <td>AND</td>\n    <td>/v1/users?filter=type==INTERNAL;age=gt=20</td>\n  </tr>\n  <tr>\n    <td>,</td>\n    <td>OR</td>\n    <td>/v1/users?filter=type==INTERNAL,age=gt=20</td>\n  </tr>\n</table>\n\nThese operators can be combined in may ways. Here is a more complex example:\n\n/v1/users?filter=age=gt=20;responsibility.name==INTERNAL-REVIEW;(type==INTERNAL,type==EXTERNAL)\n"
       operationId: users-get
       parameters:
-      - name: filter
-        in: query
-        description: |
-          A filter expression used to trim the collection results of a resource.
-          Filter expressions generally use varying degrees of support for [RSQL/FIQL parsing](https://fiql-parser.readthedocs.io/en/stable/usage.html).
-          The endpoint documentation itself should indicate the supported filter expressions and features.
-        required: false
-        schema:
-          $ref: '#/components/schemas/Filter'
-      - name: limit
-        in: query
-        description: Number of results requested to be returned.
-        required: false
-        schema:
-          $ref: '#/components/schemas/Limit'
-      - name: offset
-        in: query
-        description: Number of items to skip before including the number of limit results in the request.
-        required: false
-        schema:
-          $ref: '#/components/schemas/Offset'
-      - name: ordering
-        in: query
-        description: "Specifies how results of a collection should be sorted. \nCan be specified multiple times for multiple sort orders, using '-' prefix to indicate descending order for the field.\n"
-        required: false
-        schema:
-          $ref: '#/components/schemas/Ordering'
+        - name: filter
+          in: query
+          description: |
+            A filter expression used to trim the collection results of a resource.
+            Filter expressions generally use varying degrees of support for [RSQL/FIQL parsing](https://fiql-parser.readthedocs.io/en/stable/usage.html).
+            The endpoint documentation itself should indicate the supported filter expressions and features.
+          required: false
+          schema:
+            $ref: "#/components/schemas/Filter"
+        - name: limit
+          in: query
+          description: Number of results requested to be returned.
+          required: false
+          schema:
+            $ref: "#/components/schemas/Limit"
+        - name: offset
+          in: query
+          description: Number of items to skip before including the number of limit results in the request.
+          required: false
+          schema:
+            $ref: "#/components/schemas/Offset"
+        - name: ordering
+          in: query
+          description: "Specifies how results of a collection should be sorted. \nCan be specified multiple times for multiple sort orders, using '-' prefix to indicate descending order for the field.\n"
+          required: false
+          schema:
+            $ref: "#/components/schemas/Ordering"
       responses:
         "200":
           description: List of filtered users.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserList'
+                $ref: "#/components/schemas/UserList"
         "400":
           description: Invalid Data
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorFieldValidation'
+                $ref: "#/components/schemas/ErrorFieldValidation"
               example:
                 title: Invalid Data
                 status: 400
@@ -75,21 +75,21 @@ paths:
                 detail: Content missing or invalid for required fields.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: INPUT_INVALID
-                  message: Attribute 'email' must be a valid email address.
-                  field: email
-                  source: body
-                  value: testuser
-                - code: INPUT_NOT_NULL
-                  message: Attribute 'reason' must not be null.
-                  field: reason
-                  source: body
+                  - code: INPUT_INVALID
+                    message: Attribute 'email' must be a valid email address.
+                    field: email
+                    source: body
+                    value: testuser
+                  - code: INPUT_NOT_NULL
+                    message: Attribute 'reason' must not be null.
+                    field: reason
+                    source: body
         "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Not Found
                 status: 404
@@ -101,7 +101,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Internal Server Error
                 status: 500
@@ -109,11 +109,11 @@ paths:
                 detail: Request for resource failed unexpectedly.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: CONNECTION_TIMEOUT
-                  message: A downstream dependency connection timed out.
+                  - code: CONNECTION_TIMEOUT
+                    message: A downstream dependency connection timed out.
     post:
       tags:
-      - Users
+        - Users
       summary: Create User
       description: Creates a new user within the system.
       operationId: users-create
@@ -121,20 +121,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
         required: true
       responses:
         "201":
           description: User has been successfully created.
           headers:
             Location:
-              $ref: '#/components/headers/Location'
+              $ref: "#/components/headers/Location"
         "400":
           description: Invalid Data
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorFieldValidation'
+                $ref: "#/components/schemas/ErrorFieldValidation"
               example:
                 title: Invalid Data
                 status: 400
@@ -142,21 +142,21 @@ paths:
                 detail: Content missing or invalid for required fields.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: INPUT_INVALID
-                  message: Attribute 'email' must be a valid email address.
-                  field: email
-                  source: body
-                  value: testuser
-                - code: INPUT_NOT_NULL
-                  message: Attribute 'reason' must not be null.
-                  field: reason
-                  source: body
+                  - code: INPUT_INVALID
+                    message: Attribute 'email' must be a valid email address.
+                    field: email
+                    source: body
+                    value: testuser
+                  - code: INPUT_NOT_NULL
+                    message: Attribute 'reason' must not be null.
+                    field: reason
+                    source: body
         "409":
           description: Conflict
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Conflict
                 status: 409
@@ -168,7 +168,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Internal Server Error
                 status: 500
@@ -176,40 +176,40 @@ paths:
                 detail: Request for resource failed unexpectedly.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: CONNECTION_TIMEOUT
-                  message: A downstream dependency connection timed out.
+                  - code: CONNECTION_TIMEOUT
+                    message: A downstream dependency connection timed out.
   /v1/users/{id}:
     get:
       tags:
-      - Users
+        - Users
       summary: Get User by ID
       description: Retrieves details about a specific user.
       operationId: users-get-by-id
       parameters:
-      - name: id
-        in: path
-        description: A unique identifier for the User.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          $ref: '#/components/schemas/UserId'
+        - name: id
+          in: path
+          description: A unique identifier for the User.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            $ref: "#/components/schemas/UserId"
       responses:
         "200":
           description: User with the provided ID.
           headers:
             ETag:
-              $ref: '#/components/headers/ETag'
+              $ref: "#/components/headers/ETag"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Not Found
                 status: 404
@@ -221,7 +221,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Internal Server Error
                 status: 500
@@ -229,34 +229,34 @@ paths:
                 detail: Request for resource failed unexpectedly.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: CONNECTION_TIMEOUT
-                  message: A downstream dependency connection timed out.
+                  - code: CONNECTION_TIMEOUT
+                    message: A downstream dependency connection timed out.
     put:
       tags:
-      - Users
+        - Users
       summary: Update User
       description: Updates an existing user with the given payload.
       operationId: users-update
       parameters:
-      - name: id
-        in: path
-        description: A unique identifier for the User.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          $ref: '#/components/schemas/UserId'
-      - name: If-Match
-        in: header
-        description: "The If-Match HTTP request header makes the request conditional. \nFor GET and HEAD methods, the server will return the requested resource only if it matches one of the listed ETags. \nFor PUT and other non-safe methods, it will only upload the resource in this case.\n"
-        required: false
-        schema:
-          $ref: '#/components/schemas/IfMatch'
+        - name: id
+          in: path
+          description: A unique identifier for the User.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            $ref: "#/components/schemas/UserId"
+        - name: If-Match
+          in: header
+          description: "The If-Match HTTP request header makes the request conditional. \nFor GET and HEAD methods, the server will return the requested resource only if it matches one of the listed ETags. \nFor PUT and other non-safe methods, it will only upload the resource in this case.\n"
+          required: false
+          schema:
+            $ref: "#/components/schemas/IfMatch"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
         required: true
       responses:
         "204":
@@ -264,13 +264,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
         "400":
           description: Invalid Data
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorFieldValidation'
+                $ref: "#/components/schemas/ErrorFieldValidation"
               example:
                 title: Invalid Data
                 status: 400
@@ -278,21 +278,21 @@ paths:
                 detail: Content missing or invalid for required fields.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: INPUT_INVALID
-                  message: Attribute 'email' must be a valid email address.
-                  field: email
-                  source: body
-                  value: testuser
-                - code: INPUT_NOT_NULL
-                  message: Attribute 'reason' must not be null.
-                  field: reason
-                  source: body
+                  - code: INPUT_INVALID
+                    message: Attribute 'email' must be a valid email address.
+                    field: email
+                    source: body
+                    value: testuser
+                  - code: INPUT_NOT_NULL
+                    message: Attribute 'reason' must not be null.
+                    field: reason
+                    source: body
         "404":
           description: Not Found
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Not Found
                 status: 404
@@ -304,7 +304,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Precondition Failed
                 status: 412
@@ -316,7 +316,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Internal Server Error
                 status: 500
@@ -324,29 +324,29 @@ paths:
                 detail: Request for resource failed unexpectedly.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: CONNECTION_TIMEOUT
-                  message: A downstream dependency connection timed out.
+                  - code: CONNECTION_TIMEOUT
+                    message: A downstream dependency connection timed out.
     delete:
       tags:
-      - Users
+        - Users
       summary: Delete User
       description: Deletes an existing user.
       operationId: users-delete
       parameters:
-      - name: id
-        in: path
-        description: A unique identifier for the User.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          $ref: '#/components/schemas/UserId'
-      - name: If-Match
-        in: header
-        description: "The If-Match HTTP request header makes the request conditional. \nFor GET and HEAD methods, the server will return the requested resource only if it matches one of the listed ETags. \nFor PUT and other non-safe methods, it will only upload the resource in this case.\n"
-        required: false
-        schema:
-          $ref: '#/components/schemas/IfMatch'
+        - name: id
+          in: path
+          description: A unique identifier for the User.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            $ref: "#/components/schemas/UserId"
+        - name: If-Match
+          in: header
+          description: "The If-Match HTTP request header makes the request conditional. \nFor GET and HEAD methods, the server will return the requested resource only if it matches one of the listed ETags. \nFor PUT and other non-safe methods, it will only upload the resource in this case.\n"
+          required: false
+          schema:
+            $ref: "#/components/schemas/IfMatch"
       responses:
         "204":
           description: User was deleted successfully.
@@ -355,7 +355,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Not Found
                 status: 404
@@ -367,7 +367,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
               example:
                 title: Internal Server Error
                 status: 500
@@ -375,13 +375,13 @@ paths:
                 detail: Request for resource failed unexpectedly.
                 instance: https://example.com/account/12345/resource/23
                 context:
-                - code: CONNECTION_TIMEOUT
-                  message: A downstream dependency connection timed out.
+                  - code: CONNECTION_TIMEOUT
+                    message: A downstream dependency connection timed out.
 
   /_webhooks/sendgrid/email-opened:
     post:
       tags:
-      - Webhooks
+        - Webhooks
       summary: Sendgrid Push Notification on Email Open
       x-internal: true
       description: Event payload with email and open details.
@@ -389,24 +389,39 @@ paths:
       parameters:
         - name: username
           in: query
-          required: true   # requring this would normal fail, but should pass because this is a _webhook exception
+          required: true # requring this would normal fail, but should pass because this is a _webhook exception
           schema:
             type: string
       responses:
         "202":
           description: Item was accepted.
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                title: Internal Server Error
+                status: 500
+                requestId: b6d9a290-9f20-465b-bcd3-4a5166eeb3d7
+                detail: Request for resource failed unexpectedly.
+                instance: https://example.com/account/12345/resource/23
+                context:
+                  - code: CONNECTION_TIMEOUT
+                    message: A downstream dependency connection timed out.
 
-components:   
+components:
   schemas:
     PagingOffset:
       type: object
       properties:
         totalCount:
-          $ref: '#/components/schemas/TotalCount'
+          $ref: "#/components/schemas/TotalCount"
         limit:
-          $ref: '#/components/schemas/Limit'
+          $ref: "#/components/schemas/Limit"
         offset:
-          $ref: '#/components/schemas/Offset'
+          $ref: "#/components/schemas/Offset"
       description: Offset Paging result schema for all collection responses.
       example:
         totalCount: 100
@@ -421,7 +436,7 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/UserId'
+          $ref: "#/components/schemas/UserId"
         systemId:
           type: string
           description: The unique identifier for the system this user belongs to.
@@ -446,16 +461,16 @@ components:
           type: string
           description: The type of the user within the system.
           enum:
-          - INTERNAL
-          - EXTERNAL
-          - SYSTEM_SPECIFIC
+            - INTERNAL
+            - EXTERNAL
+            - SYSTEM_SPECIFIC
         primaryResponsibility:
-          $ref: '#/components/schemas/Responsibility'
+          $ref: "#/components/schemas/Responsibility"
         secondaryResponsibilities:
           type: array
           description: All the secondary responsibilities of the user.
           items:
-            $ref: '#/components/schemas/Responsibility'
+            $ref: "#/components/schemas/Responsibility"
         createdDateTime:
           type: string
           description: The date and time the user was created.
@@ -502,21 +517,21 @@ components:
       description: Responsibility definition for a user within their job.
     ErrorFieldValidation:
       allOf:
-      - $ref: '#/components/schemas/ProblemDetails'
-      - type: object
-        properties:
-          context:
-            type: array
-            description: List of objects providing additional context and detail on sub-reasons for the validation issue or error.
-            items:
-              allOf:
-              - $ref: '#/components/schemas/ErrorContext'
-              - $ref: '#/components/schemas/ErrorContextFields'
+        - $ref: "#/components/schemas/ProblemDetails"
+        - type: object
+          properties:
+            context:
+              type: array
+              description: List of objects providing additional context and detail on sub-reasons for the validation issue or error.
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/ErrorContext"
+                  - $ref: "#/components/schemas/ErrorContextFields"
     ProblemDetails:
       required:
-      - requestId
-      - status
-      - title
+        - requestId
+        - status
+        - title
       type: object
       properties:
         title:
@@ -556,8 +571,8 @@ components:
       description: Extended Problem Details error model for SPS Commerce, based upon Problem Details for HTTP APIs (https://datatracker.ietf.org/doc/html/rfc7807))
     ErrorContext:
       required:
-      - code
-      - message
+        - code
+        - message
       type: object
       properties:
         code:
@@ -587,14 +602,14 @@ components:
       description: List of objects providing additional context and detail on sub-reasons for the validation issue or error.
     Error:
       allOf:
-      - $ref: '#/components/schemas/ProblemDetails'
-      - type: object
-        properties:
-          context:
-            type: array
-            description: List of objects providing additional context and detail on sub-reasons for the validation issue or error.
-            items:
-              $ref: '#/components/schemas/ErrorContext'
+        - $ref: "#/components/schemas/ProblemDetails"
+        - type: object
+          properties:
+            context:
+              type: array
+              description: List of objects providing additional context and detail on sub-reasons for the validation issue or error.
+              items:
+                $ref: "#/components/schemas/ErrorContext"
     Filter:
       type: string
       description: |
@@ -645,16 +660,16 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/User'
+            $ref: "#/components/schemas/User"
         paging:
-          $ref: '#/components/schemas/PagingOffset'
+          $ref: "#/components/schemas/PagingOffset"
   responses:
     Error:
       description: Internal Server Error
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             title: Internal Server Error
             status: 500
@@ -662,14 +677,14 @@ components:
             detail: Request for resource failed unexpectedly.
             instance: https://example.com/account/12345/resource/23
             context:
-            - code: CONNECTION_TIMEOUT
-              message: A downstream dependency connection timed out.
+              - code: CONNECTION_TIMEOUT
+                message: A downstream dependency connection timed out.
     InvalidData:
       description: Invalid Data
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorFieldValidation'
+            $ref: "#/components/schemas/ErrorFieldValidation"
           example:
             title: Invalid Data
             status: 400
@@ -677,21 +692,21 @@ components:
             detail: Content missing or invalid for required fields.
             instance: https://example.com/account/12345/resource/23
             context:
-            - code: INPUT_INVALID
-              message: Attribute 'email' must be a valid email address.
-              field: email
-              source: body
-              value: testuser
-            - code: INPUT_NOT_NULL
-              message: Attribute 'reason' must not be null.
-              field: reason
-              source: body
+              - code: INPUT_INVALID
+                message: Attribute 'email' must be a valid email address.
+                field: email
+                source: body
+                value: testuser
+              - code: INPUT_NOT_NULL
+                message: Attribute 'reason' must not be null.
+                field: reason
+                source: body
     Conflict:
       description: Conflict
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             title: Conflict
             status: 409
@@ -703,7 +718,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             title: Not Found
             status: 404
@@ -715,7 +730,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             title: Precondition Failed
             status: 412
@@ -732,35 +747,35 @@ components:
         The endpoint documentation itself should indicate the supported filter expressions and features.
       required: false
       schema:
-        $ref: '#/components/schemas/Filter'
+        $ref: "#/components/schemas/Filter"
     Ordering:
       name: ordering
       in: query
       description: "Specifies how results of a collection should be sorted. \nCan be specified multiple times for multiple sort orders, using '-' prefix to indicate descending order for the field.\n"
       required: false
       schema:
-        $ref: '#/components/schemas/Ordering'
+        $ref: "#/components/schemas/Ordering"
     Limit:
       name: limit
       in: query
       description: Number of results requested to be returned.
       required: false
       schema:
-        $ref: '#/components/schemas/Limit'
+        $ref: "#/components/schemas/Limit"
     Offset:
       name: offset
       in: query
       description: Number of items to skip before including the number of limit results in the request.
       required: false
       schema:
-        $ref: '#/components/schemas/Offset'
+        $ref: "#/components/schemas/Offset"
     IfMatch:
       name: If-Match
       in: header
       description: "The If-Match HTTP request header makes the request conditional. \nFor GET and HEAD methods, the server will return the requested resource only if it matches one of the listed ETags. \nFor PUT and other non-safe methods, it will only upload the resource in this case.\n"
       required: false
       schema:
-        $ref: '#/components/schemas/IfMatch'
+        $ref: "#/components/schemas/IfMatch"
     UserId:
       name: id
       in: path
@@ -769,18 +784,18 @@ components:
       style: simple
       explode: false
       schema:
-        $ref: '#/components/schemas/UserId'
+        $ref: "#/components/schemas/UserId"
   headers:
     Location:
       description: |
         The Location response header indicates the URL of a created resource, when associated with a 201 (created) status response.
         The provided URL can be relative or absolute depending on the API.
       schema:
-        $ref: '#/components/schemas/Location'
+        $ref: "#/components/schemas/Location"
     ETag:
       description: "The ETag (or entity tag) HTTP response header is an identifier for a specific version of a resource. \nIt lets caches be more efficient and save bandwidth, as a web server does not need to resend a full response if the content was not changed. \nAdditionally, etags help to prevent simultaneous updates of a resource from overwriting each other\n"
       schema:
-        $ref: '#/components/schemas/ETag'
+        $ref: "#/components/schemas/ETag"
   securitySchemes:
     MyBearer:
       type: http
