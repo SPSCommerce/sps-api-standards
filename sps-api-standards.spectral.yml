@@ -108,6 +108,13 @@ rules:
       function: enumeration
       functionOptions:
         values: ["200", "201", "202", "204", "400", "401", "403", "404", "405", "406", "409", "412", "415", "428", "429", "500"]
+  sps-missing-500-response:
+    description: Every endpoint SHOULD have a 500 response
+    severity: warn
+    given: "$.paths[*][*]"
+    then:
+      field: responses.500
+      function: truthy
   ##### HTTP Headers #####
   sps-headers-hyphenated-pascal-case:
     description: All `HTTP` headers MUST use `Hyphenated-Pascal-Case` notation
@@ -136,8 +143,73 @@ rules:
       function: pattern
       functionOptions:
         notMatch: "^(x|X)-"
+  sps-invalid-location-header:
+    description: Location header MUST NOT be present in non-201 responses
+    severity: error
+    given: $.paths[*][*].responses[?(@property !== '201')].headers
+    then:
+      field: Location
+      function: falsy
+  sps-authorization-missing:
+    description: Security field MUST be present with at least one item
+    severity: error
+    given: "$"
+    then:
+      field: "security"
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          minItems: 1
+  sps-default-content-language:
+    description: Content-Language is optional but MUST default locale to en-US when none provided
+    severity: error
+    given: $.paths[*][*].responses[*].headers.Content-Language.schema.default
+    then:
+      function: pattern
+      functionOptions:
+        match: "en-US"
+  sps-no-explicit-headers:
+    description: Access-Control-*, Content-Type, and Accept Headers SHOULD NOT be specified explicitly in a spec as it an operational concern.
+    severity: warn
+    given: "$.paths[*][*].responses[*].headers"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^(Access-Control-.*|Content-Type|Accept)$"
+  sps-invalid-custom-header-format:
+    description: Custom headers MUST NOT be longer than 50 chars, and MUST only contain alphanumeric and dash chars, and MUST begin with SPS- not x-
+    severity: error
+    given: "$.paths[*][*].responses[*].headers.*~"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(SPS-[a-zA-Z0-9-]{1,50}|Accept|Access-Control.*|Authorization|Cache-Control|Content-Language|Content-Length|Content-Type|Date|ETag|Host|If-Match|If-None-Match|Location|Origin|User-Agent)$"
+  sps-sensitive-data-in-headers:
+    description: Headers MUST NOT contain sensitive data.
+    severity: error
+    given: "$.paths[*][*].responses[*].headers.*~"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^(SPS-Token|SPS-Password|SPS-Identity|Password)$"
   ##### MIME Types #####
-
+  sps-no-resource-extensions:
+    description: Request and Response media type formats MUST NOT be implied using extensions on resources (i.e. .json or .xml). Instead, use the standard resource path with the appropriate Content-Type header
+    severity: error
+    given: "$.paths.*~"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "\\.json|\\.xml|\\.yml|\\.yaml"
+  sps-invalid-mime-type:
+    description: MIME types MUST be standard (application/json, application/problem+json, application/problem+xml) or use custom format application/vnd.sps-*+(json|xml)
+    severity: error
+    given: $.paths[*][*].responses[*].content.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^application/(json|problem\\+json|problem\\+xml|vnd\\.sps-.*\\+(json|xml))$"
   ##### HTTP Methods #####
   sps-invalid-http-method:
     description: Operations MUST use only the common HTTP methods as outlined in the standards guide, and must be in lower-case
