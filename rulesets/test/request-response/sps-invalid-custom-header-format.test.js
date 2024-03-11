@@ -47,7 +47,7 @@ describe("sps-invalid-custom-header-format", () => {
     await spectral.validateFailure(spec, ruleName, "Error", 1);
   });
 
-  test("custom headers cant start with X-", async () => {
+  test("custom headers can't start with X-", async () => {
     const spec = `
       openapi: 3.1.0
       paths:
