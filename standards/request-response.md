@@ -269,7 +269,7 @@ Content-Type: application/json; charset=UTF-8
 **Support**: **MUST**
 
 **Description**: This response-header field is used to redirect the recipient to a location other than the Request-URI for completion of the request or identification of a new resource.
-- Usage of the `Location` header is **MUST** only be used with response codes 201 or 3xx.
+- Usage of the `Location` header is **MUST** only be used with response codes 201 or 3xx. <a name="sps-invalid-location-header" href="#sps-invalid-location-header"><i class="fa fa-check-circle" title="#sps-invalid-location-header"></i></a>
 - Relative URLs **MUST** be made relative to the URL host.
 
 **Example(s)**:
@@ -319,7 +319,7 @@ User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/fir
 
 **Support**: **MUST**
 
-**Description**: More information at [Authentication](authentication.md).
+**Description**: More information at [Authentication](authentication.md). <a name="sps-authorization-missing" href="#sps-authorization-missing"><i class="fa fa-check-circle" title="#sps-authorization-missing"></i></a>
 
 **Example(s)**:
 
@@ -342,7 +342,7 @@ Authorization: Basic <token>
 **Support**: OPTIONAL
 
 **Description**: This request/response header is used to specify the language of the content.
-- This header **MUST** be optional, and the default locale **MUST** be `en-US` when none is provided.
+- This header **MUST** be optional, and the default locale **MUST** be `en-US` when none is provided. <a name="sps-default-content-language" href="#sps-default-content-language"><i class="fa fa-check-circle" title="#sps-default-content-language"></i></a>
 - API clients **SHOULD** identify the language of the data using the `Content-Language` header.
 - APIs **SHOULD** provide this header in the response.
 
@@ -452,10 +452,10 @@ Access-Control-Allow-Methods: *
 - Custom Headers **MAY** be used and created as necessary.
 - Custom Headers **MUST** only be used if not in conflict by a similar name or similar function to the standard headers or other widely used custom headers.
 - Custom Headers **MUST** abide by the same rules and guidelines as standard headers.
-- Custom Header names **MUST NOT** be longer than 50 characters.
-- Custom Header names **MUST** only contain alpha, numeric, and dash characters: [a-zA-Z0-9-]
+- Custom Header names **MUST NOT** be longer than 50 characters. <a name="sps-invalid-custom-header-format" href="#sps-invalid-custom-header-format"><i class="fa fa-check-circle" title="#sps-invalid-custom-header-format"></i></a>
+- Custom Header names **MUST** only contain alpha, numeric, and dash characters: [a-zA-Z0-9-] <a name="sps-invalid-custom-header-format" href="#sps-invalid-custom-header-format"><i class="fa fa-check-circle" title="#sps-invalid-custom-header-format"></i></a>
 - Custom Headers **MUST** start with the prefix `SPS-` (Note: do not prefix with `X-`). <a name="sps-no-x-headers" href="#sps-no-x-headers"><i class="fa fa-check-circle" title="#sps-no-x-headers"></i></a>
-- Custom Headers **SHOULD NOT** include sensitive data that applies to customers/employees or is subject to legal, regulatory, contractual, and business requirements.
+- Custom Headers **SHOULD NOT** include sensitive data that applies to customers/employees or is subject to legal, regulatory, contractual, and business requirements. <a name="sps-sensitive-data-in-headers" href="#sps-sensitive-data-in-headers"><i class="fa fa-check-circle" title="#sps-sensitive-data-in-headers"></i></a>
 
 ```
 // CORRECT
@@ -539,7 +539,7 @@ SPS-Execution-Context: 1                // valid, but SHOULD be human-readable.
     - API endpoints that are responsible for returning data in different formats **MUST** support other content types depending on the requirements, in addition to `application/json`.
 - MIME types provided **MUST** follow customization standards or be a common MIME type indicated in the [IANA Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml).
 - Requests made with unsupported `Content-Types` (and MIME types) **MUST** result in a standard error response with a `415` status code following the standard error response format.
-- Request and Response media type formats **MUST NOT** be implied using extensions on resources (i.e. `.json` or `.xml`). Instead, use the standard resource path with the appropriate `Content-Type` header.
+- Request and Response media type formats **MUST NOT** be implied using extensions on resources (i.e. `.json` or `.xml`). Instead, use the standard resource path with the appropriate `Content-Type` header. <a name="sps-no-resource-extensions" href="#sps-no-resource-extensions"><i class="fa fa-check-circle" title="#sps-no-resource-extensions"></i></a>
 
 ```
 // JSON SCENARIO                            // JSON media type MUST always be supported
@@ -582,7 +582,7 @@ Location: /articles/3
 ### Custom MIME Types
 
 - Custom MIME types **MUST** only be used to define the formatting or schema for the version of data that it is associated with. It is not a mechanism for versioning the contract of the Request, Response, URL, Headers, Query Parameters, etc.
-    - Custom MIME types **MUST** use the following format: `application/vnd.sps-*+(json|xml)` (i.e. `application/vnd.sps-model+json`), where `*` can be adjusted accordingly. 
+    - Custom MIME types **MUST** use the following format: `application/vnd.sps-*+(json|xml)` (i.e. `application/vnd.sps-model+json`), where `*` can be adjusted accordingly. <a name="sps-invalid-mime-type" href="#sps-invalid-mime-type"><i class="fa fa-check-circle" title="#sps-invalid-mime-type"></i></a>
     - Custom MIME types **SHOULD** be limited in their usage as it provides an extra layer of complexity beyond the default `application/json` media type.
     - Documentation of your API **MUST** be clearly updated to indicate the purpose and usage of different MIME types on an endpoint.
     - Version information can be included in custom MIME types following the wildcard (i.e. `application/vnd.sps-model.v1+json`). The version number must follow the `v` indicator.

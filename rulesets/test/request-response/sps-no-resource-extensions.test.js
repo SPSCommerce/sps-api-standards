@@ -62,4 +62,22 @@ describe("sps-no-resource-extensions", () => {
 
     await spectral.validateFailure(spec, ruleName, "Error", 1);
   });
+
+  test("invalid path with extension .yml", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /items.yml:
+          get:
+            responses:
+              '200':
+                description: Successful response
+                content:
+                  application/yaml:
+                    schema:
+                      $ref: '#/components/schemas/Item'
+    `;
+
+    await spectral.validateFailure(spec, ruleName, "Error", 1);
+  });
 });

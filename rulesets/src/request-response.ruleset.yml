@@ -77,7 +77,7 @@ rules:
         notMatch: "^(x|X)-"
 
   sps-invalid-location-header:
-    description: Location header must not be present in non-201 responses
+    description: Location header MUST NOT be present in non-201 responses
     severity: error
     given: $.paths[*][*].responses[?(@property !== '201')].headers
     then:
@@ -106,7 +106,7 @@ rules:
         match: "en-US"
 
   sps-no-explicit-headers:
-    description: Access-Control-*, Content-Type, and Accept Headers should not be specified explicitly in a spec as it an operational concern.
+    description: Access-Control-*, Content-Type, and Accept Headers SHOULD NOT be specified explicitly in a spec as it an operational concern.
     severity: warn
     given: "$.paths[*][*].responses[*].headers"
     then:
@@ -124,7 +124,7 @@ rules:
         match: "^(SPS-[a-zA-Z0-9-]{1,50}|Accept|Access-Control.*|Authorization|Cache-Control|Content-Language|Content-Length|Content-Type|Date|ETag|Host|If-Match|If-None-Match|Location|Origin|User-Agent)$"
 
   sps-sensitive-data-in-headers:
-    description: Headers MUST NOT contain sensitive data
+    description: Headers MUST NOT contain sensitive data.
     severity: error
     given: "$.paths[*][*].responses[*].headers.*~"
     then:
@@ -140,7 +140,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: "\\.json|\\.xml"
+        notMatch: "\\.json|\\.xml|\\.yml|\\.yaml"
 
   sps-invalid-mime-type:
     description: MIME types MUST be standard (application/json, application/problem+json, application/problem+xml) or use custom format application/vnd.sps-*+(json|xml)
