@@ -1,5 +1,4 @@
 rules:
-
   sps-limit-path-size:
     message: APIs SHOULD NOT expand their total URL length beyond a few hundred characters.
     severity: warn
@@ -38,7 +37,7 @@ rules:
       function: pattern
       functionOptions:
         match: api.spscommerce.com|api.sps-internal.com|localhost
-  
+
   sps-path-no-environment:
     message: "API paths MUST NOT indicate environment names."
     severity: error
@@ -56,7 +55,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: (?!https?://localhost)(https?://.*):(\d*)\/?(.*) 
+        notMatch: (?!https?://localhost)(https?://.*):(\d*)\/?(.*)
 
   sps-paths-expose-technology:
     message: "A resource MUST NOT leak or expose format or technology-specific information at any point in the path."
@@ -80,7 +79,7 @@ rules:
     message: "A resource containing multiple words MUST be separated using kebab-case (lower case and separated with hyphens)."
     severity: error
     given: $.paths[?(/^((?!_webhooks).)*$/i.test(@property))]~
-    then: 
+    then:
       function: pattern
       # (\/[a-z]+_.) looks for any instance of a forward slash followed by a lowercase character followed by an underscore
       # (\/([a-z]|[A-Z])+[A-Z])looks for any instance of a forward slash followed by a lowercase of uppercase character followed by an uppercase character
@@ -132,7 +131,7 @@ rules:
       function: pattern
       functionOptions:
         notMatch: ^(.*{{1}.*){4,}
-  
+
   sps-paths-limit-sub-resources:
     message: The hierarchy of nested resources SHOULD NOT contain more than 8 resource names in the path.
     severity: warn
@@ -140,7 +139,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: ^(.*\/{1}.*){9,}
+        notMatch: ^([^/]*/){9,}
 
   sps-paths-with-http-methods:
     message: "A resource SHOULD NOT contain HTTP methods."
@@ -189,16 +188,16 @@ rules:
     given: $.paths.*.*.parameters[?(@.in=='query')].required
     then:
       function: falsy
-  
+
   sps-query-params-no-api-keys:
     message: "Query parameters MUST not contain sensitive information, like API tokens or keys."
     severity: error
     given: $.paths.*.*.parameters[?(@.in=='query')].name
     then:
       function: pattern
-      functionOptions:  
+      functionOptions:
         notMatch: "apiKey|token"
-  
+
   sps-query-params-not-in-path:
     message: "Paths SHOULD NOT have query parameters in them. They should be defined separately in the OpenAPI."
     severity: warn
@@ -207,5 +206,3 @@ rules:
       function: pattern
       functionOptions:
         notMatch: \?
-   
-    
