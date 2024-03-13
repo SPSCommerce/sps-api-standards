@@ -542,7 +542,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: ^(.*\/{1}.*){9,}
+        notMatch: ^([^/]*/){9,}
   sps-paths-with-http-methods:
     message: "A resource SHOULD NOT contain HTTP methods."
     severity: error
