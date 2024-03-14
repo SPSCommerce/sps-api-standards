@@ -27,7 +27,7 @@ describe("sps-ref-property-name", () => {
                         ref: myrefvalue
                         name: hello
         `;
-    
+
         await spectral.validateSuccess(spec, ruleName);
     });
 
@@ -64,5 +64,40 @@ describe("sps-ref-property-name", () => {
                             type: string
         `;
         await spectral.validateFailure(spec, ruleName, "Error");
+    });
+
+    test("Ref property refers to readOnly value, and should pass", async () => {
+        const spec = `
+        openapi: 3.0.1
+        paths:
+            /v1/test:
+                post:
+                    summary: Create a new Rule
+                    requestBody:
+                    required: true
+                    content:
+                        application/json:
+                        schema:
+                            allOf:
+                            - $ref: '#/components/schemas/Rule'
+                            - properties:
+                                ref:
+                                    readOnly: true
+                                priority:
+                                    properties:
+                                    id:
+                                        readOnly: false
+                                    name:
+                                        readOnly: true
+                                type:
+                                    properties:
+                                    id:
+                                        readOnly: false
+                                    name:
+                                        readOnly: true
+                                    ref:
+                                        readOnly: true
+        `;
+        await spectral.validateSuccess(spec, ruleName);
     });
 });
