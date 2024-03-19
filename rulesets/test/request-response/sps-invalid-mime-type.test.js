@@ -27,6 +27,24 @@ describe("sps-invalid-mime-type", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
+  test("another valid MIME type", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /items:
+          get:
+            responses:
+              '200':
+                description: Successful response
+                content:
+                  application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                    schema:
+                      $ref: '#/components/schemas/Item'
+    `;
+
+    await spectral.validateSuccess(spec, ruleName);
+  });
+
   test("another valid MIME Type", async () => {
     const spec = `
       openapi: 3.1.0
@@ -91,7 +109,7 @@ describe("sps-invalid-mime-type", () => {
               '200':
                 description: Successful response
                 content:
-                  application/vnd.whatever:
+                  application/vnd-whatever:
                     schema:
                       $ref: '#/components/schemas/Item'
     `;

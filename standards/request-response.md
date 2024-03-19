@@ -454,24 +454,24 @@ Access-Control-Allow-Methods: *
 - Custom Headers **MUST** abide by the same rules and guidelines as standard headers.
 - Custom Header names **MUST NOT** be longer than 50 characters. <a name="sps-invalid-custom-header-format" href="#sps-invalid-custom-header-format"><i class="fa fa-check-circle" title="#sps-invalid-custom-header-format"></i></a>
 - Custom Header names **MUST** only contain alpha, numeric, and dash characters: [a-zA-Z0-9-] <a name="sps-invalid-custom-header-format" href="#sps-invalid-custom-header-format"><i class="fa fa-check-circle" title="#sps-invalid-custom-header-format"></i></a>
-- Custom Headers **MUST** start with the prefix `SPS-` (Note: do not prefix with `X-`). <a name="sps-no-x-headers" href="#sps-no-x-headers"><i class="fa fa-check-circle" title="#sps-no-x-headers"></i></a>
+- Custom Headers **MUST** start with the prefix `Sps-` (Note: do not prefix with `X-`). <a name="sps-no-x-headers" href="#sps-no-x-headers"><i class="fa fa-check-circle" title="#sps-no-x-headers"></i></a>
 - Custom Headers **SHOULD NOT** include sensitive data that applies to customers/employees or is subject to legal, regulatory, contractual, and business requirements. <a name="sps-sensitive-data-in-headers" href="#sps-sensitive-data-in-headers"><i class="fa fa-check-circle" title="#sps-sensitive-data-in-headers"></i></a>
 
 ```
 // CORRECT
-SPS-Claims: { "Custom": "Value" }
-SPS-User: 123456789012345678901234567890
-SPS-Meta-Information: YourInformation/Goes/Here
+Sps-Claims: { "Custom": "Value" }
+Sps-User: 123456789012345678901234567890
+Sps-Meta-Information: YourInformation/Goes/Here
  
 // INCORRECT
-X-SPS-User: 123456789012345678901234567890
+X-Sps-User: 123456789012345678901234567890
 ```
 
 ```note
 The usage of non-standard headers is not considered custom headers. For example, your API may consume or interact with other infrastructure outside of the contract specification for your service, such as `X-Forwarded-Host` or `X-Request-ID`, these are appropriate to continue using, but would not expect to identify them in your Open API spec for example. As such these types of headers not relevant to REST are intentionally left out of this documentation.
 ```
 
-#### SPS-CORS-Error
+#### Sps-Cors-Error
 
 **Type**: Response
 
@@ -490,10 +490,10 @@ The usage of non-standard headers is not considered custom headers. For example,
 
 ```
 // CORRECT
-SPS-CORS-Error: bad origin
+Sps-Cors-Error: bad origin
 ```
 
-#### SPS-Execution-Context
+#### Sps-Execution-Context
 
 **Type**: Both
 
@@ -504,7 +504,7 @@ SPS-CORS-Error: bad origin
 - A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable to this API.
 - The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
     - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
-    - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `SPS-Execution-Context` this is interpreted as the default value.
+    - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `Sps-Execution-Context` this is interpreted as the default value.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
 - The header value **MUST** be at minimum 1 character in length and  **MUST NOT** exceed a maximum length of 100 characters.
 - The header value **SHOULD** contain human-readable tag for the context.
@@ -516,14 +516,14 @@ SPS-CORS-Error: bad origin
 
 ```
 // CORRECT
-SPS-Execution-Context: prod
-SPS-Execution-Context: preprod
-SPS-Execution-Context: customer-testing
-SPS-Execution-Context: example-customer-configuration
+Sps-Execution-Context: prod
+Sps-Execution-Context: preprod
+Sps-Execution-Context: customer-testing
+Sps-Execution-Context: example-customer-configuration
 
 // INCORRECT
-SPS-Execution-Context:                  // values must be at least a character long.
-SPS-Execution-Context: 1                // valid, but SHOULD be human-readable.
+Sps-Execution-Context:                  // values must be at least a character long.
+Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
 ```
 
 ## MIME Types
@@ -924,7 +924,7 @@ The `OPTIONS` method is used to describe communication options for the target re
 - HTTP `OPTIONS` Method **MUST NOT** be used with any sensitive data.
 - HTTP `OPTIONS` Method responses **MUST NOT** be intended to be cached.
 - HTTP `OPTIONS` Method used for `CORS` integration **MUST** provide standard `CORS` headers for access control (`Access-Control-Allow-*`).
-    - Rejected `CORS` requests should return a `403` status code, including the [SPS-CORS-Error](#sps-cors-error) custom header indicating the reason for rejection.
+    - Rejected `CORS` requests should return a `403` status code, including the [Sps-Cors-Error](#sps-cors-error) custom header indicating the reason for rejection.
 
 ```
 // REQUEST

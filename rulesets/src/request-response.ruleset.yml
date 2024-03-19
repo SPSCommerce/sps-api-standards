@@ -121,7 +121,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^(SPS-[a-zA-Z0-9-]{1,50}|Accept|Access-Control.*|Authorization|Cache-Control|Content-Language|Content-Length|Content-Type|Date|ETag|Host|If-Match|If-None-Match|Location|Origin|User-Agent)$"
+        match: "^(Sps-[a-zA-Z0-9-]{1,50}|Accept|Access-Control.*|Authorization|Cache-Control|Content-Language|Content-Length|Content-Type|Date|ETag|Host|If-Match|If-None-Match|Location|Origin|User-Agent)$"
 
   sps-sensitive-data-in-headers:
     description: Headers MUST NOT contain sensitive data.
@@ -143,13 +143,13 @@ rules:
         notMatch: "\\.json|\\.xml|\\.yml|\\.yaml"
 
   sps-invalid-mime-type:
-    description: MIME types MUST be standard (application/json, application/problem+json, application/problem+xml) or use custom format application/vnd.sps-*+(json|xml)
+    description: MIME types MUST be standard (application/json, application/problem+json, application/problem+xml) or use custom format application/vnd.*
     severity: error
     given: $.paths[*][*].responses[*].content.*~
     then:
       function: pattern
       functionOptions:
-        match: "^application/(json|problem\\+json|problem\\+xml|vnd\\.sps-.*\\+(json|xml))$"
+        match: "^application/(json|problem\\+json|problem\\+xml|vnd\\..*)$"
 
   ##### HTTP Methods #####
   sps-invalid-http-method:
