@@ -85,7 +85,7 @@ rules:
       function: falsy
 
   sps-authorization-missing:
-    description: Security field MUST be present with at least one item
+    description: Security field MUST be present at the root of the spec with at least one item (ie. HTTPBearer, Token, APIKey, etc.)
     severity: error
     given: "$"
     then:
