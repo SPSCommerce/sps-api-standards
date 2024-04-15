@@ -1,5 +1,33 @@
 rules:
-  # domain references (URN-like values)
+  ##### General #####
+  sps-no-keyword-conflicts:
+    description: Names that may conflict with keywords in common programming languages SHOULD NOT be used.
+    severity: warn
+    given: "$..properties.*~"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: >-
+          ^(
+            abstract|continue|for|new|switch|assert|default|goto|package|synchronized|
+            boolean|do|if|private|this|break|double|implements|protected|throw|byte|
+            else|import|public|throws|case|enum|instanceof|return|transient|catch|
+            extends|int|short|try|char|final|interface|static|void|class|finally|
+            long|volatile|const|float|native|super|while
+          )$
+
+  ##### Property Names #####
+  sps-camel-case-properties:
+    description: Property names and acronyms MUST be in camelCase.
+    severity: error
+    formats: [oas3]
+    given: "$..properties.*~"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z]+([A-Z][a-z0-9]+)*$"
+
+  ##### Domain References #####
   sps-ref-property-name:
     description: Property with the name 'ref' MUST be of type 'sps-ref' following URN-like reference formats.
     severity: error
@@ -52,7 +80,151 @@ rules:
         functionOptions:
           match: "^string$"
 
-  # fingerprint property usage and naming
+  ##### Standard Properties #####
+  sps-invalid-id-type:
+    description: id SHOULD use a data type of 'string'.
+    severity: warn
+    formats: [oas3]
+    given: '$..[?(@property === "id")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-ref-type:
+    description: ref MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "ref")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-orgid-type:
+    description: orgId MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "orgId")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-orgref-type:
+    description: orgRef MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "orgRef")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-name-type:
+    description: name MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "name")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-description-type:
+    description: description MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "description")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-requestid-type:
+    description: requestId MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "requestId")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-createddatetime-type:
+    description: createdDateTime MUST use a data type of 'string' with the format 'date-time'.
+    severity: error
+    formats: [oas3]
+    given: "$..properties.createdDateTime"
+    then:
+      - field: type
+        function: pattern
+        functionOptions:
+          match: "^string$"
+      - field: format
+        function: truthy
+      - field: format
+        function: pattern
+        functionOptions:
+          match: "^date-time$"
+
+  sps-invalid-createdby-type:
+    description: createdBy MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "createdBy")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-modifieddatetime-type:
+    description: modifiedDateTime MUST use a data type of 'string' with the format 'date-time'.
+    severity: error
+    formats: [oas3]
+    given: "$..properties.modifiedDateTime"
+    then:
+      - field: type
+        function: pattern
+        functionOptions:
+          match: "^string$"
+      - field: format
+        function: truthy
+      - field: format
+        function: pattern
+        functionOptions:
+          match: "^date-time$"
+
+  sps-invalid-modifiedby-type:
+    description: modifiedBy MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "modifiedBy")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-deletedby-type:
+    description: deletedBy MUST use a data type of 'string'.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "deletedBy")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
+  sps-invalid-fingerprint-type:
+    description: Fingerprint values MUST use a data type of `string`.
+    severity: error
+    formats: [oas3]
+    given: '$..[?(@property === "fingerprint")].type'
+    then:
+      function: pattern
+      functionOptions:
+        match: "^string$"
+
   sps-fingerprint-naming:
     description: Rather than property names refering to the implementation for 'hash' or 'hashkey', you MUST use the property name 'fingerprint'.
     message: "{{property}} is not using property name fingerprint."
@@ -63,13 +235,3 @@ rules:
       function: pattern
       functionOptions:
         notMatch: "^hashkey|hashKey|hash$"
-
-  sps-fingerprint-type:
-    description: Fingerprint values MUST use a data type of `string`.
-    severity: error
-    formats: [oas3]
-    given: '$..[?(@property === "fingerprint")].type'
-    then:
-      function: pattern
-      functionOptions:
-        match: "^string$"
