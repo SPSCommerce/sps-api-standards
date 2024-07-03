@@ -1,0 +1,6 @@
+{
+    "spectral.rulesetFile": "rulesets/src/.spectral.yml",
+    "spectral.validateFiles": [
+        "*.openapi.yml"
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "module": "nodenext",
+        "noImplicitAny": false,
+        "checkJs": true,
+        "allowJs": true,
+        "moduleResolution": "nodenext",
+    },
+    "include": [
+        "test/**/*"
+    ],
+    "exclude": [
+        "./node_modules",
+        "./dist",
+    ]
+}

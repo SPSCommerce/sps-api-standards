@@ -1,7 +1,7 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-disallowed-prepositions", () => {
-  let spectral = null;
+  /** @type {SpectralTestHarness} */ let spectral = null;
   const ruleName = "sps-disallowed-prepositions";
   const ruleset = "src/naming.ruleset.yml";
 
@@ -53,6 +53,7 @@ describe("sps-disallowed-prepositions", () => {
                         testFor:
                           type: string
             `;
+
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
