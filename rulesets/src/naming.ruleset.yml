@@ -122,16 +122,6 @@ rules:
       functionOptions:
         match: "^string$"
 
-  sps-invalid-orgref-type:
-    description: orgRef MUST use a data type of 'string'.
-    severity: error
-    formats: [oas3]
-    given: '$..[?(@property === "orgRef")].type'
-    then:
-      function: pattern
-      functionOptions:
-        match: "^string$"
-
   sps-invalid-name-type:
     description: name MUST use a data type of 'string'.
     severity: error
