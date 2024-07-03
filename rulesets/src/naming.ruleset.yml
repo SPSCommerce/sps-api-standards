@@ -23,9 +23,20 @@ rules:
     formats: [oas3]
     given: "$..properties.*~"
     then:
+      function: casing
+      functionOptions:
+        type: camel
+        disallowDigits: true
+
+  sps-disallowed-prepositions:
+    description: Property names SHOULD NOT include prepositions (e.g. "for", "during", "at")
+    severity: warn
+    formats: [oas3]
+    given: "$..properties.*~"
+    then:
       function: pattern
       functionOptions:
-        match: "^[a-z]+([A-Z][a-z0-9]+)*$"
+        notMatch: "(^(for|during|at)|.*(For|During|At)([A-Z]|$)).*"
 
   ##### Domain References #####
   sps-ref-property-name:
