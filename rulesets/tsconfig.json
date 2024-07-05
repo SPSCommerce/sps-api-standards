@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
         "outDir": "./dist",
-        "module": "nodenext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "ESNext",
         "noImplicitAny": false,
         "checkJs": true,
         "allowJs": true,
-        "moduleResolution": "nodenext",
     },
     "include": [
         "test/**/*"
