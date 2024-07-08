@@ -1,15 +1,15 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-disallowed-prepositions", () => {
+describe("sps-disallowed-boolean-prefixes", () => {
   /** @type {SpectralTestHarness} */ let spectral = null;
-  const ruleName = "sps-disallowed-prepositions";
+  const ruleName = "sps-disallowed-boolean-prefixes";
   const ruleset = "src/naming.ruleset.yml";
 
   beforeEach(async () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  test("valid property names", async () => {
+  test("invalid property name isTest", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -26,89 +26,14 @@ describe("sps-disallowed-prepositions", () => {
                     schema:
                       type: object
                       properties:
-                        form:
-                          type: string
-                        enforceForms:
-                          type: string
-            `;
-
-    await spectral.validateSuccess(spec, ruleName);
-  });
-
-  test("valid property name form", async () => {
-    const spec = `
-      openapi: 3.0.0
-      info:
-        title: Sample API
-        version: 1.0.0
-      paths:
-        /users:
-          get:
-            responses:
-              '200':
-                description: A list of users
-                content:
-                  application/json:
-                    schema:
-                      type: object
-                      properties:
-                        form:
-                          type: string
-            `;
-
-    await spectral.validateSuccess(spec, ruleName);
-  });
-
-  test("valid property name: name", async () => {
-    const spec = `
-      openapi: 3.0.0
-      info:
-        title: Sample API
-        version: 1.0.0
-      paths:
-        /users:
-          get:
-            responses:
-              '200':
-                description: A list of users
-                content:
-                  application/json:
-                    schema:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-            `;
-
-    await spectral.validateSuccess(spec, ruleName);
-  });
-
-  test("valid property name", async () => {
-    const spec = `
-      openapi: 3.0.0
-      info:
-        title: Sample API
-        version: 1.0.0
-      paths:
-        /users:
-          get:
-            responses:
-              '200':
-                description: A list of users
-                content:
-                  application/json:
-                    schema:
-                      type: object
-                      properties:
-                        testFor:
-                          type: string
+                        isTest:
+                          type: boolean
             `;
 
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
-
-  test("invalid property name for", async () => {
+  test("invalid property name hasTest", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -125,11 +50,35 @@ describe("sps-disallowed-prepositions", () => {
                     schema:
                       type: object
                       properties:
-                        for:
+                        hasTest:
+                          type: boolean
+            `;
+
+    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+  });
+
+  test("valid string name with invalid boolean name", async () => {
+    const spec = `
+      openapi: 3.0.0
+      info:
+        title: Sample API
+        version: 1.0.0
+      paths:
+        /users:
+          get:
+            responses:
+              '200':
+                description: A list of users
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        hasTest:
                           type: string
         `;
 
-    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+    await spectral.validateSuccess(spec, ruleName);
   });
 
   test("invalid property name forSomething", async () => {
@@ -153,7 +102,7 @@ describe("sps-disallowed-prepositions", () => {
                           type: string
         `;
 
-    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+    await spectral.validateSuccess(spec, ruleName);
   });
 
   test("invalid property name at", async () => {
@@ -177,7 +126,6 @@ describe("sps-disallowed-prepositions", () => {
                           type: string
         `;
 
-    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+    await spectral.validateSuccess(spec, ruleName);
   });
-  
 });
