@@ -475,7 +475,7 @@ components:
           type: string
           description: The date and time the user was created.
           format: date-time
-        createdBy:
+        created:
           type: string
           description: The user ID that created this user.
           format: uid
@@ -484,7 +484,7 @@ components:
           type: string
           description: The date and time the user was last changed.
           format: date-time
-        modifiedBy:
+        modified:
           type: string
           description: The user ID that last changed this user.
           format: uid

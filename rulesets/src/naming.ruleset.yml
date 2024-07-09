@@ -7,14 +7,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: >-
-          ^(
-            abstract|continue|for|new|switch|assert|default|goto|package|synchronized|
-            boolean|do|if|private|this|break|double|implements|protected|throw|byte|
-            else|import|public|throws|case|enum|instanceof|return|transient|catch|
-            extends|int|short|try|char|final|interface|static|void|class|finally|
-            long|volatile|const|float|native|super|while
-          )$
+        notMatch: ^(abstract|continue|for|new|switch|assert|default|goto|package|synchronized|boolean|do|if|private|this|break|double|implements|protected|throw|byte|else|import|public|throws|case|enum|instanceof|return|transient|catch|extends|int|short|try|char|final|interface|static|void|class|finally|long|volatile|const|float|native|super|while)$
 
   ##### Property Names #####
   sps-camel-case-properties:
@@ -29,26 +22,14 @@ rules:
         disallowDigits: true
 
   sps-disallowed-prepositions:
-    description: Property names SHOULD NOT include prepositions (e.g. "for", "during", "at")
+    description: Property names SHOULD NOT include prepositions (e.g. "for", "during", "at", etc.)
     severity: warn
     formats: [oas3]
     given: "$..properties.*~"
     then:
       function: pattern
       functionOptions: 
-        notMatch: >-
-         "(^(about|above|across|after|against|among|around|at|before|behind|below|beside|
-          between|by|down|during|for|from|in|inside|into|near|of|off|on|out|over|through|
-          to|toward|under|up|with|aboard|along|amid|as|beneath|beyond|but|concerning|
-          considering|despite|except|following|like|minus|next|onto|opposite|outside|
-          past|per|plus|regarding|round|save|since|than|till|underneath|unlike|until|
-          upon|versus|via|within|without)([A-Z]|$)|.*(About|Above|Across|After|Against|
-          Among|Around|At|Before|Behind|Below|Beside|Between|By|Down|During|For|From|In|
-          Inside|Into|Near|Of|Off|On|Out|Over|Through|To|Toward|Under|Up|With|Aboard|
-          Along|Amid|As|Beneath|Beyond|But|Concerning|Considering|Despite|Except|
-          Following|Like|Minus|Next|Onto|Opposite|Outside|Past|Per|Plus|Regarding|Round|
-          Save|Since|Than|Till|Underneath|Unlike|Until|Upon|Versus|Via|Within|Without)
-          ([A-Z]|$)).*"
+        notMatch: (^(about|above|across|after|against|among|around|at|before|behind|below|beside|between|by|down|during|for|from|in|inside|into|near|of|off|on|out|over|through|to|toward|under|up|with|aboard|along|amid|as|beneath|beyond|but|concerning|considering|despite|except|following|like|minus|next|onto|opposite|outside|past|per|plus|regarding|round|save|since|than|till|underneath|unlike|until|upon|versus|via|within|without)([A-Z]|$)|.*(About|Above|Across|After|Against|Among|Around|At|Before|Behind|Below|Beside|Between|By|Down|During|For|From|In|Inside|Into|Near|Of|Off|On|Out|Over|Through|To|Toward|Under|Up|With|Aboard|Along|Amid|As|Beneath|Beyond|But|Concerning|Considering|Despite|Except|Following|Like|Minus|Next|Onto|Opposite|Outside|Past|Per|Plus|Regarding|Round|Save|Since|Than|Till|Underneath|Unlike|Until|Upon|Versus|Via|Within|Without)([A-Z]|$)).*
 
   sps-disallowed-boolean-prefixes:
     description: Boolean properties SHOULD NOT use is, has, or another prefix.
@@ -123,6 +104,36 @@ rules:
       function: pattern
       functionOptions:
         match: "^string$"
+  
+  sps-mandate-abbreviations-identifier:
+    description: Use abbreviations instead of long form names, i.e. identifier SHOULD BE id.
+    severity: warn
+    formats: [oas3]
+    given: '$..properties.*~'
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "(^identifier([A-Z]|$)|.*Identifier([A-Z]|$))"
+
+  sps-mandate-abbreviations-reference:
+    description: Use abbreviations instead of long form names, i.e. reference SHOULD BE ref.
+    severity: warn
+    formats: [oas3]
+    given: '$..properties.*~'
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "(^reference([A-Z]|$)|Reference([A-Z]|$))"
+
+  sps-mandate-abbreviations-organization:
+    description: Use abbreviations instead of long form names, i.e. organization SHOULD BE org.
+    severity: warn
+    formats: [oas3]
+    given: '$..properties.*~'
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "(^organization([A-Z]|$)|Organization([A-Z]|$))"
 
   sps-invalid-ref-type:
     description: ref MUST use a data type of 'string'.

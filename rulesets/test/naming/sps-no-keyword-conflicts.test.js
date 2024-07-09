@@ -57,6 +57,30 @@ describe("sps-no-keyword-conflicts", () => {
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
+  test("invalid property name abstract", async () => {
+    const spec = `
+      openapi: 3.0.0
+      info:
+        title: Sample API
+        version: 1.0.0
+      paths:
+        /users:
+          get:
+            responses:
+              '200':
+                description: A list of users
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        abstract:
+                          type: string
+        `;
+
+    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+  });
+
   test("invalid property name assert and for", async () => {
     const spec = `
       openapi: 3.0.0
