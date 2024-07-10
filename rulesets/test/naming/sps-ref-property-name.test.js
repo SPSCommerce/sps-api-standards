@@ -74,29 +74,29 @@ describe("sps-ref-property-name", () => {
                 post:
                     summary: Create a new Rule
                     requestBody:
-                    required: true
-                    content:
-                        application/json:
-                        schema:
-                            allOf:
-                            - $ref: '#/components/schemas/Rule'
-                            - properties:
-                                ref:
-                                    readOnly: true
-                                priority:
-                                    properties:
-                                    id:
-                                        readOnly: false
-                                    name:
-                                        readOnly: true
-                                type:
-                                    properties:
-                                    id:
-                                        readOnly: false
-                                    name:
-                                        readOnly: true
-                                    ref:
-                                        readOnly: true
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    allOf:
+                                    - $ref: '#/components/schemas/Rule'
+                                    - properties:
+                                        ref:
+                                            readOnly: true
+                                        priority:
+                                            properties:
+                                                id:
+                                                    readOnly: false
+                                                name:
+                                                    readOnly: true
+                                        type:
+                                            properties:
+                                                id:
+                                                    readOnly: false
+                                                name:
+                                                    readOnly: true
+                                                ref:
+                                                    readOnly: true
         `;
         await spectral.validateSuccess(spec, ruleName);
     });
