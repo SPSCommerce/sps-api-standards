@@ -28,6 +28,8 @@ describe("sps-mandate-abbreviations-organization", () => {
                       properties:
                         org:
                           type: string
+                        organizational:
+                          type: string
         `;
 
     await spectral.validateSuccess(spec, ruleName);

@@ -28,6 +28,8 @@ describe("sps-mandate-abbreviations-reference", () => {
                       properties:
                         ref:
                           type: string
+                        dereferenced:
+                          type: string
         `;
 
     await spectral.validateSuccess(spec, ruleName);

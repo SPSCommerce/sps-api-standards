@@ -28,6 +28,8 @@ describe("sps-mandate-abbreviations-identifier", () => {
                       properties:
                         id:
                           type: string
+                        reidentifier:
+                          type: string
         `;
 
     await spectral.validateSuccess(spec, ruleName);
