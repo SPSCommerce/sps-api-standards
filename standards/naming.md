@@ -29,7 +29,7 @@ When you consider the names to use for your path, endpoints and other components
 - Names **MUST** use the same term for the same concept used elsewhere, including concepts shared across APIs. Refer to specific components below.
 - Names **MUST** be different for different concepts.
 - Overly general names that are ambiguous within the context of the API and the larger ecosystem of APIs **MUST** be avoided (i.e. "identity", "notification-service", etc). They can lead to a misunderstanding of API concepts. Rather, choose specific names that accurately describe the API concept. - This is particularly important for names that define first-order API elements, such as resources. There is no definitive list of names to avoid, as every name must be evaluated in the context of other names.
-- Names that may conflict with keywords in common programming languages **SHOULD NOT** be used. 
+- Names that may conflict with keywords in common programming languages **SHOULD NOT** be used. <a name="sps-no-keyword-conflicts" href="#sps-no-keyword-conflicts"><i class="fa fa-check-circle" title="#sps-no-keyword-conflicts"></i></a>
 
 ## Text
 
@@ -53,7 +53,7 @@ orderNumber
 lineItemNumber
 ```
 
-- All acronyms **MUST** follow camelCase standards if they are part of the property name.
+- All acronyms **MUST** follow camelCase standards if they are part of the property name. <a name="sps-camel-case-properties" href="#sps-camel-case-properties"><i class="fa fa-check-circle" title="#sps-camel-case-properties"></i></a>
 
 ```
 // INCORRECT
@@ -68,7 +68,7 @@ documentId
 imageUrl
 ```
 
-- Property names **SHOULD NOT** include prepositions (e.g. "for", "during", "at"):
+- Property names **SHOULD NOT** include prepositions (e.g. "for", "during", "at"). <a name="sps-disallowed-prepositions" href="#sps-disallowed-prepositions"><i class="fa fa-check-circle" title="#sps-disallowed-prepositions"></i></a>
 
 ```
 // INCORRECT
@@ -92,7 +92,7 @@ collectedItems
 importedObjects
 ```
 
-- Boolean properties **SHOULD NOT** use is, has, or another prefix.
+- Boolean properties **SHOULD NOT** use is, has, or another prefix. <a name="sps-disallowed-boolean-prefixes" href="#sps-disallowed-boolean-prefixes"><i class="fa fa-check-circle" title="#sps-disallowed-boolean-prefixes"></i></a>
 - Boolean properties **SHOULD** describe their associated entity using adjectives and not nouns.
     - Boolean properties **SHOULD NOT** be pluralized (i.e. avoid pluralized nouns acting as adjectives). 
 
