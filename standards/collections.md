@@ -4,11 +4,11 @@
 
 Collection usage and manipulation with HTTP REST APIs specifically require its own set of standardization that provide helpful considerations and must use styles for consistency.
 
-- All collection-based API responses **MUST** offer paging capability for consistency and evolution, regardless of the collection size or the static nature of the data. Even if the resource is returning a collection of static "types" representing 2 items, pagination should be supported in its simplest form.
+- All collection-based API responses **MUST** offer paging capability for consistency and evolution, regardless of the collection size or the static nature of the data. Even if the resource is returning a collection of static "types" representing 2 items, pagination should be supported in its simplest form. <a name="sps-no-collection-paging-capability" href="#sps-no-collection-paging-capability"><i class="fa fa-check-circle" title="sps-no-collection-paging-capability"></i></a>
 
 ## Root Element
 
-- All collection-based endpoint responses **MUST** include the collection under the `results` root element.
+- All collection-based endpoint responses **MUST** include the collection under the `results` root element. <a name="sps-collection-missing-results-array" href="#sps-collection-missing-results-array"><i class="fa fa-check-circle" title="sps-collection-missing-results-array"></i></a>
 
 ```
 // CORRECT
@@ -30,7 +30,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 
 ### General
 
-- All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below.
+- All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below. <a name="sps-missing-pagination-query-parameters" href="#sps-missing-pagination-query-parameters"><i class="fa fa-check-circle" title="sps-missing-pagination-query-parameters"></i></a>
 
 ```
 // CORRECT
@@ -44,7 +44,7 @@ GET https://api.spscommerce.com/v1/books
 ```
 
 - All collection-based endpoints **SHOULD** use `GET` requests for pagination and not `POST` requests unless it is necessary for the action.
-- All collection-based endpoints `POST` request parameters **MUST** be specified as parameters in the body of the request within the `paging` element and the outlined schema below.
+- All collection-based endpoints `POST` request parameters **MUST** be specified as parameters in the body of the request within the `paging` element and the outlined schema below. <a name="sps-post-request-body-missing-paging-object" href="#sps-post-request-body-missing-paging-object"><i class="fa fa-check-circle" title="sps-post-request-body-missing-paging-object"></i></a>
 
 ```
 // CORRECT
@@ -401,13 +401,13 @@ RESPONSE
 To limit or narrow down the results of a collection endpoint you may provide filtering capabilities, where a filter is part of the query parameters.
 
 - Filtering is not a requirement on all collection-based endpoints.
-- Filtering query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional.
-- The resource identifier in a collection **SHOULD NOT** be used to filter collection results, resource identifier should be in the URI.
+- Filtering query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional. <a name="sps-query-params-not-required" href="#sps-query-params-not-required"><i class="fa fa-check-circle" title="sps-query-params-not-required"></i></a>
+- The resource identifier in a collection **SHOULD NOT** be used to filter collection results, resource identifier should be in the URI. <a name="sps-disallow-resource-identifier-filtering" href="#sps-disallow-resource-identifier-filtering"><i class="fa fa-check-circle" title="sps-disallow-resource-identifier-filtering"></i></a>
 - Filtering **SHOULD** only occur on endpoints that are collections using the schema described above.
 - Filtering attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`.
     - Limit filter references to three levels of object hierarchy in accordance with `GET-based` HTTP Methods ([Request Response](request-response.md)).
 - Filtering **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
-- Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md).
+- Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md). <a name="sps-unreasonable-query-parameters-limit" href="#sps-unreasonable-query-parameters-limit"><i class="fa fa-check-circle" title="sps-unreasonable-query-parameters-limit"></i></a>
     - Overly verbose filtering that contains dozens or hundreds of parameters **SHOULD** consider if their API design is appropriate.
     - Overly verbose filtering that contains an undesirable number of parameters that cannot be redesigned **SHOULD** consider using a non-REST style `POST` endpoint as described under [Actions in URL Structure](url-structure.md).
         - `POST` requests for non-REST style filtering **SHOULD** specify parameters at the root of the request body with the same names that would be used for query parameters normally.
@@ -507,7 +507,7 @@ For filtering use cases beyond the functionality provided in "Simple" filtering,
 RSQL is based on FIQL and is considered a superset of it, making it and FIQL usable in any RSQL compatible library. For clarity, it is expressed here as FIQL/RSQL. If your platform doesn't provide any library then it is possible to generate a parser using ABNF from the draft [documentation page](https://datatracker.ietf.org/doc/html/draft-nottingham-atompub-fiql-00) or from the [RSQL GitHub page](https://github.com/jirutka/rsql-parser). Take note, that FIQL/RSQL is easily extendable with custom functions required by an API and can be used with XML/JSON responses despite the fact that initially it was designed as a feed query language.
 ```
 
-- Advanced filtering **MUST** specify the entirety of the expression as a value of the single dedicated `filter` query parameter unless using advanced filtering for a particular subset of your payload response.
+- Advanced filtering **MUST** specify the entirety of the expression as a value of the single dedicated `filter` query parameter unless using advanced filtering for a particular subset of your payload response. <a name="sps-multiple-filter-parameters" href="#sps-multiple-filter-parameters"><i class="fa fa-check-circle" title="sps-multiple-filter-parameters"></i></a>
     - `filter` **MUST** only be specified once in the URL.
     - `filter` **MUST** only contain the FIQL/RSQL syntax specified in these standards.
 - Each query parameter value or any field value inside FIQL/RSQL expression **MUST** be URL encoded. FIQL/RSQL expression itself generally does not require encoding as there are no unsafe characters.
@@ -600,12 +600,12 @@ The dynamic nature of filters means that all fields cannot be listed in Open API
 Sorting on collection endpoints should be done by specifying the attributes that should be sorted or ordered by using an ordering query parameter.
 
 - Sorting is not a requirement on all collection-based endpoints.
-- Sorting query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional.
+- Sorting query parameters **MUST** always be optionally applied as indicated by URL Structures that all query parameters are always optional. <a name="sps-query-params-not-required" href="#sps-query-params-not-required"><i class="fa fa-check-circle" title="sps-query-params-not-required"></i></a>
 - Default sort order **SHOULD** be considered as `undefined` and non-deterministic from the API consumer's perspective when no sorting query parameters are provided.
     - A default sort order **MUST** be applied internally for implementation purposes to provide consistently paged responses.
     - A default sort order modification is not considered an API breaking change unless the behavior is documented as such.
 - Sorting **SHOULD** only occur on endpoints that are collections using the schema described above.
-- Sorting **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
+- Sorting **MUST** only be implemented on `GET-based` HTTP Methods via query parameters. <a name="sps-sorting-parameters-only-get-requests" href="#sps-sorting-parameters-only-get-requests"><i class="fa fa-check-circle" title="sps-sorting-parameters-only-get-requests"></i></a>
 - Sorting query parameters **MUST** be included as part of the pagination next/previous URLs, similar to how `limit` is included as an additional query parameter.
 - If an explicit sort order is desired, the query parameter `ordering` **MUST** be used to specify attribute names.
 - Specifying an attribute name in the ordering parameter **MUST** sort by that attribute ascending (ASC). Specifying a `-` sign in front modifies to descending (DESC) on the same attribute.

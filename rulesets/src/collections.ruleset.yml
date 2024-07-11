@@ -1,0 +1,136 @@
+rules:
+  ##### General #####
+  sps-no-collection-paging-capability:
+    description: Response bodies from collection endpoints must offer paging capability.
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties
+    then:
+      - field: "paging"
+        function: truthy
+      - field: "paging.type"
+        function: pattern
+        functionOptions:
+          match: "object"
+
+  ##### Root Element #####
+  sps-collection-missing-results-array:
+    description: Response bodies must have a root element called results and is an array of objects.
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties.results
+    then:
+      - field: type
+        function: pattern
+        functionOptions:
+          match: "array"
+      - field: items.type
+        function: pattern
+        functionOptions:
+          match: "object"
+
+  ##### Pagination #####
+  sps-missing-pagination-query-parameters:
+    description: 'Collection GET endpoints must support pagination using query parameters: limit, offset, cursor.'
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get
+    then:
+      - field: parameters
+        function: schema
+        functionOptions:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+            minItems: 3
+            contains:
+              anyOf:
+                - properties:
+                    name:
+                      const: offset
+                - properties:
+                    name:
+                      const: limit
+                - properties:
+                    name:
+                      const: cursor
+
+  sps-post-request-body-missing-paging-object:
+    description: "POST collection endpoints MUST have a request body schema that includes paging parameters."
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].post.requestBody.content.application/json.schema.properties.paging
+    then:
+      field: "type"
+      function: pattern
+      functionOptions:
+        match: "object"
+
+  ##### FILTERING #####
+  sps-disallow-resource-identifier-filtering:
+    description: "Resource identifier filtering is not allowed. Use the resource identifier in the URL path."
+    severity: warn
+    given: $.paths..get.parameters.[?(@.in=='query' && @.name=='id')]
+    then:
+      field: "name"
+      function: pattern
+      functionOptions:
+        notMatch: "^id$"
+
+  sps-unreasonable-query-parameters-limit:
+    description: "Filtering query parameters SHOULD have a reasonable limit, no more than 12."
+    severity: warn
+    given: $.paths..get
+    then:
+      function: schema
+      functionOptions:
+        dialect: "draft2020-12"
+        schema:
+          type: object
+          properties:
+            parameters:
+              type: array
+              minContains: 0
+              maxContains: 12
+              contains:
+                type: object
+                properties:
+                  in:
+                    const: query
+
+  sps-multiple-filter-parameters:
+    description: "Ensures the 'filter' query parameter is specified only once."
+    severity: error
+    given: $.paths..get
+    then:
+      function: schema
+      functionOptions:
+        dialect: "draft2020-12"
+        schema:
+          type: object
+          properties:
+            parameters:
+              type: array
+              minContains: 0
+              maxContains: 1
+              contains:
+                type: object
+                properties:
+                  in:
+                    const: query
+                  name:
+                    pattern: "(filter|Filter)"
+
+  ##### SORTING #####
+  sps-sorting-parameters-only-get-requests:
+    description: "Sorting query parameters SHOULD only be used with GET endpoints."
+    severity: error
+    given: $.paths.*[?(@property!='get')].parameters.[?(@.in=='query')]
+    then:
+      field: "name"
+      function: pattern
+      functionOptions:
+        notMatch: "^sort|sorting|sort_by|order|ordering|order_by$"
+
