@@ -159,30 +159,6 @@ RESPONSE
 
 - Rather than property names referring to the implementation for 'hash' or 'hashkey', you **MUST** use the property name 'fingerprint'. <a name="sps-fingerprint-naming" href="#sps-fingerprint-naming"><i class="fa fa-check-circle" title="#sps-fingerprint-naming"></i></a>
 
-## DataTypes
-
-- orgId **MUST** use a data type of 'string'. <a name="sps-invalid-id-type" href="#sps-invalid-id-type"><i class="fa fa-check-circle" title="#sps-invalid-id-type"></i></a>
-
-- ref **MUST** use a data type of 'string'. <a name="sps-invalid-ref-type" href="#sps-invalid-ref-type"><i class="fa fa-check-circle" title="#sps-invalid-ref-type"></i></a>
-
-- orgId **MUST** use a data type of 'string'. <a name="sps-invalid-orgid-type" href="#sps-invalid-orgid-type"><i class="fa fa-check-circle" title="#sps-invalid-orgid-type"></i></a>
-
-- name **MUST** use a data type of 'string'. <a name="sps-invalid-name-type" href="#sps-invalid-name-type"><i class="fa fa-check-circle" title="#sps-invalid-name-type"></i></a>
-
-- description **MUST** use a data type of 'string'. <a name="sps-invalid-description-type" href="#sps-invalid-description-type"><i class="fa fa-check-circle" title="#sps-invalid-description-type"></i></a>
-
-- requestId **MUST** use a data type of 'string'. <a name="sps-invalid-requestid-type" href="#sps-invalid-requestid-type"><i class="fa fa-check-circle" title="#sps-invalid-requestid-type"></i></a>
-
-- createdDateTime **MUST** use a data type of 'string' with the format 'date-time'. <a name="sps-invalid-createddatetime-type" href="#sps-invalid-createddatetime-type"><i class="fa fa-check-circle" title="#sps-invalid-createddatetime-type"></i></a>
-
-- createdBy **MUST** use a data type of 'string'. <a name="sps-invalid-createdby-type" href="#sps-invalid-createdby-type"><i class="fa fa-check-circle" title="#sps-invalid-createdby-type"></i></a>
-
-- modifiedDateTime **MUST** use a data type of 'string' with the format 'date-time'. <a name="sps-invalid-modifieddatetime-type" href="#sps-invalid-modifieddatetime-type"><i class="fa fa-check-circle" title="#sps-invalid-modifieddatetime-type"></i></a>
-
-- modifiedBy **MUST** use a data type of 'string'. <a name="sps-invalid-modifiedby-type" href="#sps-invalid-modifiedby-type"><i class="fa fa-check-circle" title="#sps-invalid-modifiedby-type"></i></a>
-
-- deletedBy **MUST** use a data type of 'string'. <a name="sps-invalid-deletedby-type" href="#sps-invalid-deletedby-type"><i class="fa fa-check-circle" title="#sps-invalid-deletedby-type"></i></a>
-
 ## Identifiers
 
 - An entity with a unique identifier **MUST** be labeled as `id`.
@@ -266,21 +242,21 @@ The following properties represent standardized names that are cross-domain tran
 
 Refer to further information in [Serialization](serialization.md) with regard to specific property naming conventions based on JSON types.
 
-| Name               | Type           | Description |
-| ------------------ | -------------- | ----------- |
-| id                 | String         | A unique identifier for the parent entity.  |
-| ref                | String         | A unique reference for the parent entity / resource using unique resource names.  |
-| orgId              | String         | A unique identifier for an organization, typically a UUID. |
-| orgRef             | String         | A unique reference for an organization using its domain qualified unique resource name containing the orgId. |
-| name               | String         | The official name of the parent entity. |
-| description        | String         | Text describing the parent entity. |
-| requestId          | String         | Used to represent a unique tracing identified associated with the platform. |
-| createdDateTime    | DateTime       | The creation timestamp of an entity. |
-| createdBy          | String         | An identifier for a user that created an entity. |
-| modifiedDateTime   | DateTime       | The modified timestamp of an entity. |
-| modifiedBy         | String         | An identifier for a user that modified an entity. |
-| deletedBy          | String         | An identifier for a user that deleted an entity. |
-| fingerprint        | String         | Fingerprint represents a hashed reference to an associated data context (e.g file content hash, document identifier hash, etc). Use this standardized name over something like `hashkey`.<a name="sps-fingerprint-naming" href="#sps-fingerprint-naming"><i class="fa fa-check-circle" title="#sps-fingerprint-naming"></i></a> |
+| Name             | Type     | Description                                                                                                                                                                                                                                                                                                                      |
+| ---------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id               | String   | A unique identifier for the parent entity.                                                                                                                                                                                                                                                                                       |
+| ref              | String   | A unique reference for the parent entity / resource using unique resource names. <a name="sps-invalid-ref-type" href="#sps-invalid-ref-type"><i class="fa fa-check-circle" title="#sps-invalid-ref-type"></i></a>                                                                                                                |
+| orgId            | String   | A unique identifier for an organization, typically a UUID. <a name="sps-invalid-orgid-type" href="#sps-invalid-orgid-type"><i class="fa fa-check-circle" title="#sps-invalid-orgid-type"></i></a>                                                                                                                                |
+| orgRef           | String   | A unique reference for an organization using its domain qualified unique resource name containing the orgId.                                                                                                                                                                                                                     |
+| name             | String   | The official name of the parent entity. <a name="sps-invalid-name-type" href="#sps-invalid-name-type"><i class="fa fa-check-circle" title="#sps-invalid-name-type"></i></a>                                                                                                                                                      |
+| description      | String   | Text describing the parent entity. <a name="sps-invalid-description-type" href="#sps-invalid-description-type"><i class="fa fa-check-circle" title="#sps-invalid-description-type"></i></a>                                                                                                                                      |
+| requestId        | String   | Used to represent a unique tracing identified associated with the platform. <a name="sps-invalid-requestid-type" href="#sps-invalid-requestid-type"><i class="fa fa-check-circle" title="#sps-invalid-requestid-type"></i></a>                                                                                                   |
+| createdDateTime  | DateTime | The creation timestamp of an entity. <a name="sps-invalid-createddatetime-type" href="#sps-invalid-createddatetime-type"><i class="fa fa-check-circle" title="#sps-invalid-createddatetime-type"></i></a>                                                                                                                        |
+| createdBy        | String   | An identifier for a user that created an entity. <a name="sps-invalid-createdby-type" href="#sps-invalid-createdby-type"><i class="fa fa-check-circle" title="#sps-invalid-createdby-type"></i></a>                                                                                                                              |
+| modifiedDateTime | DateTime | The modified timestamp of an entity. <a name="sps-invalid-modifieddatetime-type" href="#sps-invalid-modifieddatetime-type"><i class="fa fa-check-circle" title="#sps-invalid-modifieddatetime-type"></i></a>                                                                                                                     |
+| modifiedBy       | String   | An identifier for a user that modified an entity. <a name="sps-invalid-modifiedby-type" href="#sps-invalid-modifiedby-type"><i class="fa fa-check-circle" title="#sps-invalid-modifiedby-type"></i></a>                                                                                                                          |
+| deletedBy        | String   | An identifier for a user that deleted an entity. <a name="sps-invalid-deletedby-type" href="#sps-invalid-deletedby-type"><i class="fa fa-check-circle" title="#sps-invalid-deletedby-type"></i></a>                                                                                                                              |
+| fingerprint      | String   | Fingerprint represents a hashed reference to an associated data context (e.g file content hash, document identifier hash, etc). Use this standardized name over something like `hashkey`. <a name="sps-fingerprint-naming" href="#sps-fingerprint-naming"><i class="fa fa-check-circle" title="#sps-fingerprint-naming"></i></a> |
 
 Additional standardized property names and schemas are also described in the following:
 
