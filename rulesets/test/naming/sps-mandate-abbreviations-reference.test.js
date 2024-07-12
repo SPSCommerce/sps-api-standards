@@ -9,7 +9,7 @@ describe("sps-mandate-abbreviations-reference", () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  test("id with type string is successful", async () => {
+  test("abbreviation is successful", async () => {
     const spec = `
       openapi: 3.0.0
       info:
