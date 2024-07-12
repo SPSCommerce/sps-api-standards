@@ -11,7 +11,6 @@ const { bundleAndLoadRuleset } = require("@stoplight/spectral-ruleset-bundler/wi
 const { DiagnosticSeverity } = require('@stoplight/types');
 
 class SpectralTestHarness {
-    
     constructor(rulesetPath) {
         this.rulesetPath = rulesetPath;
     };
