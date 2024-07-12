@@ -29,7 +29,7 @@ rules:
     then:
       function: pattern
       functionOptions: 
-        notMatch: (^(about|above|across|after|against|among|around|at|before|behind|below|beside|between|by|down|during|for|from|in|inside|into|near|of|off|on|out|over|through|to|toward|under|up|with|aboard|along|amid|as|beneath|beyond|but|concerning|considering|despite|except|following|like|minus|next|onto|opposite|outside|past|per|plus|regarding|round|save|since|than|till|underneath|unlike|until|upon|versus|via|within|without)([A-Z]|$)|.*(About|Above|Across|After|Against|Among|Around|At|Before|Behind|Below|Beside|Between|By|Down|During|For|From|In|Inside|Into|Near|Of|Off|On|Out|Over|Through|To|Toward|Under|Up|With|Aboard|Along|Amid|As|Beneath|Beyond|But|Concerning|Considering|Despite|Except|Following|Like|Minus|Next|Onto|Opposite|Outside|Past|Per|Plus|Regarding|Round|Save|Since|Than|Till|Underneath|Unlike|Until|Upon|Versus|Via|Within|Without)([A-Z]|$)).*
+        notMatch: (^(about|above|across|after|against|among|around|at|before|behind|below|beside|between|down|during|for|from|in|inside|into|near|of|off|on|out|over|through|to|toward|under|up|with|as|but|like|since|than|till|unlike|until|upon|within|without)([A-Z]|$)|.*(About|Above|Across|After|Against|Among|Around|At|Before|Behind|Below|Beside|Between|Down|During|For|From|In|Inside|Into|Near|Of|Off|On|Out|Over|Through|To|Toward|Under|Up|With|As|But|Like|Since|Than|Till|Unlike|Until|Upon|Within|Without)([A-Z]|$)).*
 
   sps-disallowed-boolean-prefixes:
     description: Boolean properties SHOULD NOT use is, has, or another prefix.
