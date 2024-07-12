@@ -14,7 +14,7 @@ class SpectralTestHarness {
     
     constructor(rulesetPath) {
         this.rulesetPath = rulesetPath;
-    }
+    };
 
     validate = async function(content) {
         const ruleset = await bundleAndLoadRuleset(path.resolve(this.rulesetPath), { fs, fetch });
