@@ -75,7 +75,7 @@ describe("sps-camel-case-properties", () => {
     await spectral.validateFailure(spec, ruleName, "Error", 4);
   });
 
-  test("invalid usage of camel casing ifor acronyms", async () => {
+  test("invalid usage of camel casing for acronyms", async () => {
     const spec = `
       openapi: 3.0.1
       paths:
