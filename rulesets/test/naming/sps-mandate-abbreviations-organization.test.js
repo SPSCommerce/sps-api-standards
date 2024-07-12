@@ -9,7 +9,7 @@ describe("sps-mandate-abbreviations-organization", () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  test("id with type string is successful", async () => {
+  test("organization with type string is successful", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -35,7 +35,7 @@ describe("sps-mandate-abbreviations-organization", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("id with type number failure", async () => {
+  test("organization should warn when it is the entire field name", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -59,7 +59,7 @@ describe("sps-mandate-abbreviations-organization", () => {
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
-  test("id with type number failure", async () => {
+  test("organization should warn when it is a word present in the field name", async () => {
     const spec = `
       openapi: 3.0.1
       paths: {}
