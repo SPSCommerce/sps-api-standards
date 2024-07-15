@@ -11,8 +11,8 @@ rules:
 
   ##### Property Names #####
   sps-camel-case-properties:
-    description: Property names and acronyms MUST be in camelCase.
-    severity: error
+    description: Property names and acronyms SHOULD be in camelCase.
+    severity: warn
     formats: [oas3]
     given: "$..properties.*~"
     then:
@@ -39,7 +39,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: "^(is|has)([A-Z]|$).*"
+         notMatch: "^(is|has|was|will|needs|uses|should|can)([A-Z]|$).*"
 
   ##### Domain References #####
   sps-ref-property-name:

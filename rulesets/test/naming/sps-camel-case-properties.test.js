@@ -72,7 +72,7 @@ describe("sps-camel-case-properties", () => {
                           type: string
       `;
 
-    await spectral.validateFailure(spec, ruleName, "Error", 4);
+    await spectral.validateFailure(spec, ruleName, "Warning", 4);
   });
 
   test("invalid usage of camel casing for acronyms", async () => {
@@ -103,6 +103,6 @@ describe("sps-camel-case-properties", () => {
                           type: string
       `;
 
-    await spectral.validateFailure(spec, ruleName, "Error", 2);
+    await spectral.validateFailure(spec, ruleName, "Warning", 2);
   });
 });
