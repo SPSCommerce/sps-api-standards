@@ -115,16 +115,6 @@ rules:
       functionOptions:
         notMatch: "(^identifier([A-Z]|$)|.*Identifier([A-Z]|$))"
 
-  sps-mandate-abbreviations-reference:
-    description: Use abbreviations instead of long form names, i.e. reference SHOULD BE ref.
-    severity: warn
-    formats: [oas3]
-    given: '$..properties.*~'
-    then:
-      function: pattern
-      functionOptions:
-        notMatch: "(^reference([A-Z]|$)|Reference([A-Z]|$))"
-
   sps-mandate-abbreviations-organization:
     description: Use abbreviations instead of long form names, i.e. organization SHOULD BE org.
     severity: warn
