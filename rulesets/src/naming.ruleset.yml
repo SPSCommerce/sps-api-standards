@@ -229,7 +229,7 @@ rules:
       functionOptions:
         match: "^string$"
 
-  sps-invalid-deletedby-type:
+  sps-invalid-deleted-by-type:
     description: deletedBy MUST use a data type of 'string'.
     severity: error
     formats: [oas3]
