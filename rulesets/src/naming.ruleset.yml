@@ -165,7 +165,7 @@ rules:
       functionOptions:
         match: "^string$"
 
-  sps-invalid-requestid-type:
+  sps-invalid-request-id-type:
     description: requestId MUST use a data type of 'string'.
     severity: error
     formats: [oas3]
@@ -175,7 +175,7 @@ rules:
       functionOptions:
         match: "^string$"
 
-  sps-invalid-createddatetime-type:
+  sps-invalid-created-date-time-type:
     description: createdDateTime MUST use a data type of 'string' with the format 'date-time'.
     severity: error
     formats: [oas3]
@@ -192,7 +192,7 @@ rules:
         functionOptions:
           match: "^date-time$"
 
-  sps-invalid-createdby-type:
+  sps-invalid-created-by-type:
     description: createdBy MUST use a data type of 'string'.
     severity: error
     formats: [oas3]
@@ -202,7 +202,7 @@ rules:
       functionOptions:
         match: "^string$"
 
-  sps-invalid-modifieddatetime-type:
+  sps-invalid-modified-date-time-type:
     description: modifiedDateTime MUST use a data type of 'string' with the format 'date-time'.
     severity: error
     formats: [oas3]
@@ -219,7 +219,7 @@ rules:
         functionOptions:
           match: "^date-time$"
 
-  sps-invalid-modifiedby-type:
+  sps-invalid-modified-by-type:
     description: modifiedBy MUST use a data type of 'string'.
     severity: error
     formats: [oas3]

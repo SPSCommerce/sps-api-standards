@@ -2,7 +2,7 @@ const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-invalid-modifdeletedbyiedby-type", () => {
   let spectral = null;
-  const ruleName = "sps-invalid-deletedby-type";
+  const ruleName = "sps-invalid-deleted-by-type";
   const ruleset = "src/naming.ruleset.yml";
 
   beforeEach(async () => {

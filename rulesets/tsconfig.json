@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+      "outDir": "./dist",
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "target": "ESNext",
+      "noImplicitAny": false,
+      "checkJs": true,
+      "allowJs": true,
+  },
+  "include": [
+      "test/**/*"
+  ],
+  "exclude": [
+      "./node_modules",
+      "./dist",
+  ]
+}

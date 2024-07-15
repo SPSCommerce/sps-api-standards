@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-invalid-modifiedby-type", () => {
+describe("sps-invalid-modified-by-type", () => {
   let spectral = null;
-  const ruleName = "sps-invalid-modifiedby-type";
+  const ruleName = "sps-invalid-modified-by-type";
   const ruleset = "src/naming.ruleset.yml";
 
   beforeEach(async () => {

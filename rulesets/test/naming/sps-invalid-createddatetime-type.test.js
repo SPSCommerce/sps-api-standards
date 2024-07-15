@@ -1,8 +1,8 @@
 const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-invalid-createddatetime-type", () => {
+describe("sps-invalid-created-date-time-type", () => {
   let spectral = null;
-  const ruleName = "sps-invalid-createddatetime-type";
+  const ruleName = "sps-invalid-created-date-time-type";
   const ruleset = "src/naming.ruleset.yml";
 
   beforeEach(async () => {
