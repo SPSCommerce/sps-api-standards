@@ -19,7 +19,6 @@ rules:
       function: casing
       functionOptions:
         type: camel
-        disallowDigits: true
 
   sps-disallowed-prepositions:
     description: Property names SHOULD NOT include prepositions (e.g. "for", "during", "at", etc.)
