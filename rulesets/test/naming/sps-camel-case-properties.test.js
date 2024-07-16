@@ -37,6 +37,8 @@ describe("sps-camel-case-properties", () => {
                           type: string
                         userName:
                           type: string
+                        test1:
+                          type: string
       `;
 
     await spectral.validateSuccess(spec, ruleName);
