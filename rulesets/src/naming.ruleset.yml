@@ -11,8 +11,8 @@ rules:
 
   ##### Property Names #####
   sps-camel-case-properties:
-    description: Property names and acronyms SHOULD be in camelCase.
-    severity: warn
+    description: Property names and acronyms MUST be in camelCase.
+    severity: error
     formats: [oas3]
     given: "$..properties.*~"
     then:
