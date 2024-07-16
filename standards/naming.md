@@ -42,7 +42,7 @@ When you consider the names to use for your path, endpoints and other components
 - Object properties **SHOULD** be adjectives or nouns.
 - Abbreviations of properties **MUST NOT** be used unless the abbreviation is clearer and better established than the full spelling.
   - Examples of preferable abbreviations would include `id`, `html`, or `api`.
-- camelCase **MUST** be used for all property names in both request and response payloads: <a name="sps-camel-case-properties" href="#sps-camel-case-properties"><i class="fa fa-check-circle" title="#sps-camel-case-properties"></i></a>
+- camelCase **SHOULD** be used for all property names in both request and response payloads: <a name="sps-camel-case-properties" href="#sps-camel-case-properties"><i class="fa fa-check-circle" title="#sps-camel-case-properties"></i></a>
 
 ```
 // INCORRECT
@@ -54,7 +54,7 @@ orderNumber
 lineItemNumber
 ```
 
-- All acronyms **MUST** follow camelCase standards if they are part of the property name. <a name="sps-camel-case-properties" href="#sps-camel-case-properties"><i class="fa fa-check-circle" title="#sps-camel-case-properties"></i></a>
+- All acronyms **SHOULD** follow camelCase standards if they are part of the property name. <a name="sps-camel-case-properties" href="#sps-camel-case-properties"><i class="fa fa-check-circle" title="#sps-camel-case-properties"></i></a>
 
 ```
 // INCORRECT
