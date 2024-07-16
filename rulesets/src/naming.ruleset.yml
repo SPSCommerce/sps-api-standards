@@ -35,7 +35,7 @@ rules:
     description: Boolean properties SHOULD NOT use is, has, or another prefix.
     severity: warn
     formats: [oas3]
-    given: "$..properties[?(@.type == 'boolean')]~"
+    given: "$..properties[?(@ && @.type == 'boolean')]~"
     then:
       function: pattern
       functionOptions:
