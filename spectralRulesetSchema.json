@@ -1,0 +1,418 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Spectral Ruleset",
+  "type": "object",
+  "properties": {
+    "rules": {
+      "description": "An array of rules to apply to the document.",
+      "type": "object",
+      "additionalProperties": {
+        "if": {
+          "type": "object"
+        },
+        "then": {
+          "description": "A custom rule",
+          "properties": {
+            "description": {
+              "description": "A short description of the rule.",
+              "type": "string"
+            },
+            "message": {
+              "description": "A message that's displayed in the Spectral lint output. Can be customized to use placeholder values that are evaluated at runtime.",
+              "type": "string"
+            },
+            "severity": {
+              "description": "The severity of the rule. Used to differentiate between rules that must be followed (error) and warnings or hints. Default value is warn.",
+              "type": "string",
+              "enum": [
+                "error",
+                "warn",
+                "info",
+                "hint",
+                "off"
+              ]
+            },
+            "formats": {
+              "description": "The format that the rule should apply to. For example, oas3 for any OpenAPI v3.x descriptions. Can be applied at the ruleset and/or rule level.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "given": {
+              "description": "The part of the document the rule should be applied to. Uses the JSONPath syntax.",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "then": {
+              "description": "Describes which function should be applied to the given part of the document. Can be used with a core function or custom function.",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "description": "Apply the function to a specific property in an object. If omitted, the function is applied to the entire target of the given JSONPath.",
+                      "type": "string"
+                    },
+                    "function": {
+                      "$ref": "#/$defs/function"
+                    },
+                    "functionOptions": {
+                      "$ref": "#/$defs/functionOptions"
+                    }
+                  },
+                  "required": [
+                    "function"
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "description": "Apply the function to a specific property in an object. If omitted, the function is applied to the entire target of the given JSONPath.",
+                        "type": "string"
+                      },
+                      "function": {
+                        "$ref": "#/$defs/function"
+                      },
+                      "functionOptions": {
+                        "$ref": "#/$defs/functionOptions"
+                      }
+                    },
+                    "required": [
+                      "function"
+                    ]
+                  }
+                }
+              ]
+            },
+            "resolved": {
+              "description": "Used to apply a rule to a document that's not 'resolved,' where $ref JSON Schema references haven't been replaced with the objects they point to.",
+              "type": "boolean"
+            },
+            "recommended": {
+              "description": "Use recommended when extending a ruleset so users can enforce all rules (recommended set to false) or only recommended rules (recommended set to true).",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "given",
+            "then"
+          ]
+        },
+        "else": true
+      }
+    },
+    "extends": {
+      "description": "A reference to other rulesets. Used to extend and customize existing rulesets.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "formats": {
+      "description": "The format that the ruleset should apply to. For example, oas3 for any OpenAPI v3.x descriptions. Can be applied at the ruleset and/or rule level.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "documentationUrl": {
+      "description": "A URL that contains more information about the ruleset and rules in it. Can help provide users more context on why the ruleset exists and how it should be used.",
+      "type": "string",
+      "format": "uri"
+    },
+    "parserOptions": {
+      "description": "Can be used to tune the severity of duplicate keys or invalid values in your ruleset.",
+      "type": "object",
+      "properties": {
+        "duplicateKeys": {
+          "description": "Set the severity for duplicate keys.",
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "off"
+          ]
+        },
+        "incompatibleValues": {
+          "description": "Set the severity for incompatible values.",
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "off"
+          ]
+        }
+      }
+    },
+    "aliases": {
+      "description": "An array of key-value pairs that can be used to define commonly used JSONPath expressions to be reused across a ruleset.",
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "overrides": {
+      "description": "Can be used to customize which formats, files, or parts of files, that a ruleset should be applied to.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "description": "Specify the files that the overrides should apply to.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "formats": {
+            "description": "Specify the formats that the overrides should apply to.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rules": {
+            "description": "An array of rules to apply to the specified files and formats.",
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "description": "A short description of the rule.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "A message that's displayed in the Spectral lint output. Can be customized to use placeholder values that are evaluated at runtime.",
+                      "type": "string"
+                    },
+                    "severity": {
+                      "description": "The severity of the rule. Used to differentiate between rules that must be followed (error) and warnings or hints. Default value is warn.",
+                      "type": "string",
+                      "enum": [
+                        "error",
+                        "warn",
+                        "info",
+                        "hint",
+                        "off"
+                      ]
+                    },
+                    "formats": {
+                      "description": "The format that the rule should apply to. For example, oas3 for any OpenAPI v3.x descriptions. Can be applied at the ruleset and/or rule level.",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "given": {
+                      "description": "The part of the document the rule should be applied to. Uses the JSONPath syntax.",
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
+                    },
+                    "then": {
+                      "description": "Describes which function should be applied to the given part of the document. Can be used with a core function or custom function.",
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "field": {
+                              "description": "Apply the function to a specific property in an object. If omitted, the function is applied to the entire target of the given JSONPath.",
+                              "type": "string"
+                            },
+                            "function": {
+                              "$ref": "#/$defs/function"
+                            },
+                            "functionOptions": {
+                              "$ref": "#/$defs/functionOptions"
+                            }
+                          },
+                          "required": [
+                            "function"
+                          ]
+                        }
+                      ]
+                    },
+                    "resolved": {
+                      "description": "Used to apply a rule to a document that's not 'resolved,' where $ref JSON Schema references haven't been replaced with the objects they point to.",
+                      "type": "boolean"
+                    },
+                    "recommended": {
+                      "description": "Use recommended when extending a ruleset so users can enforce all rules (recommended set to false) or only recommended rules (recommended set to true).",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "given",
+                    "then"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "functionOptions": {
+      "description": "Options to pass to the function.",
+      "type": "object",
+      "properties": {
+        "keyedBy": {
+          "type": "string",
+          "description": "Key to sort an object by (for 'alphabetical' function)."
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of possible values (for 'enumeration' function)."
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum length to match (for 'length' function)."
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum length to match (for 'length' function)."
+        },
+        "match": {
+          "type": "string",
+          "description": "Pattern that should match (for 'pattern' function)."
+        },
+        "notMatch": {
+          "type": "string",
+          "description": "Pattern that should not match (for 'pattern' function)."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "flat",
+            "camel",
+            "pascal",
+            "kebab",
+            "cobol",
+            "snake",
+            "macro"
+          ],
+          "description": "The casing type to match against (for 'casing' function)."
+        },
+        "disallowDigits": {
+          "type": "boolean",
+          "description": "If not truthy, digits are allowed (for 'casing' function)."
+        },
+        "separator.char": {
+          "type": "string",
+          "description": "Additional char to separate groups of words (for 'casing' function)."
+        },
+        "separator.allowLeading": {
+          "type": "boolean",
+          "description": "Can the group separator char be used at the first char? (for 'casing' function)."
+        },
+        "schema": {
+          "$ref": "http://json-schema.org/draft-07/schema#",
+          "description": "A valid JSON Schema document (for 'schema' function)."
+        },
+        "dialect": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "draft4",
+            "draft6",
+            "draft7",
+            "draft2019-09",
+            "draft2020-12"
+          ],
+          "description": "The JSON Schema draft used by function. 'auto' by default (for 'schema' function)."
+        },
+        "allErrors": {
+          "type": "boolean",
+          "description": "Returns all errors when true; otherwise only returns the first error (for 'schema' function)."
+        },
+        "reusableObjectsLocation": {
+          "type": "string",
+          "description": "A local JSON pointer to the document member holding the reusable objects (for 'unreferencedReusableObject' function)."
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The properties to check (for 'xor' function)."
+        }
+      },
+      "additionalProperties": true
+    },
+    "function": {
+      "description": "The core or custom function to apply.",
+      "type": "string",
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "alphabetical",
+            "enumeration",
+            "falsy",
+            "length",
+            "pattern",
+            "casing",
+            "schema",
+            "truthy",
+            "defined",
+            "undefined",
+            "unreferencedReusableObject",
+            "xor",
+            "typedEnum"
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  }
+}
