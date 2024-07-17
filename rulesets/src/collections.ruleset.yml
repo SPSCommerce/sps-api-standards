@@ -85,6 +85,13 @@ rules:
       functionOptions:
         notMatch: "^id$"
 
+  sps-filtering-only-get-requests:
+    description: "Only GET-based endpoints SHOULD have have the query parameter 'filter'."
+    severity: error
+    given: $.paths.*[?(@property!='get')].parameters.[?(@.in=='query' && @.name=='filter')].name
+    then:
+      function: falsy
+
 # Commented out because 
 # https://github.com/SPSCommerce/sps-api-standards/pull/86#discussion_r1680361945
   # sps-unreasonable-query-parameters-limit:
@@ -109,8 +116,8 @@ rules:
 
 # This rule might need to be reworked.
 # Hybird filter is possible but it should error if root level filter exist with hybird filter.
-  sps-multiple-filter-parameters:
-    description: "The 'filter' query parameter MUST be specified only once."
+  sps-hybird-filtering-exists-with-root-filter:
+    description: "Hybrid filtering MAY be offered on multiple attributes, but MUST never exist if a root \"filter\" query parameter is present."
     severity: error
     given: $.paths..get
     then:
@@ -121,15 +128,39 @@ rules:
           properties:
             parameters:
               type: array
-              minContains: 0
-              maxContains: 1
-              contains:
+              items:
                 type: object
                 properties:
-                  in:
-                    const: query
                   name:
-                    pattern: "(filter|Filter)"
+                    type: string
+                  in:
+                    type: string
+                  required:
+                    type: boolean
+                required:
+                - name
+                - in
+          allOf:
+          - if:
+              properties:
+                parameters:
+                  type: array
+                  contains:
+                    type: object
+                    properties:
+                      name:
+                        const: filter
+            then:
+              not:
+                properties:
+                  parameters:
+                    type: array
+                    contains:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          pattern: \w+Filter
 
   ##### SORTING #####
   sps-sorting-parameters-only-get-requests:

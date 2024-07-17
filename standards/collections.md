@@ -406,8 +406,8 @@ To limit or narrow down the results of a collection endpoint you may provide fil
 - Filtering **SHOULD** only occur on endpoints that are collections using the schema described above.
 - Filtering attribute names may represent nested objects and **MUST** use a period to represent each segment of the object path: `grandparent.parent.child`.
     - Limit filter references to three levels of object hierarchy in accordance with `GET-based` HTTP Methods ([Request Response](request-response.md)).
-- Filtering **MUST** only be implemented on `GET-based` HTTP Methods via query parameters.
-- Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md). <a name="sps-unreasonable-query-parameters-limit" href="#sps-unreasonable-query-parameters-limit"><i class="fa fa-check-circle" title="sps-unreasonable-query-parameters-limit"></i></a>
+- Filtering **MUST** only be implemented on `GET-based` HTTP Methods via query parameters. <a name="sps-filtering-only-get-requests" href="#sps-filtering-only-get-requests"><i class="fa fa-check-circle" title="sps-filtering-only-get-requests"></i></a>
+- Filtering using `GET-based` requests with query parameters **SHOULD** be avoided if expected use cases or allowed usage resolves URL lengths beyond a reasonable size for the developer experience or approaching limits defined in [URL Structure](url-structure.md).
     - Overly verbose filtering that contains dozens or hundreds of parameters **SHOULD** consider if their API design is appropriate.
     - Overly verbose filtering that contains an undesirable number of parameters that cannot be redesigned **SHOULD** consider using a non-REST style `POST` endpoint as described under [Actions in URL Structure](url-structure.md).
         - `POST` requests for non-REST style filtering **SHOULD** specify parameters at the root of the request body with the same names that would be used for query parameters normally.
@@ -507,7 +507,7 @@ For filtering use cases beyond the functionality provided in "Simple" filtering,
 RSQL is based on FIQL and is considered a superset of it, making it and FIQL usable in any RSQL compatible library. For clarity, it is expressed here as FIQL/RSQL. If your platform doesn't provide any library then it is possible to generate a parser using ABNF from the draft [documentation page](https://datatracker.ietf.org/doc/html/draft-nottingham-atompub-fiql-00) or from the [RSQL GitHub page](https://github.com/jirutka/rsql-parser). Take note, that FIQL/RSQL is easily extendable with custom functions required by an API and can be used with XML/JSON responses despite the fact that initially it was designed as a feed query language.
 ```
 
-- Advanced filtering **MUST** specify the entirety of the expression as a value of the single dedicated `filter` query parameter unless using advanced filtering for a particular subset of your payload response. <a name="sps-multiple-filter-parameters" href="#sps-multiple-filter-parameters"><i class="fa fa-check-circle" title="sps-multiple-filter-parameters"></i></a>
+- Advanced filtering **MUST** specify the entirety of the expression as a value of the single dedicated `filter` query parameter unless using advanced filtering for a particular subset of your payload response.
     - `filter` **MUST** only be specified once in the URL.
     - `filter` **MUST** only contain the FIQL/RSQL syntax specified in these standards.
 - Each query parameter value or any field value inside FIQL/RSQL expression **MUST** be URL encoded. FIQL/RSQL expression itself generally does not require encoding as there are no unsafe characters.
@@ -516,7 +516,7 @@ RSQL is based on FIQL and is considered a superset of it, making it and FIQL usa
     - Using "simple" or "advanced" filtering without the hybrid approach **SHOULD** be the preferred choice. Hybrid filtering is not desirable but may be necessary based on the constraints of your implementation and requirements (including performance).
         - Hybrid filtering is intended to support scenarios where API producers are unable to provide advanced filtering capability on all aspects of the payload response attributes and want to provide scope clarity in the attribute filter name.
     - Hybrid filtering attribute values **MUST** be valid advanced filtering expressions (FIQL/RSQL).
-    - Hybrid filtering **MAY** be offered on multiple attributes, but **MUST** never exist if a root "filter" query parameter is available.
+    - Hybrid filtering **MAY** be offered on multiple attributes, but **MUST** never exist if a root "filter" query parameter is available. <a name="sps-hybird-filtering-exists-with-root-filter" href="#sps-hybird-filtering-exists-with-root-filter"><i class="fa fa-check-circle" title="sps-hybird-filtering-exists-with-root-filter"></i></a>
     - Hybrid filtering with multiple attribute filters **MUST** logically "AND" the results of both filters together (unless the attribute name is repeated, in which case repeated attributes names are "OR" for the results as described in simple filtering).
     - Hybrid filtering **MAY** be combined with additional simple filtering query parameters, provided they do not have a suffix of `Filter`.
 

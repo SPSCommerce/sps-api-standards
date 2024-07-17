@@ -1,15 +1,15 @@
     const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-sorting-parameters-only-get-requests", () => {
+describe("sps-filtering-only-get-requests", () => {
   let spectral = null;
-  const ruleName = "sps-sorting-parameters-only-get-requests";
+  const ruleName = "sps-filtering-only-get-requests";
   const ruleset = "src/collections.ruleset.yml";
 
   beforeEach(async () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  test("valid - no errors should happen when sorting query parameter only on GET endpoints", async () => {
+  test("valid - GET endpoint has a filter query parameter", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -20,18 +20,6 @@ describe("sps-sorting-parameters-only-get-requests", () => {
           get:
             summary: Get a list of users
             parameters:
-            - name: sortBy
-              in: query
-              required: false
-            - name: limit
-              in: query
-              required: false
-            - name: offset
-              in: query
-              required: false
-            - name: cursor
-              in: query
-              required: false
             - name: filter
               in: query
               required: false
@@ -42,7 +30,7 @@ describe("sps-sorting-parameters-only-get-requests", () => {
           get:
             summary: Get a list of users
             parameters:
-            - name: orderBy
+            - name: filter
               in: query
               required: false
             responses:
@@ -53,26 +41,23 @@ describe("sps-sorting-parameters-only-get-requests", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("invalid - non-GET endpoints should not have sorting parameters as query parameters", async () => {
+  test("invalid - non-GET endpoints has filter query parameter", async () => {
     const spec = `
       openapi: 3.0.0
       info:
         title: Sample API
         version: 1.0.0
       paths:
-        /users/{id}:
-          patch:
-            summary: Get a list of users
+        /users:
+          post:
+            summary: Create a user
             parameters:
-            - name: id
-              in: path
-              required: true
-            - name: sorting
+            - name: filter
               in: query
               required: false
             responses:
               '200':
-                description: A list of users
+                description: Create a user
     `;
 
     await spectral.validateFailure(spec, ruleName, "Error", 1);

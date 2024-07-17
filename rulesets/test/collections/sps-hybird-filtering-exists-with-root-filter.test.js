@@ -1,15 +1,15 @@
     const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
-describe("sps-multiple-filter-parameters", () => {
+describe("sps-hybird-filtering-exists-with-root-filter", () => {
   let spectral = null;
-  const ruleName = "sps-multiple-filter-parameters";
+  const ruleName = "sps-hybird-filtering-exists-with-root-filter";
   const ruleset = "src/collections.ruleset.yml";
 
   beforeEach(async () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  test("valid - endpoint has correct use-case of filter, only one filter parameter", async () => {
+  test("valid - endpoint only has root filter", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -84,7 +84,7 @@ describe("sps-multiple-filter-parameters", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
   
-  test("invalid - endpoint has hybird filtering but there is also a root filter", async () => {
+  test("invalid - endpoint has hybird filtering and a root filter", async () => {
     const spec = `
       openapi: 3.0.0
       info:
