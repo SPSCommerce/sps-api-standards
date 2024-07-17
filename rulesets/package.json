@@ -9,7 +9,9 @@
     "@stoplight/spectral-ruleset-bundler": "^1.2.1",
     "@stoplight/spectral-runtime": "^1.1.2",
     "@stoplight/types": "^13.3.0",
-    "jest": "^28.1.1"
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.9",
+    "jest": "^28.1.3"
   },
   "scripts": {
     "test": "jest"
