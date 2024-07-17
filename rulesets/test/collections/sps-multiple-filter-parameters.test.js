@@ -59,7 +59,32 @@ describe("sps-multiple-filter-parameters", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("invalid - endpoint has incorrect use-case of filter, more than one filter on the endpoint", async () => {
+  test("valid - endpoint has hybird filtering", async () => {
+    const spec = `
+      openapi: 3.0.0
+      info:
+        title: Sample API
+        version: 1.0.0
+      paths:
+        /users:
+          get:
+            summary: Get a list of users
+            parameters:
+              - name: active
+                in: query
+                required: false
+              - name: userFilter
+                in: query
+                required: false
+          responses:
+            '200':
+              description: A list of users
+    `;
+
+    await spectral.validateSuccess(spec, ruleName);
+  });
+  
+  test("invalid - endpoint has hybird filtering but there is also a root filter", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -85,5 +110,30 @@ describe("sps-multiple-filter-parameters", () => {
     `;
 
     await spectral.validateFailure(spec, ruleName, "Error", 1);
+  });
+  
+  test("valid - endpoint has 2 hybird filters", async () => {
+    const spec = `
+      openapi: 3.0.0
+      info:
+        title: Sample API
+        version: 1.0.0
+      paths:
+        /users:
+          get:
+            summary: Get a list of users
+            parameters:
+              - name: activeFilter
+                in: query
+                required: false
+              - name: userFilter
+                in: query
+                required: false
+          responses:
+            '200':
+              description: A list of users
+    `;
+
+    await spectral.validateSuccess(spec, ruleName);
   });
 });

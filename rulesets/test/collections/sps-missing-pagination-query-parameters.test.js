@@ -9,45 +9,7 @@ describe("sps-missing-pagination-query-parameters", () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  test("valid - GET endpoint has the proper pagination query parameters", async () => {
-      const spec = `
-        openapi: 3.1.0
-        paths:
-          /v1/users:
-            get:
-              summary: Get User by ID
-              parameters:
-              - name: offset
-                in: query
-              - name: limit
-                in: query
-              - name: cursor
-                in: query
-      `;
-      await spectral.validateSuccess(spec, ruleName);
-  });
-    
-  test("valid - GET endpoint has the proper pagination and other query parameters", async () => {
-      const spec = `
-        openapi: 3.1.0
-        paths:
-          /v1/users:
-            get:
-              summary: Get User by ID
-              parameters:
-              - name: offset
-                in: query
-              - name: limit
-                in: query
-              - name: cursor
-                in: query
-              - name: officeLocation
-                in: query
-      `;
-      await spectral.validateSuccess(spec, ruleName);
-  });
-
-  test("invalid GET endpoint has 2 out of the 3 required pagination query parameters", async () => {
+  test("invalid - GET endpoint is missing pagination query parameters", async () => {
     const spec = `
       openapi: 3.1.0
       paths:
@@ -55,57 +17,10 @@ describe("sps-missing-pagination-query-parameters", () => {
           get:
             summary: Get User by ID
             parameters:
-            - name: offset
-              in: query
-              type: integer
-            - name: limit
-              in: query
-              type: integer
-    `;
-    await spectral.validateFailure(spec, ruleName, "Error", 1);
-  });
-
-  test("invalid - GET endpoint has 2 out of the 3 required pagination query parameters", async () => {
-    const spec = `
-      openapi: 3.1.0
-      paths:
-        /v1/users:
-          get:
-            summary: Get User by ID
-            parameters:
-            - name: offset
-              in: query
-              type: integer
-            - name: limit
-              in: query
-              type: integer
-    `;
-    await spectral.validateFailure(spec, ruleName, "Error", 1);
-  });
-
-  test("invalid - pagination query parameters on GET endpoint", async () => {
-    const spec = `
-      openapi: 3.1.0
-      paths:
-        /v1/users:
-          get:
-            summary: Get User by ID
-            parameters:
-            - name: max
+            - name: officeLocation
               in: query
     `;
-    await spectral.validateFailure(spec, ruleName, "Error", 1);
-  });
-    
-  test("invalid - missing pagination query parameters on GET endpoint", async () => {
-    const spec = `
-      openapi: 3.1.0
-      paths:
-        /v1/users:
-          get:
-            summary: Get User by ID
-    `;
-    await spectral.validateFailure(spec, ruleName, "Error", 1);
+    await spectral.validateFailure(spec, ruleName, "Error", 2);
   });
 
   test("valid - rule does not flag query parameters on GET endpoints that searches on a certain id", async () => {
@@ -124,4 +39,105 @@ describe("sps-missing-pagination-query-parameters", () => {
     `;
     await spectral.validateSuccess(spec, ruleName);
   });
+
+  describe("offset based pagination", () => {
+    test("valid - GET endpoint has offset based pagination query parameters", async () => {
+        const spec = `
+          openapi: 3.1.0
+          paths:
+            /v1/users:
+              get:
+                summary: Get User by ID
+                parameters:
+                - name: offset
+                  in: query
+                - name: limit
+                  in: query
+        `;
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
+    test("valid - GET endpoint has offset based pagination and other query parameters", async () => {
+      const spec = `
+        openapi: 3.1.0
+        paths:
+          /v1/users:
+            get:
+              summary: Get User by ID
+              parameters:
+              - name: offset
+                in: query
+              - name: limit
+                in: query
+              - name: officeLocation
+                in: query
+      `;
+      await spectral.validateSuccess(spec, ruleName);
+    });
+
+    test("invalid - GET endpoint has offset pagination parameters but not limit", async () => {
+      const spec = `
+        openapi: 3.1.0
+        paths:
+          /v1/users:
+            get:
+              summary: Get User by ID
+              parameters:
+              - name: offset
+                in: query
+      `;
+      await spectral.validateFailure(spec, ruleName, "Error", 1);
+    });
+  });
+
+  describe("cursor based pagination", () => {
+    test("valid - GET endpoint has cursor based pagination query parameters", async () => {
+        const spec = `
+          openapi: 3.1.0
+          paths:
+            /v1/users:
+              get:
+                summary: Get User by ID
+                parameters:
+                - name: cursor
+                  in: query
+                - name: limit
+                  in: query
+        `;
+        await spectral.validateSuccess(spec, ruleName);
+    });
+
+    test("valid - GET endpoint has cursor pagination and other query parameters", async () => {
+      const spec = `
+        openapi: 3.1.0
+        paths:
+          /v1/users:
+            get:
+              summary: Get User by ID
+              parameters:
+              - name: cursor
+                in: query
+              - name: limit
+                in: query
+              - name: officeLocation
+                in: query
+      `;
+      await spectral.validateSuccess(spec, ruleName);
+    });
+    
+    test("invalid - GET endpoint has cursor pagination parameters but not limit", async () => {
+      const spec = `
+        openapi: 3.1.0
+        paths:
+          /v1/users:
+            get:
+              summary: Get User by ID
+              parameters:
+              - name: cursor
+                in: query
+      `;
+      await spectral.validateFailure(spec, ruleName, "Error", 1);
+    });
+  });
+
 });
