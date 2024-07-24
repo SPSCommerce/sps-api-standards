@@ -92,7 +92,7 @@ describe("sps-no-collection-paging-capability", () => {
                               type: integer
     `;
 
-    await spectral.validateFailure(spec, ruleName, "Error", 1);
+    await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
   test("invalid - response body - paging element must be an object", async () => {
@@ -120,6 +120,6 @@ describe("sps-no-collection-paging-capability", () => {
                         type: string
     `;
 
-    await spectral.validateFailure(spec, ruleName, "Error", 1);
+    await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 });
