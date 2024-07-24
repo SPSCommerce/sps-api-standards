@@ -61,7 +61,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserList"
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  paging:
+                    $ref: "#/components/schemas/PagingOffset"
         "400":
           description: Invalid Data
           content:
