@@ -26,9 +26,9 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
             - name: active
               in: query
               required: false
-          responses:
-              '200':
-                description: A list of users
+            responses:
+                '200':
+                  description: A list of users
     `;
 
     await spectral.validateSuccess(spec, ruleName);
@@ -51,9 +51,26 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
               - name: foo
                 in: query
                 required: false
-          responses:
-              '200':
-                description: A list of users
+            responses:
+                '200':
+                  description: A list of users
+    `;
+
+    await spectral.validateSuccess(spec, ruleName);
+  });
+  
+  test("valid - endpoint has no query parameter", async () => {
+    const spec = `
+      openapi: 3.0.0
+      info:
+        title: Sample API
+        version: 1.0.0
+      paths:
+        /ping:
+          get:
+            responses:
+                '200':
+                  description: health check
     `;
 
     await spectral.validateSuccess(spec, ruleName);
@@ -76,9 +93,9 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
               - name: userFilter
                 in: query
                 required: false
-          responses:
-            '200':
-              description: A list of users
+            responses:
+              '200':
+                description: A list of users
     `;
 
     await spectral.validateSuccess(spec, ruleName);
@@ -104,9 +121,9 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
               - name: userFilter
                 in: query
                 required: false
-          responses:
-            '200':
-              description: A list of users
+            responses:
+              '200':
+                description: A list of users
     `;
 
     await spectral.validateFailure(spec, ruleName, "Error", 1);
@@ -129,9 +146,9 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
               - name: userFilter
                 in: query
                 required: false
-          responses:
-            '200':
-              description: A list of users
+            responses:
+              '200':
+                description: A list of users
     `;
 
     await spectral.validateSuccess(spec, ruleName);

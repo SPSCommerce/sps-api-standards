@@ -114,12 +114,10 @@ rules:
   #                 in:
   #                   const: query
 
-# This rule might need to be reworked.
-# Hybird filter is possible but it should error if root level filter exist with hybird filter.
   sps-hybird-filtering-exists-with-root-filter:
     description: "Hybrid filtering MAY be offered on multiple attributes, but MUST never exist if a root \"filter\" query parameter is present."
     severity: error
-    given: $.paths..get
+    given: $.paths..get.parameters^
     then:
       function: schema
       functionOptions:
@@ -135,11 +133,6 @@ rules:
                     type: string
                   in:
                     type: string
-                  required:
-                    type: boolean
-                required:
-                - name
-                - in
           allOf:
           - if:
               properties:
