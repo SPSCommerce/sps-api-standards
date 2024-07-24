@@ -4,7 +4,7 @@
 
 Collection usage and manipulation with HTTP REST APIs specifically require its own set of standardization that provide helpful considerations and must use styles for consistency.
 
-- All collection-based API responses **MUST** offer paging capability for consistency and evolution, regardless of the collection size or the static nature of the data. Even if the resource is returning a collection of static "types" representing 2 items, pagination should be supported in its simplest form. <a name="sps-no-collection-paging-capability" href="#sps-no-collection-paging-capability"><i class="fa fa-check-circle" title="sps-no-collection-paging-capability"></i></a>
+- All collection-based API responses **SHOULD** offer paging capability for consistency and evolution, regardless of the collection size or the static nature of the data. Even if the resource is returning a collection of static "types" representing 2 items, pagination should be supported in its simplest form. <a name="sps-no-collection-paging-capability" href="#sps-no-collection-paging-capability"><i class="fa fa-check-circle" title="sps-no-collection-paging-capability"></i></a>
 
 ## Root Element
 
@@ -30,7 +30,7 @@ Collection usage and manipulation with HTTP REST APIs specifically require its o
 
 ### General
 
-- All collection-based endpoints `GET` request parameters **MUST** be specified as query parameters with the outlined schema below. <a name="sps-missing-pagination-query-parameters" href="#sps-missing-pagination-query-parameters"><i class="fa fa-check-circle" title="sps-missing-pagination-query-parameters"></i></a>
+- All collection-based endpoints `GET` request parameters **SHOULD** be specified as query parameters with the outlined schema below. <a name="sps-missing-pagination-query-parameters" href="#sps-missing-pagination-query-parameters"><i class="fa fa-check-circle" title="sps-missing-pagination-query-parameters"></i></a>
 
 ```
 // CORRECT

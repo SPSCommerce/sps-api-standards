@@ -1,8 +1,8 @@
 rules:
   ##### General #####
   sps-no-collection-paging-capability:
-    description: "Response bodies from collection endpoints must offer paging capability."
-    severity: error
+    description: "Response bodies from collection endpoints SHOULD offer paging capability."
+    severity: warn
     given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties
     then:
       - field: "paging"
@@ -29,8 +29,8 @@ rules:
 
   ##### Pagination #####
   sps-missing-pagination-query-parameters:
-    description: "Collection GET endpoints must support pagination using query parameters. Offset or cursor based pagination is required."
-    severity: error
+    description: "Collection GET endpoints SHOULD support pagination using query parameters. Offset or cursor based pagination is required."
+    severity: warn
     given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get
     then:
       - field: parameters
