@@ -8,6 +8,23 @@ describe("sps-missing-pagination-query-parameters", () => {
   beforeEach(async () => {
     spectral = new SpectralTestHarness(ruleset);
   });
+  
+  test("valid - query parameter is not at the end of the path", async () => {
+    const spec = `
+      openapi: 3.1.0
+      paths:
+        /v1/items/{itemId}/views:
+          get:
+            summary: Get User by ID
+            parameters:
+            - name: userId
+              in: path
+              required: true
+            - name: limit
+              in: query
+    `;
+    await spectral.validateSuccess(spec, ruleName);
+  });
 
   test("invalid - GET endpoint is missing pagination query parameters", async () => {
     const spec = `
@@ -20,7 +37,7 @@ describe("sps-missing-pagination-query-parameters", () => {
             - name: officeLocation
               in: query
     `;
-    await spectral.validateFailure(spec, ruleName, "Error", 2);
+    await spectral.validateFailure(spec, ruleName, "Warning", 2);
   });
 
   test("valid - rule does not flag query parameters on GET endpoints that searches on a certain id", async () => {
@@ -86,7 +103,7 @@ describe("sps-missing-pagination-query-parameters", () => {
               - name: offset
                 in: query
       `;
-      await spectral.validateFailure(spec, ruleName, "Error", 1);
+      await spectral.validateFailure(spec, ruleName, "Warning", 1);
     });
   });
 
@@ -136,7 +153,7 @@ describe("sps-missing-pagination-query-parameters", () => {
               - name: cursor
                 in: query
       `;
-      await spectral.validateFailure(spec, ruleName, "Error", 1);
+      await spectral.validateFailure(spec, ruleName, "Warning", 1);
     });
   });
 

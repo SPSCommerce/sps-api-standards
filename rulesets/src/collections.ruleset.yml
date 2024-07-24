@@ -31,7 +31,7 @@ rules:
   sps-missing-pagination-query-parameters:
     description: "Collection GET endpoints SHOULD support pagination using query parameters. Offset or cursor based pagination is required."
     severity: warn
-    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}\/*.*/))].get
     then:
       - field: parameters
         function: schema
