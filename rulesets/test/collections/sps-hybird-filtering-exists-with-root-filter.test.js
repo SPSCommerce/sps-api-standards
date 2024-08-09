@@ -76,7 +76,7 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("valid - endpoint has hybird filtering", async () => {
+  test("valid - endpoint has hybrid filtering", async () => {
     const spec = `
       openapi: 3.0.0
       info:
