@@ -9,6 +9,164 @@ rules:
       function: pattern
       functionOptions:
         notMatch: basic
+  ##### General #####
+  sps-no-collection-paging-capability:
+    description: "Response bodies from collection endpoints SHOULD offer paging capability."
+    severity: warn
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties
+    then:
+      - field: "paging"
+        function: truthy
+      - field: "paging.type"
+        function: pattern
+        functionOptions:
+          match: "object"
+  ##### Root Element #####
+  sps-collection-missing-results-array:
+    description: "Response bodies must have a root element called results and is an array of objects."
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties.results
+    then:
+      - field: type
+        function: pattern
+        functionOptions:
+          match: "array"
+      - field: items.type
+        function: pattern
+        functionOptions:
+          match: "object"
+  ##### Pagination #####
+  sps-missing-pagination-query-parameters:
+    description: "Collection GET endpoints SHOULD support pagination using query parameters. Offset or cursor based pagination is required."
+    severity: warn
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}\/*.*/))].get
+    then:
+      - field: parameters
+        function: schema
+        functionOptions:
+          schema:
+            type: array
+            items:
+              type: object
+            contains:
+              type: object
+              properties:
+                name:
+                  const: limit
+                in:
+                  const: query
+            allOf:
+              - anyOf:
+                  - contains:
+                      type: object
+                      properties:
+                        name:
+                          const: offset
+                        in:
+                          const: query
+                  - contains:
+                      type: object
+                      properties:
+                        name:
+                          const: cursor
+                        in:
+                          const: query
+  sps-post-request-body-missing-paging-object:
+    description: "POST collection endpoints MUST have a request body schema that includes paging parameters."
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].post.requestBody.content.application/json.schema.properties.paging
+    then:
+      field: "type"
+      function: pattern
+      functionOptions:
+        match: "object"
+  ##### FILTERING #####
+  sps-disallow-resource-identifier-filtering:
+    description: "Resource identifier filtering is not allowed as a query parameter. Use the resource identifier in the URL path."
+    severity: warn
+    given: $.paths..get.parameters.[?(@.in=='query' && @.name=='id')]
+    then:
+      field: "name"
+      function: pattern
+      functionOptions:
+        notMatch: "^id$"
+  sps-filtering-only-get-requests:
+    description: "Only GET-based endpoints SHOULD have have the query parameter 'filter'."
+    severity: error
+    given: $.paths.*[?(@property!='get')].parameters.[?(@.in=='query' && @.name=='filter')].name
+    then:
+      function: falsy
+      # Commented out because 
+      # https://github.com/SPSCommerce/sps-api-standards/pull/86#discussion_r1680361945
+  # sps-unreasonable-query-parameters-limit:
+  #   description: "Filtering query parameters SHOULD have a reasonable limit, no more than 12."
+  #   severity: warn
+  #   given: $.paths..get
+  #   then:
+  #     function: schema
+  #     functionOptions:
+  #       schema:
+  #         type: object
+  #         properties:
+  #           parameters:
+  #             type: array
+  #             minContains: 0
+  #             maxContains: 12
+  #             contains:
+  #               type: object
+  #               properties:
+  #                 in:
+  #                   const: query
+  sps-hybird-filtering-exists-with-root-filter:
+    description: "Hybrid filtering MAY be offered on multiple attributes, but MUST never exist if a root \"filter\" query parameter is present."
+    severity: error
+    given: $.paths..get.parameters^
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            parameters:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  in:
+                    type: string
+          allOf:
+            - if:
+                properties:
+                  parameters:
+                    type: array
+                    contains:
+                      type: object
+                      properties:
+                        name:
+                          const: filter
+              then:
+                not:
+                  properties:
+                    parameters:
+                      type: array
+                      contains:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            pattern: \w+Filter
+  ##### SORTING #####
+  sps-sorting-parameters-only-get-requests:
+    description: "Non-GET endpoints MUST NOT have sorting query parameters. Parameter names such as sort, sorting, orderBy, etc."
+    severity: error
+    given: $.paths.*[?(@property!='get')].parameters.[?(@.in=='query')]
+    then:
+      field: "name"
+      function: pattern
+      functionOptions:
+        notMatch: "^sort|sorting|sortBy|order|ordering|orderBy$"
   sps-unknown-error-format:
     description: "Every error response SHOULD support RFC 7807."
     severity: error
