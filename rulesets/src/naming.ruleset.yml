@@ -16,9 +16,9 @@ rules:
     formats: [oas3]
     given: "$..properties.*~"
     then:
-      function: casing
+      function: pattern
       functionOptions:
-        type: camel
+        match: ^[a-z][a-z0-9]*(([A-Z]{2}|[A-Z])[a-z0-9]+)*$
 
   sps-disallowed-prepositions:
     description: Property names SHOULD NOT include prepositions (e.g. "for", "during", "at", etc.)
