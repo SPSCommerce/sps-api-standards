@@ -283,7 +283,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        notMatch: "^identifier$"
+        notMatch: "(^identifier([A-Z]|$)|.*Identifier([A-Z]|$))"
   sps-mandate-abbreviations-organization:
     description: Use abbreviations instead of long form names, i.e. organization SHOULD BE org.
     severity: warn
