@@ -59,7 +59,7 @@ describe("sps-mandate-abbreviations-identifier", () => {
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
-  test("identifier should warn when it is a word present in the field name", async () => {
+  test("identifier should not warn when it is a word present in the field name prefix", async () => {
     const spec = `
       openapi: 3.0.1
       paths: {}
@@ -70,9 +70,24 @@ describe("sps-mandate-abbreviations-identifier", () => {
             properties:
               identifierNumber:
                 type: number
-              NumberIdentifier
         `;
 
-    await spectral.validateFailure(spec, ruleName, "Warning", 1);
+        await spectral.validateSuccess(spec, ruleName);
+  });
+
+  test("identifier should not warn when it is a word present in the field name suffix", async () => {
+    const spec = `
+      openapi: 3.0.1
+      paths: {}
+      components:
+        schemas:
+          User:
+            type: object
+            properties:
+              externalIdentifier:
+                type: number
+        `;
+
+        await spectral.validateSuccess(spec, ruleName);
   });
 });
