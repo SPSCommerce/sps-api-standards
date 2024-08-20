@@ -18,7 +18,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: ^[a-z]+(([A-Z]{2}|[A-Z])[a-z0-9]+)*$
+        match: ^[a-z][a-z0-9]*(([A-Z]{2}|[A-Z])[a-z0-9]+)*$
 
   sps-disallowed-prepositions:
     description: Property names SHOULD NOT include prepositions (e.g. "for", "during", "at", etc.)
