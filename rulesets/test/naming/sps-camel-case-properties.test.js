@@ -9,6 +9,36 @@ describe("sps-camel-case-properties", () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
+  
+  test("valid property names with two capital letters in a row", async () => {
+    const spec = `
+      openapi: 3.0.1
+      paths:
+        /users:
+          post:
+            requestBody:
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      censusScheduleKLocation:
+                        type: string
+            responses:
+              '200':
+                description: Successful operation
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        userIDcode:
+                          type: string
+      `;
+
+    await spectral.validateSuccess(spec, ruleName);
+  });
+
   test("valid property names", async () => {
     const spec = `
       openapi: 3.0.1
