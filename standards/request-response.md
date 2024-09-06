@@ -364,6 +364,7 @@ Content-Language: en-US, de-DE, en-CA
 
 **Description**: The `ETag` response-header field provides the current value of the entity tag for the requested variant. Used with `If-Match`, `If-None-Match` and `If-Range` to implement optimistic concurrency control. Refer to `GET` request below.
 - `ETag` **SHOULD** be returned for `GET` requests where the individual resource has a specific version.
+- More details about `ETag` and its possible implementations for collections can be found here: [ETag and collections](collections.md#etag-and-collections).
 
 **Example(s)**:
 
