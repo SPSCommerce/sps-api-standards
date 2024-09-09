@@ -627,41 +627,25 @@ GET /articles?orderings=title&orderings=-reviewRating       // never use plurali
 DELETE /articles?ordering=title                             // ordering only applies to GET methods.
 ```
 
-## Etag and collections
+## ETags with Collections
 
-There is no single standardized approach for adding ETag to the response body for collections. The following solutions can be used as interim approaches until a standardized HATEOAS implementation is fully adopted within the company's API standards.
+ETags in consideration with resource collections post some additional considerations on what the `ETag` should represent and in what granularity. For more general details about using `ETags` in request and response headers for optimistic concurrency, see the [Request Response](request-response.md#etag) section. When working with ETags in collections, the following considerations should be taken into account:
 
-### ETag in Response Header
-
-More details about Etag can be found in the [Etag Headers](request-response.md#etag) section.
-
-Description: Include the ETag in the HTTP response headers for the entire collection. This approach provides a single ETag value for the whole response.  
-Usage: Clients use the ETag from the header for conditional requests, such as `If-None-Match`.  
-Example:
+- `ETags` used in a response header **MUST** represent the entire of the response body, which is the entire collection rather than an individual resource. This is typically less useful in many situations.
+- `ETags` on a collection resource **MAY** exist both for the entire response body as a response header, and as an individual `ETag` property on each resource item in the response body if needed.
+- `ETags` are best represented as metadata in headers, agnostic or separated from the resource model representation. However, some requests to resource collections may benefit from including an `ETag` with reach resource individual resource represented in the collection. Adding an `ETag` to the body of a collection response can help reduce the number of API calls by allowing clients to track changes to individual resources without needing to fetch each resource one by one. The `ETag` will act as a unique identifier for each resource version, ensuring that clients can perform safe and efficient updates or deletions without conflicts with `If-Match` header. If using granular collection `ETags` in the response body, then:
+    - `ETags` **SHOULD** be added to the object model for the response body as a read-only field as a sibling to the `id` of each result item. 
+    - `ETag` response header **MUST** be present when retrieving an individual resource.
+    - `ETag` property in the response body **MUST** also be present for retrieving an individual resource.
+    - `ETag` workflow headers, such as `If-Match`, **MUST** be available when interacting with individual resources, such as `PUT`, `PATCH` or `DELETE` requests.
 
 ```
+// REQUEST
 GET /resources
-HTTP/1.1 200 OK
-ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
-```
 
-### ETag in Response Body
-
-Description: Embed the ETag within each entity of the collection in the response body.
-Adding an ETag to the body of a collection response can help reduce the number of API calls by allowing clients to track changes to individual resources without needing to fetch each resource one by one.  
-Usage: The ETag will act as a unique identifier for each resource version, ensuring that clients can perform safe and efficient updates or deletions without conflicts with `If-Match` header.  
-
-Implementation:  
-- Add the ETag as a read-only field in the object model.
-- Ensure the ETag is included in both the response headers and body for getting an individual resource.
-
-Example:  
-
-Search Request for collection of resources
-
-```
-GET /resources
-Example Response (Body):
+// RESPONSE
+200 OK
+Content-Type: application/json
 {
   "results": [
     {
@@ -677,35 +661,19 @@ Example Response (Body):
   ]
   ...
 }
-```
 
-Conditional Update/Delete  
+// REQUEST
+GET /resources/123
 
-```
-PUT /resources/123
-If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+// RESPONSE
+200 OK
+Content-Type: application/json
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 {
-  "name": "Updated Object"
+    "id": "123",
+    "name": "Sample Object",
+    "etag": "33a64df551425fcc55e4d42a148795d9f25f89d4"
 }
 ```
 
-Server-side Validation: The server checks the provided ETag against the current version of the resource. If they match, the operation proceeds. If not, the server returns a `412 Precondition Failed status`, preventing the operation from being performed on outdated data.  
-More details about Etag can be found in the [Etag Headers](request-response.md#etag) section.
-
-Search for an individual resource
-
-```
-GET /resources/456
-HTTP/1.1 200 OK
-ETag: "67b64df551425fcc55e4d42a148795d9f2567fg3"
-(Body):
-{
-  "id": "456",
-  "name": "Another Object",
-  "etag": "67b64df551425fcc55e4d42a148795d9f2567fg3"
-}
-```
-
-### Hybrid Approach  
-
-Description: Combine both approaches by including ETag values for individual entities and a collection-level ETag in Headers. This provides flexibility for managing both individual resources and the overall collection.
+Processing of `ETag` and associated validation headers should be consistent with the [Request Response](request-response.md#etag) section, returning appropriate status codes as needed.
