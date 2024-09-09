@@ -626,3 +626,54 @@ GET /articles?ordering=title,-reviewRating                  // ordering multiple
 GET /articles?orderings=title&orderings=-reviewRating       // never use pluralized "orderings"
 DELETE /articles?ordering=title                             // ordering only applies to GET methods.
 ```
+
+## ETags with Collections
+
+ETags in consideration with resource collections post some additional considerations on what the `ETag` should represent and in what granularity. For more general details about using `ETags` in request and response headers for optimistic concurrency, see the [Request Response](request-response.md#etag) section. When working with ETags in collections, the following considerations should be taken into account:
+
+- `ETags` used in a response header **MUST** represent the entire of the response body, which is the entire collection rather than an individual resource. This is typically less useful in many situations. Working with paged collection results means the response header `ETag` is page-sensitive.
+- `ETags` on a collection resource **MAY** exist both for the entire response body as a response header, and as an individual `ETag` property on each resource item in the response body if needed.
+- `ETags` are best represented as metadata in headers, agnostic, or separated from the resource model representation. However, some requests to resource collections may benefit from including an `ETag` with each resource individual resource represented in the collection. Adding an `ETag` to the body of a collection response can help reduce the number of API calls by allowing clients to track changes to individual resources without needing to fetch each resource one by one to make use of request headers like `If-Match`. If using granular collection `ETags` in the response body, then:
+    - `ETags` **SHOULD** be added to the object model for the response body as a read-only field as a sibling to the `id` of each result item. 
+    - `ETag` response header **MUST** be present when retrieving an individual resource.
+    - `ETag` property in the response body **MUST** also be present for retrieving an individual resource.
+    - `ETag` workflow headers, such as `If-Match`, **MUST** be available when interacting with individual resources, such as `PUT`, `PATCH` or `DELETE` requests.
+
+```
+// REQUEST
+GET /resources
+
+// RESPONSE
+200 OK
+Content-Type: application/json
+{
+  "results": [
+    {
+      "id": "123",
+      "name": "Sample Object",
+      "etag": "33a64df551425fcc55e4d42a148795d9f25f89d4"
+    },
+    {
+      "id": "456",
+      "name": "Another Object",
+      "etag": "67b64df551425fcc55e4d42a148795d9f2567fg3"
+    }
+  ]
+  ...
+}
+
+// REQUEST
+GET /resources/123
+
+// RESPONSE
+200 OK
+Content-Type: application/json
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+{
+    "id": "123",
+    "name": "Sample Object",
+    "etag": "33a64df551425fcc55e4d42a148795d9f25f89d4"
+}
+```
+
+Processing of `ETag` and associated validation headers should be consistent with the [Request Response](request-response.md#etag) section, returning appropriate status codes as needed.
