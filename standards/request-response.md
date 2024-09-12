@@ -507,11 +507,12 @@ Sps-Cors-Error: bad origin
     - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
     - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `Sps-Execution-Context` this is interpreted as the default value.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
+- Resources that can store data in multiple Execution Contexts **MUST** result in `400 - Bad Request` if resource exists but does not have data for given context.
 - The header value **MUST** be at minimum 1 character in length and  **MUST NOT** exceed a maximum length of 100 characters.
 - The header value **SHOULD** contain human-readable tag for the context.
 - The header **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
-- The header **MUST** be supplied in the response for every request containing the header, and match the original requested value.
-- The header **SHOULD** be supplied in the response for every request in general, if applicable to the API, even if just defaulting to __prod__.
+- The header **MUST** be supplied in the successful response (2xx) for every request containing the header, and match the original requested value.
+- The header **SHOULD** be supplied in the successful response (2xx) for every request in general, if applicable to the API, even if just defaulting to __prod__.
 
 **Example(s)**:
 
