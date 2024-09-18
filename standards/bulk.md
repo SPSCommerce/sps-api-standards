@@ -179,6 +179,10 @@ Content-Type: application/json
 }
 ```
 
+Identity Service has implemented a bulk operation in django for the OrganizationApplicationGroupSubscription model [here](https://github.com/SPSCommerce/identity-service/blob/8d188eaa55bb6413e8816c04152fb538a14fe2c5/sps_organizations/views.py#L856).
+The view is fully atomic, and follows the above guidelines.
+
+
 ```note
 **PATCH REQUEST ATOMICITY**
 While the [HTTP PATCH RFC](https://datatracker.ietf.org/doc/html/rfc5789) requires full atomicity in application of the patched document, this is not possible in the case of bulk operations. In the case of bulk operations, the request body is a collection of resources which means that the request body is not a single document. While not a perfect interpretation of PATCH execution, the boundaries of bulk operations require some compromise to benefit developer experience and consistency.
