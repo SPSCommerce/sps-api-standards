@@ -395,7 +395,6 @@ paths:
       parameters:
         - name: username
           in: query
-          required: true # requring this would normal fail, but should pass because this is a _webhook exception
           schema:
             type: string
       responses:
