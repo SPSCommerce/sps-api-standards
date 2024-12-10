@@ -14,20 +14,19 @@ rules:
   #         match: "object"
 
   ##### Root Element #####
-  # https://atlassian.spscommerce.com/browse/DPE-286
-  # sps-collection-missing-results-array:
-  #   description: "Response bodies must have a root element called results and is an array of objects."
-  #   severity: error
-  #   given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties.results
-  #   then:
-  #     - field: type
-  #       function: pattern
-  #       functionOptions:
-  #         match: "array"
-  #     - field: items.type
-  #       function: pattern
-  #       functionOptions:
-  #         match: "object"
+  sps-collection-missing-results-array:
+    description: "Response bodies must have a root element called results and is an array of objects."
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties.results
+    then:
+      - field: type
+        function: pattern
+        functionOptions:
+          match: "array"
+      - field: items.type
+        function: pattern
+        functionOptions:
+          match: "object"
 
   ##### Pagination #####
   sps-missing-pagination-query-parameters:
@@ -66,16 +65,15 @@ rules:
                     in:
                       const: query
 
-  # sps-post-request-body-missing-paging-object:
-  # See https://atlassian.spscommerce.com/browse/DPE-286
-  #   description: "POST collection endpoints MUST have a request body schema that includes paging parameters."
-  #   severity: error
-  #   given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].post.requestBody.content.application/json.schema.properties.paging
-  #   then:
-  #     field: "type"
-  #     function: pattern
-  #     functionOptions:
-  #       match: "object"
+  sps-post-request-body-missing-paging-object:
+    description: "POST collection endpoints MUST have a request body schema that includes paging parameters."
+    severity: error
+    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].post.requestBody.content.application/json.schema.properties.paging
+    then:
+      field: "type"
+      function: pattern
+      functionOptions:
+        match: "object"
 
   ##### FILTERING #####
   sps-disallow-resource-identifier-filtering:
