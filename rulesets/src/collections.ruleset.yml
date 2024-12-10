@@ -1,16 +1,17 @@
 rules:
   ##### General #####
-  sps-no-collection-paging-capability:
-    description: "Response bodies from collection endpoints SHOULD offer paging capability."
-    severity: warn
-    given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties
-    then:
-      - field: "paging"
-        function: truthy
-      - field: "paging.type"
-        function: pattern
-        functionOptions:
-          match: "object"
+  # See https://atlassian.spscommerce.com/browse/DPE-286
+  # sps-no-collection-paging-capability:
+  #   description: "Response bodies from collection endpoints SHOULD offer paging capability."
+  #   severity: warn
+  #   given: $.paths[?(!@property.match(/.*\/\{[^}]+\}$/))].get.responses['200'].content.application/json.schema.properties
+  #   then:
+  #     - field: "paging"
+  #       function: truthy
+  #     - field: "paging.type"
+  #       function: pattern
+  #       functionOptions:
+  #         match: "object"
 
   ##### Root Element #####
   sps-collection-missing-results-array:

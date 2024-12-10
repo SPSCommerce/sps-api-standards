@@ -60,7 +60,8 @@ describe("sps-no-collection-paging-capability", () => {
     await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("invalid - response body - missing paging object", async () => {
+  // Re-enable with https://atlassian.spscommerce.com/browse/DPE-286
+  test.skip("invalid - response body - missing paging object", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -95,7 +96,8 @@ describe("sps-no-collection-paging-capability", () => {
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
 
-  test("invalid - response body - paging element must be an object", async () => {
+  // Re-enable with https://atlassian.spscommerce.com
+  test.skip("invalid - response body - paging element must be an object", async () => {
     const spec = `
     openapi: 3.0.0
     info:
