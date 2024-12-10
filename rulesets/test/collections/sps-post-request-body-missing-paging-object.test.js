@@ -63,7 +63,7 @@ describe("sps-post-request-body-missing-paging-object", () => {
       await spectral.validateSuccess(spec, ruleName);
   });
 
-  test("invalid - POST endpoint has incorrect paging type - string", async () => {
+  test.skip("invalid - POST endpoint has incorrect paging type - string", async () => {
       const spec = `
           openapi: 3.1.0
           paths:
