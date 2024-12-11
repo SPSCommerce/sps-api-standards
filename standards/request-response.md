@@ -448,6 +448,45 @@ Access-Control-Allow-Methods: *
 **KEEP AN EYE ON IT**: The [Idempotency-Key Request header](https://tools.ietf.org/id/draft-idempotency-header-01.html) is in an experimental state but getting lots of attention as a pattern of making fault-tolerant resilient requests for traditionally non-idempotent methods like `POST`.
 ```
 
+#### Idempotency-Key
+The HTTP Idempotency-Key request header field can be used to carry an "idempotency key" to make non-idempotent HTTP methods such as POST or PATCH fault-tolerant.
+This is both a standard and non-standard header, as there is common usage of it, but no accepted spec for it.
+
+`Idempotency-Key` should typically be a V4 UUID as a string, or another random string with enough entropy to avoid collisions, and 
+should be no longer than 255 characters long.
+A suggested regex for a generic validator:
+```regexp
+[a-z0-9-]{20,255}
+```
+An API must in some way persist the Idempotency-Key in a stateful way.
+It is common to include the key as part of the primary key or as a secondary index for the resource.
+
+An API, when faced with a conflict, may return any standard success `2xx success` if the endpoint is idempotent,
+or a `409 Conflict` if the endpoint is not idempotent.
+
+```
+// CORRECT
+Idempotency-Key: d4f885c5-2196-49c0-ba69-bc70008585ad
+Idempotency-Key: d4f885c5-2196-49c0-ba69-bc70008585ad-custom
+ 
+// INCORRECT
+Idempotency-Key: a                          // not enough entropy
+Idempotency-Key: KG5Lxw!@#$&*()FBepaKHyUD   // special characters can be limiting for storage and url reference
+```
+
+This is a common technique for avoiding retry-loops creating duplicate entries. 
+For example:
+1. User calls API (Idempotency-Key=d4f885c5-2196-49c0-ba69-bc70008585ad)
+2. API creates resource(key=d4f885c5-2196-49c0-ba69-bc70008585ad)
+3. API responds 201
+4. Response dies in transit, user receives 5xx
+5. User calls API again (Idempotency-Key=d4f885c5-2196-49c0-ba69-bc70008585ad)
+6. API notices resource(key=d4f885c5-2196-49c0-ba69-bc70008585ad) exists, responds with a 201
+
+It is also a powerful technique to bind a workflow to an idempotency key to avoid duplicate entries or breakage.
+`Idempotency-Key` can be bound to various message IDs for a system, ensuring that if the message is replayed,
+the stateful interactions are all idempotent to that message ID.
+
 ### Custom Headers
 
 - Custom Headers **MAY** be used and created as necessary.
