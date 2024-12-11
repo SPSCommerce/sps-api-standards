@@ -1,6 +1,6 @@
 rules:
   ##### General #####
-  # See https://atlassian.spscommerce.com/browse/DPE-286
+  # See https://atlassian.spscommerce.com/browse/DPE-286 
   # sps-no-collection-paging-capability:
   #   description: "Response bodies from collection endpoints SHOULD offer paging capability."
   #   severity: warn
