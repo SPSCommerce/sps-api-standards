@@ -527,6 +527,47 @@ Sps-Execution-Context:                  // values must be at least a character l
 Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
 ```
 
+#### Sps-User-Agent
+**Type**: Request
+
+**Support**: OPTIONAL
+
+**Description**: 
+`Sps-User-Agent` is a direct augmentation of `User-Agent` and is intended to be paired with it, following
+the format of the SPS [Authentication and Authorization Guardrail](https://atlassian.spscommerce.com/wiki/display/Guardrails/[Authentication+and+Authorization).
+Typically, an API should require the `User-Agent` header, and that it **SHOULD** follow the format 
+`serviceName[/serviceVersion] [sdk[/sdkVersion ](serviceTechRegistryId)` to include the valid tech-registry
+serviceName and serviceId of the client.
+However, is common for some clients, such as web-browsers, to lock a client out of setting the `User-Agent`.
+Thus, `User-Agent` cannot reliably encode actually identifying information for general applications.
+Furthermore, auth tokens also do not include this information, and it is also common to forward a user_token, where
+what an API would rather know is not what "user" but what "client" is making the request.
+
+- `Sps-User-Agent` **MUST** be provided for all API requests that cannot include serviceName and serviceId in the `User-Agent`.
+- The header value **MUST** follow this format `serviceName[/serviceVersion] [sdk[/sdkVersion ](serviceTechRegistryId)`
+  - `^(?<NAME>[a-z0-9_-]{1,60})(?:/[^ ]+)? (?<SDK>[^ /]+(?:/[^ /]+)?)? ?\((?<SERVICEID>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\)$`
+- The header value **SHOULD** contain the SDK of the client.
+- It is expected to be rare that a service includes its version in the header, but it is an allowed option.
+- Requests with an invalid `Sps-User-Agent` **MUST** return a `400` response status code.
+- A serviceName **MAY** use `_` to delineate sub-clients of that service.
+- An API is expected to be able to parse User-Agent or this header for tech-registry and serviceName validation.
+
+```
+// CORRECT
+Sps-User-Agent: transform-service/8.3.1 Java/18.0.2.1 (d4f885c5-2196-49c0-ba69-bc70008585ad)
+Sps-User-Agent: transform-service Java/18.0.2.1 (d4f885c5-2196-49c0-ba69-bc70008585ad)
+Sps-User-Agent: transform-service Java (d4f885c5-2196-49c0-ba69-bc70008585ad)
+Sps-User-Agent: transform-service (d4f885c5-2196-49c0-ba69-bc70008585ad)
+Sps-User-Agent: transform-service_subprocess (d4f885c5-2196-49c0-ba69-bc70008585ad)
+
+// INCORRECT
+Sps-User-Agent: (d4f885c5-2196-49c0-ba69-bc70008585ad) transform-service
+Sps-User-Agent: transform-service (8.3.1)
+Sps-User-Agent: transform-service/d4f885c5-2196-49c0-ba69-bc70008585ad
+Sps-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+Sps-User-Agent: python-requests/2.27.1
+```
+
 ## MIME Types
 
 ### Standard MIME Types
