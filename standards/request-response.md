@@ -450,7 +450,7 @@ Access-Control-Allow-Methods: *
 **Support**: OPTIONAL
 
 **Description**:
-The HTTP Idempotency-Key request header field can be used to carry an "idempotency key" to make non-idempotent HTTP methods such as POST or PATCH fault-tolerant.
+The HTTP `Idempotency-Key` request header field can be used to carry an "idempotency key" to make non-idempotent HTTP methods such as POST or PATCH fault-tolerant.
 This is an experimental header, as there is common usage of it, but no accepted spec for it.
 `Idempotency-Key` should typically be a V4 UUID as a string, or another random string with enough entropy to avoid collisions, and 
 should be no longer than 255 characters long.
