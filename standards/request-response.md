@@ -527,45 +527,43 @@ Sps-Execution-Context:                  // values must be at least a character l
 Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
 ```
 
-#### Sps-User-Agent
-**Type**: Request
+<hr />
+
+#### Sps-Service
+
+**Type**: Both
 
 **Support**: OPTIONAL
 
-**Description**: 
-`Sps-User-Agent` is a direct augmentation of `User-Agent` and is intended to be paired with it, following
-the format of the SPS [Authentication and Authorization Guardrail](https://atlassian.spscommerce.com/wiki/display/Guardrails/[Authentication+and+Authorization).
-Typically, an API should require the `User-Agent` header, and that it **SHOULD** follow the format 
-`serviceName[/serviceVersion] [sdk[/sdkVersion ](serviceTechRegistryId)` to include the valid tech-registry
-serviceName and serviceId of the client.
-However, is common for some clients, such as web-browsers, to lock a client out of setting the `User-Agent`.
-Thus, `User-Agent` cannot reliably encode actually identifying information for general applications.
-Furthermore, auth tokens also do not include this information, and it is also common to forward a user_token, where
-what an API would rather know is not what "user" but what "client" is making the request.
+**Description**: The `Sps-Service` header conveys metadata about the requesting asset or service within the ecosystem. It includes details such as the requesting service's identifier, name, and potentially additional attributes. This information supports logging, monitoring, and auditing by identifying the service responsible for the request. Unlike the `User-Agent` header, which describes the client or user initiating the request, `Sps-Service` focuses on the ownership and identity of the service making the request.
 
-- `Sps-User-Agent` **MUST** be provided for all API requests that cannot include serviceName and serviceId in the `User-Agent`.
-- The header value **MUST** follow this format `serviceName[/serviceVersion] [sdk[/sdkVersion ](serviceTechRegistryId)`
-  - `^(?<NAME>[a-z0-9_-]{1,60})(?:/[^ ]+)? (?<SDK>[^ /]+(?:/[^ /]+)?)? ?\((?<SERVICEID>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\)$`
-- The header value **SHOULD** contain the SDK of the client.
-- It is expected to be rare that a service includes its version in the header, but it is an allowed option.
-- Requests with an invalid `Sps-User-Agent` **MUST** return a `400` response status code.
-- A serviceName **MAY** use `_` to delineate sub-clients of that service.
-- An API is expected to be able to parse User-Agent or this header for tech-registry and serviceName validation.
+- The header **MUST** follow a key-value format with `=` as the delimiter. Attributes **MUST** be delimited by a semicolon `;`.
+- The header key names **MUST** follow `camelCase` naming conventions.
+- The header value **MUST** provide the service identifier using key name `id` as a valid UUID format.
+- The header value **SHOULD** provide the service name using key name `name`, represented by the following regex: `^[a-z-]{3,}$`.
+- The header value **MAY** extend or include additional attributes as necessary for the service or application.
+- The header value **MUST** represent the attributes of a single service or application (not multiple).
+- The header **SHOULD** be used alongside `User-Agent` to provide complete requesting context.
+- The header **SHOULD** be used for all requests made to a service by the requesting service or application (either server or client side).
+- Library or Service metadata and versions **MUST NOT** be included in this header. This information **SHOULD** be included in the `User-Agent` header.
+- Requests with an invalid `Sps-Service` formatted header **SHOULD** return a `400` response status code.
+- Requests **MAY** validate the `Sps-Service` header `id` value against the associated authority or service registry. Validation failures **MUST** return a `400` indicating the reason.
 
 ```
 // CORRECT
-Sps-User-Agent: transform-service/8.3.1 Java/18.0.2.1 (d4f885c5-2196-49c0-ba69-bc70008585ad)
-Sps-User-Agent: transform-service Java/18.0.2.1 (d4f885c5-2196-49c0-ba69-bc70008585ad)
-Sps-User-Agent: transform-service Java (d4f885c5-2196-49c0-ba69-bc70008585ad)
-Sps-User-Agent: transform-service (d4f885c5-2196-49c0-ba69-bc70008585ad)
-Sps-User-Agent: transform-service_subprocess (d4f885c5-2196-49c0-ba69-bc70008585ad)
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;name=transform-service                   // standard representation with id and name. Suffixing delimiter not required.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad; name=transform-service                  // strip out whitespace between delimiters and keys.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad                                          // permissable, but discouraged, if name is unknown (implementation specific).
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;name=transform-service;custKey=thing     // extending with custom attributes
 
 // INCORRECT
-Sps-User-Agent: (d4f885c5-2196-49c0-ba69-bc70008585ad) transform-service
-Sps-User-Agent: transform-service (8.3.1)
-Sps-User-Agent: transform-service/d4f885c5-2196-49c0-ba69-bc70008585ad
-Sps-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
-Sps-User-Agent: python-requests/2.27.1
+Sps-Service-Id: id=d4f885c5-2196-49c0-ba69-bc70008585ad                                       // incorrect header name
+Sps-Service: id=24                                                                            // id must be in format of UUID. 
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;custom-key=hello                         // attribute keys must be camelCase.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;appVersion=1.2.3                         // version does not relate to ownership, but rather user-agent.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;id=f5f844f3-6177-4474-b845-6d5cd9b00f48  // cannot have duplicate keys, or multiple ids represented.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;name=myService                           // name does not meet pattern requirements with an uppercase letter.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad,name=myService                           // HTTP headers are delimited by semicolons when values describe a single entity, not commas (used for lists).
 ```
 
 ## MIME Types
