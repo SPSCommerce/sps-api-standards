@@ -540,7 +540,7 @@ Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
 - The header **MUST** follow a key-value format with `=` as the delimiter. Attributes **MUST** be delimited by a semicolon `;`.
 - The header key names **MUST** follow `camelCase` naming conventions.
 - The header value **MUST** provide the service identifier using key name `id` as a valid UUID format.
-- The header value **SHOULD** provide the service name using key name `name`, represented by the following regex: `^[a-z-]{3,}$`.
+- The header value **SHOULD** provide the service name using key name `name`, represented by the following regex: `[a-z-]{3,}`.
 - The header value **MAY** extend or include additional attributes as necessary for the service or application.
 - The header value **MUST** represent the attributes of a single service or application (not multiple).
 - The header **SHOULD** be used alongside `User-Agent` to provide complete requesting context.
