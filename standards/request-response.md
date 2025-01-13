@@ -525,6 +525,44 @@ Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
 
 <hr />
 
+#### Sps-Service
+
+**Type**: Both
+
+**Support**: OPTIONAL
+
+**Description**: The `Sps-Service` header conveys metadata about the requesting asset or service within the ecosystem. It includes details such as the requesting service's identifier, name, and potentially additional attributes. This information supports logging, monitoring, and auditing by identifying the service responsible for the request. Unlike the `User-Agent` header, which describes the client or user initiating the request, `Sps-Service` focuses on the ownership and identity of the service making the request.
+
+- The header **MUST** follow a key-value format with `=` as the delimiter. Attributes **MUST** be delimited by a semicolon `;`.
+- The header key names **MUST** follow `camelCase` naming conventions.
+- The header value **MUST** provide the service identifier using the key name `id` as a valid UUID format.
+- The header value **SHOULD** provide the service name using the key name `name`, represented by the following regex: `[a-z0-9-]{1,60}`.
+- The header value **MAY** extend or include additional attributes as necessary for the service or application.
+- The header value **MUST** represent the attributes of a single service or application (not multiple).
+- The header **SHOULD** be used alongside `User-Agent` to provide complete requesting context.
+- The header **SHOULD** be used for all requests made to a service by the requesting service or application (either server or client side).
+- Library or Service metadata and versions **MUST NOT** be included in this header. This information **SHOULD** be included in the `User-Agent` header.
+- Requests with an invalid `Sps-Service` formatted header **SHOULD** return a `400` response status code.
+- Requests **MAY** validate the `Sps-Service` header `id` value against the associated authority or service registry. Validation failures **MUST** return a `400` indicating the reason.
+
+```
+// CORRECT
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;name=transform-service                   // standard representation with id and name. Suffixing delimiter not required.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad; name=transform-service                  // strip out whitespace between delimiters and keys.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad                                          // permissable, but discouraged, if name is unknown (implementation specific).
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;name=transform-service;custKey=thing     // extending with custom attributes
+
+// INCORRECT
+Sps-Service-Id: id=d4f885c5-2196-49c0-ba69-bc70008585ad                                       // incorrect header name
+Sps-Service: id=24                                                                            // id must be in format of UUID. 
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;custom-key=hello                         // attribute keys must be camelCase.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;appVersion=1.2.3                         // version does not relate to ownership, but rather user-agent.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;id=f5f844f3-6177-4474-b845-6d5cd9b00f48  // cannot have duplicate keys, or multiple ids represented.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad;name=myService                           // name does not meet pattern requirements with an uppercase letter.
+Sps-Service: id=d4f885c5-2196-49c0-ba69-bc70008585ad,name=myService                           // HTTP headers are delimited by semicolons when values describe a single entity, not commas (used for lists).
+
+<hr />
+
 #### Sps-Idempotency-Key
 
 **Type**: Request
