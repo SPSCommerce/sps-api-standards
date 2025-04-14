@@ -124,4 +124,28 @@ describe("sps-no-collection-paging-capability", () => {
 
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
+
+  test("valid, response body of a path with ID isn't pageable - invalid path users/{id}/foo", async () => {
+    const spec = `
+    openapi: 3.0.0
+    info:
+      title: Sample API
+      version: 1.0.0
+    paths:
+      /users/{id}/foo:
+        get:
+          summary: Invalid path example
+          responses:
+            '200':
+              description: Invalid path response
+              content:
+                application/json:
+                  schema:
+                    properties:
+                      notACollection:
+                        type: string
+    `;
+
+    await spectral.validateSuccess(spec, ruleName);
+  });
 });
