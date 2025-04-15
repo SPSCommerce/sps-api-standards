@@ -61,7 +61,7 @@ describe("sps-no-collection-paging-capability", () => {
   });
 
   // Re-enable with https://atlassian.spscommerce.com/browse/DPE-286
-  test.skip("invalid - response body - missing paging object", async () => {
+  test("invalid - response body - missing paging object", async () => {
     const spec = `
       openapi: 3.0.0
       info:
@@ -97,7 +97,7 @@ describe("sps-no-collection-paging-capability", () => {
   });
 
   // Re-enable with https://atlassian.spscommerce.com
-  test.skip("invalid - response body - paging element must be an object", async () => {
+  test("invalid - response body - paging element must be an object", async () => {
     const spec = `
     openapi: 3.0.0
     info:
@@ -123,5 +123,29 @@ describe("sps-no-collection-paging-capability", () => {
     `;
 
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
+  });
+
+  test("valid, response body of a path with ID isn't pageable - invalid path users/{id}/foo", async () => {
+    const spec = `
+    openapi: 3.0.0
+    info:
+      title: Sample API
+      version: 1.0.0
+    paths:
+      /users/{id}/foo:
+        get:
+          summary: Invalid path example
+          responses:
+            '200':
+              description: Invalid path response
+              content:
+                application/json:
+                  schema:
+                    properties:
+                      notACollection:
+                        type: string
+    `;
+
+    await spectral.validateSuccess(spec, ruleName);
   });
 });
