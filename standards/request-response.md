@@ -604,12 +604,13 @@ Sps-Idempotency-Key: KG5Lxw!@#$&*()FBepaKHyUD   // non-url-safe special characte
 **Description**: Contains a cryptographic signature of the request payload. This signature is used to verify the authenticity and integrity of a request. The signature is typically computed using a shared secret established between the producer and consumer, typically using HMAC with SHA-256. The hash function should be specified in the header value: `SPS-Signature: sha256=<HMAC hex digest>`. The primary usage of this header is for [webhook security](webhooks.md#webhook-requests).
 
 - The header value **MUST** be a valid HMAC digest of the request payload.
+- The header value **MUST** include the hash function used to compute the signature, such as `sha256` or `sha512`, etc.
 - The header value **SHOULD** be accompanied by a timestamp to prevent replay attacks. The timestamp can be included in the `Sps-Signature-Timestamp` header.
 
 ```
 // CORRECT
-Sps-Signature: sha256=4d3f8b2c1e5f6a7b8c9d0e1f2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0c1d2e3f4g5h6i7j8k9l0m
-Sps-Signature: sha512=4d3f8b2c1e5f6a7b8c9d0e1f2a3b4c5d6e7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0c1d2e3f4g5h6i7j8k9l0m
+Sps-Signature: sha256=4d3f8b2c1e5f6a7b8c9d0e1f2a3b4a9b0c1d2e3f4g5h6i7j8k9l0m
+Sps-Signature: sha512=4d3f8b2c7z8a9b0c1d2e3f4g5h6i7j8kg5h6i7g5h6i7g5h6i79l0m
 ```
 
 <hr />
