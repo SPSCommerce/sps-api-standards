@@ -1,37 +1,49 @@
 # Webhooks
 
-```note
-Webhook producer standards and best practices are still under development. Some relevant starting material: [Microsoft REST API Guidelines: Webhooks](https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#14-push-notifications-via-webhooks)
-```
-
 ## Overview
 
-Webhooks are HTTP-based callbacks that enable lightweight, event-driven communication between APIs. A webhook delivers a **payload** (a small JSON message) to a **consumer-provided URL** whenever a specific event occurs. This push-model design provides near real-time notifications and avoids the need for polling for changes. Webhooks are particularly useful for integrating with third-party systems and are generally faster than periodically polling for updates.
+A webhook is an HTTP-based callback function that allows lightweight, usually event-driven communication between two APIs. Webhooks are used by a wide variety of web apps to receive small amounts of data from other apps when specific events occur. This is especially useful for integration with third-party APIs. They have a message—or payload—and are sent to a unique URL configured by the consumer. Webhooks are an advantage in an API as they are almost always faster than polling for an updated status or parsing to determine which events or changes are new within a timeline. 
 
-* Services **MAY** implement push notifications or HTTP callbacks (webhooks) to notify other systems of events in real time.
-* Services **MAY** act as webhook consumers by exposing internal endpoints to receive events from external systems. (See **Webhook Consumer** guidelines below.)
+
+- Services **MAY** implement push notifications, HTTP callbacks, and other event notifications via webhooks.
+- Services **MAY** implement HTTP callback endpoints as a webhook consumer from other systems and/or APIs.
+
+```note
+Push notification via HTTP Callbacks, often called Webhooks, to publicly-addressable servers.
+```
 
 ## Webhook Consumer
 
-A **webhook consumer** is a service endpoint that receives and handles incoming webhooks from an external **webhook producer**. Because the producer (external system) controls the HTTP request format, consumers may need to diverge slightly from typical API design conventions to accommodate the producer’s requirements. The following standards ensure webhook endpoints are implemented consistently and securely:
+Webhook consumption often requires building API endpoints to receive webhook-specific request schemas, headers and authorization that is different from current API style and standards as webhook requests are owned by its producer and not the consumer. As a result webhook consumers should recognize this and organize webhook consuming endpoints accordingly.
 
-* Webhook consumer endpoints **MUST** be treated as **internal** operations in the API design. In the OpenAPI spec, mark them with `x-internal: true` (indicating they are not for public client use but for receiving third-party calls).
-* Webhook consumer endpoints **SHOULD** use the HTTP `POST` method to accept event payloads (as most webhook producers send `POST` requests).
-* Webhook consumer endpoints **MUST** only be exposed over secure channels (`HTTPS`). There are no exceptions to this rule – all webhook calls must use TLS to protect data in transit.
-* Webhook consumer endpoints **MUST** be protected by a **secret token or key** to verify the caller. The consumer’s endpoint should require a unique secret (e.g. as a header or URL parameter) or signature that the known webhook producer will include, in order to reject any unauthorized calls. This ensures that random third parties cannot spoof webhook calls.
-* The URL path for consumer webhook endpoints **MUST** begin with the prefix `/_webhooks/` to clearly identify their purpose as webhook receivers. This prefix isolates webhook handlers from public API routes.
-* The path after `/_webhooks/` **SHOULD** include an identifier for the webhook producer or system sending the callbacks. For example, a service consuming SendGrid webhooks might use paths like `/_webhooks/sendgrid/...`. This makes it obvious which external system the endpoint is for.
-* If a single service consumes multiple distinct webhook event types from the same producer, the path **MAY** further include an event category to differentiate them. For example:
+Webhook consuming endpoints:
+- **MAY NOT** follow API Standards or best practices when it does not pose inherit security risks or affect the rest of the API design consistency and experience.
+- **MUST** be marked as **internal** usage only in the design specification. Internal usage implies that the endpoint should only be used by the API owner themselves, including the configuration of that endpoint by them against a third party system if needed. Internal usage does not imply the endpoint is not publicly addressable (i.e. in Open API Spec, this would translate to `x-internal: true`). <a name="sps-webhooks-internal" href="#sps-webhooks-internal"><i class="fa fa-check-circle" title="#sps-webhooks-internal"></i></a>
+- **SHOULD** be `POST` endpoints unless specifically needing an alternative by the webhook producer. <a name="sps-webhooks-post" href="#sps-webhooks-post"><i class="fa fa-check-circle" title="#sps-webhooks-post"></i></a>
+- **MUST** be sent over `HTTPS` without exception.
+- **MUST** be secured with a unique secret key or token that prevents general requests to the webhook endpoint not from the webhook producer.
+- **MUST** use a route with path prefix `/_webhooks/` to clearly identify the endpoint intention and purpose for internal usage. <a name="sps-webhooks-path" href="#sps-webhooks-path"><i class="fa fa-check-circle" title="#sps-webhooks-path"></i></a>
+- **SHOULD** indicate the webhook producer or product in the route path if the endpoint is intended for a vendor specific request only, for example `/_webhooks/product-name/` (e.g. `/_webhooks/sendgrid/`).
+- **MAY** indicate a particular type of event or purpose in the route path if needed to disambiguate between different types of webhook events coming from the same webhook producer, for example `/_webhooks/product-name/specific-event` (e.g. `/_webhooks/sendgrid/email-sent`).
 
-  ```
-  POST /_webhooks/sendgrid/email-sent  
-  POST /_webhooks/sendgrid/email-opened  
-  POST /_webhooks/sendgrid/email-clicked  
-  ```
-
-Each endpoint could handle a different event from SendGrid. In cases where the producer expects one endpoint for all events, a generic path can be used (e.g. `POST /_webhooks/sendgrid`) and the event type distinguished inside the payload.
-
-Endpoints **SHOULD** continue to follow general API best practices **when possible** (e.g. use consistent naming and response handling), but it is understood that webhook consumer endpoints **MAY** deviate from normal RESTful patterns if required by the external provider (this is acceptable as long as it doesn’t introduce security risks or degrade the overall API consumer experience).
+Example:
+```
+// CORRECT
+POST /_webhooks/sendgrid/email-sent             # variations of different events for sendgrid email SaaS offering
+POST /_webhooks/sendgrid/email-opened
+POST /_webhooks/sendgrid/email-clicked
+POST /_webhooks/sendgrid                        # some webhoosk producers may want a single endpoint to send all events too
+                                                # the request payload typically would indicate the event type
+POST /_webhooks/email-event                     # a more generic event that might be used in more confiurable webhook producers
+                                                # where a single hook and event structure makes sense (same payload schema)
+                                    
+// INCORRECT
+GET /_webhooks/sendgrid/email-sent              # should be a POST request      
+POST /_webhooks/                                # requires at least one identifier after /_webhooks/
+POST /hooks/sendgrid/email-sent                 # prefix path must be /_webhooks/
+POST /hooks/sendgrid/email_sent                 # continue to support API Standards where you can, using kebab-case in the URL.
+                                                # typically, the webhook producer must at least make the path configurable.
+```
 
 ## Webhook Producer
 
