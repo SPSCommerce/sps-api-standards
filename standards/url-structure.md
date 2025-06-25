@@ -133,25 +133,25 @@ Resources in the path **SHOULD** be repeated as a representation of a hierarchy 
     - **MUST** be capable of identifying the specific resource in the addressable context.
     - **MUST** be considered stable and not information that is subject to change on the resource.
 
-    ```
-    // CORRECT
-    /articles/1/comments/2      // ID in the URL after articles "1" refers to the unique identifier for the article.
-                                // ID in the URL after comments "2" refers to the unique identifier for the article / comment composition.
-    
-    // INCORRECT
-    /articles/1/2               // Unknown contextual usage of "2".
-    ```
-    - **SHOULD** be compositional with multiple identifiers specified in sequence when culturally or domain appropriate and still representing a hierarchy. 
-    ```
-    // CORRECT
-    /repos/spscommerce/sps-atlas/pulls      // the value of "spscommerce/sps-atlas" is well understand as a reference in the industry to a repository.
-    /states/us/texas                        // the value for a country and state is well-understood and very stable
-    /time/2010/04/12                        // date and time formatting would be appropriate for historical references, but must abide by DateTime format serialization
-    ```
+```
+// CORRECT
+/articles/1/comments/2      // ID in the URL after articles "1" refers to the unique identifier for the article.
+                            // ID in the URL after comments "2" refers to the unique identifier for the article / comment composition.
 
-    ```note
-    For Date and Time references to format and serialization in the body or the path refer to [Serialization](serialization.md).
-    ```
+// INCORRECT
+/articles/1/2               // Unknown contextual usage of "2".
+```
+- **SHOULD** be compositional with multiple identifiers specified in sequence when culturally or domain appropriate and still representing a hierarchy. 
+```
+// CORRECT
+/repos/spscommerce/sps-atlas/pulls      // the value of "spscommerce/sps-atlas" is well understand as a reference in the industry to a repository.
+/states/us/texas                        // the value for a country and state is well-understood and very stable
+/time/2010/04/12                        // date and time formatting would be appropriate for historical references, but must abide by DateTime format serialization
+```
+
+```note
+For Date and Time references to format and serialization in the body or the path refer to [Serialization](serialization.md).
+```
 
 - The hierarchy of nested resources **SHOULD NOT** exceed more than 3 resources. <a name="sps-paths-limit-sub-resources" href="#sps-paths-limit-sub-resources"><i class="fa fa-check-circle" title="#sps-paths-limit-sub-resources"></i></a>
 
