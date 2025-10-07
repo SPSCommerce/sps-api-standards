@@ -499,7 +499,7 @@ Sps-Cors-Error: bad origin
 **Description**: The Execution Context header provides a standard method of indicating the dataflow context that a request should be processed with. This is used to differentiate or test changes in customer configuration of non-production data. This isolates the version of the configuration state used in a request and allows identifying transactions that should leverage a specific tagged or aliased configuration set.
 
 - A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable to this API.
-- The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
+- The header value contains a dynamic __string__ value representing a named configuration or tagged dataflow preset.
     - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
     - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `Sps-Execution-Context` this is interpreted as the default value.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
@@ -509,7 +509,7 @@ Sps-Cors-Error: bad origin
   - It **MUST** only contain ASCII letters (A–Z, a–z), digits (0–9), underscore (`_`), or hyphen (`-`).
   - It **MUST NOT** contain accented/diacritic or non-ASCII characters.
 - The header value **SHOULD** contain human-readable tag for the context.
-- The header **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
+- The original requested header value **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
 - The header **MUST** be supplied in the response for every request containing the header, and match the original requested value.
 - The header **SHOULD** be supplied in the response for every request in general, if applicable to the API, even if just defaulting to __prod__.
 
