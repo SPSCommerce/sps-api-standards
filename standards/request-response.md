@@ -505,6 +505,9 @@ Sps-Cors-Error: bad origin
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
 - The header value **MUST** be at minimum 1 character in length and  **MUST NOT** exceed a maximum length of 100 characters.
 - The header value **MUST** be case-insensitive.
+- The header value **MUST** conform to: `[A-Za-z0-9_-]`.
+  - It **MUST** only contain ASCII letters (A–Z, a–z), digits (0–9), underscore (`_`), or hyphen (`-`).
+  - It **MUST NOT** contain accented/diacritic or non-ASCII characters.
 - The header value **SHOULD** contain human-readable tag for the context.
 - The header **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
 - The header **MUST** be supplied in the response for every request containing the header, and match the original requested value.
@@ -518,10 +521,17 @@ Sps-Execution-Context: prod
 Sps-Execution-Context: preprod
 Sps-Execution-Context: customer-testing
 Sps-Execution-Context: example-customer-configuration
+Sps-Execution-Context: example_customer_config
+Sps-Execution-Context: release-2025-10-07
+Sps-Execution-Context: JIRA-007-something-descriptive
 
 // INCORRECT
 Sps-Execution-Context:                  // values must be at least a character long.
 Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
+Sps-Execution-Context: customer testing // space not allowed
+Sps-Execution-Context: example@config   // '@' not allowed
+Sps-Execution-Context: preprod\n        // control/newline not allowed
+Sps-Execution-Context: Français         // désolé, ASCII-only, s'il vous plaît
 ```
 
 <hr />
