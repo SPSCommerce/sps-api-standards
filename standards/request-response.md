@@ -499,16 +499,23 @@ Sps-Cors-Error: bad origin
 **Description**: The Execution Context header provides a standard method of indicating the dataflow context that a request should be processed with. This is used to differentiate or test changes in customer configuration of non-production data. This isolates the version of the configuration state used in a request and allows identifying transactions that should leverage a specific tagged or aliased configuration set.
 
 - A request without the presence of this header **MUST** indicate that the execution context is under the `production` dataflow and customer configuration, if applicable to this API.
-- The header value contains any dynamic __string__ value representing a named configuration or tagged dataflow preset.
+- The header value contains a dynamic __string__ value representing a named configuration or tagged dataflow preset.
     - __preprod__ - Well-known value used to represent non-production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred.
     - __prod__ - Well-known value used to represent production customer configuration and can be supported as a static mode in some legacy services without full dynamic support. Usage of dynamically named configuration sets is preferred. When no request or response header is provided for `Sps-Execution-Context` this is interpreted as the default value.
 - An invalid or unsupported header value provided **MUST** result in a `400 - Bad Request` following standard [error format](errors.md#400-bad-request).
 - The header value **MUST** be at minimum 1 character in length and  **MUST NOT** exceed a maximum length of 100 characters.
-- The header value **MUST** be case-insensitive.
+- The header value **MUST** be lowercase.
+- The header value **MUST** conform to: `[a-z0-9_-]`.
+  - It **MUST** only contain ASCII lowercase letters (a–z), digits (0–9), underscore (`_`), or hyphen (`-`).
+  - It **MUST NOT** contain accented/diacritic or non-ASCII characters.
 - The header value **SHOULD** contain human-readable tag for the context.
-- The header **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
+- The original request header value **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
 - The header **MUST** be supplied in the response for every request containing the header, and match the original requested value.
 - The header **SHOULD** be supplied in the response for every request in general, if applicable to the API, even if just defaulting to __prod__.
+
+```note
+The allowed character set is intentionally conservative and may expand in the future. Implementations should avoid hard-coding assumptions and be prepared for a broader set if the standard is updated.
+```
 
 **Example(s)**:
 
@@ -518,10 +525,18 @@ Sps-Execution-Context: prod
 Sps-Execution-Context: preprod
 Sps-Execution-Context: customer-testing
 Sps-Execution-Context: example-customer-configuration
+Sps-Execution-Context: example_customer_config
+Sps-Execution-Context: release-2025-10-07
+Sps-Execution-Context: jira-007-something-descriptive
 
 // INCORRECT
 Sps-Execution-Context:                  // values must be at least a character long.
 Sps-Execution-Context: 1                // valid, but SHOULD be human-readable.
+Sps-Execution-Context: customer testing // space not allowed
+Sps-Execution-Context: example@config   // '@' not allowed
+Sps-Execution-Context: preprod\n        // control/newline not allowed
+Sps-Execution-Context: Français         // désolé, ASCII-only, s'il vous plaît
+Sps-Execution-Context: JIRA-007         // uppercase letters not allowed; use lowercase
 ```
 
 <hr />
