@@ -509,8 +509,7 @@ Sps-Cors-Error: bad origin
   - It **MUST** only contain ASCII lowercase letters (a–z), digits (0–9), underscore (`_`), or hyphen (`-`).
   - It **MUST NOT** contain accented/diacritic or non-ASCII characters.
 - The header value **SHOULD** contain human-readable tag for the context.
-- The original request header value **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
-- The header **SHOULD** be supplied in the response for every request in general, if applicable to the API, even if just defaulting to __prod__.
+- The header **SHOULD** be propagated to outgoing requests for downstream context retention and **MUST** be supplied in responses when provided in the request, reflecting either the requested value or the properly transformed value utilized for execution.
 
 ```note
 The allowed character set is intentionally conservative and may expand in the future. Implementations should avoid hard-coding assumptions and be prepared for a broader set if the standard is updated.
