@@ -510,7 +510,6 @@ Sps-Cors-Error: bad origin
   - It **MUST NOT** contain accented/diacritic or non-ASCII characters.
 - The header value **SHOULD** contain human-readable tag for the context.
 - The original request header value **SHOULD** be propagated to any outgoing requests to retain the context for downstream usage.
-- The header **MUST** be supplied in the response for every request containing the header, and match the original requested value.
 - The header **SHOULD** be supplied in the response for every request in general, if applicable to the API, even if just defaulting to __prod__.
 
 ```note
