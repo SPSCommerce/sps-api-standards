@@ -356,6 +356,33 @@ Content-Language: en-US, de-DE, en-CA
 
 <hr />
 
+#### [Content-Disposition](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition)
+
+**Type**: Both
+
+**Support**: OPTIONAL
+
+**Description**: This request/response header indicates how content should be handled or identifies file metadata.
+- In responses, APIs **SHOULD** include this header when returning file content or binary data to indicate if content should be displayed inline or downloaded as an attachment.
+- In requests, this header **MAY** be used in multipart/form-data uploads to specify the filename and disposition of uploaded content.
+- The header **MUST** use `inline` disposition for content meant to be displayed directly.
+- The header **MUST** use `attachment` disposition for content meant to be downloaded.
+- When using `attachment`, a `filename` parameter **SHOULD** be provided to suggest a filename for the download or identify uploaded file names.
+- Filenames **SHOULD** be properly encoded when containing non-ASCII characters using RFC 5987 encoding.
+
+**Example(s)**:
+
+```
+// CORRECT
+Content-Disposition: inline
+Content-Disposition: attachment
+Content-Disposition: attachment; filename="document.pdf"
+Content-Disposition: attachment; filename="report-2025.csv"
+Content-Disposition: attachment; filename*=UTF-8''%E6%96%87%E6%A1%A3.pdf
+```
+
+<hr />
+
 #### [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag)
 
 **Type**: Response
