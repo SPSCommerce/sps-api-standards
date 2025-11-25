@@ -121,7 +121,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^(Sps-[a-zA-Z0-9-]{1,50}|Accept|Access-Control.*|Authorization|Cache-Control|Content-Language|Content-Length|Content-Type|Date|ETag|Host|If-Match|If-None-Match|Location|Origin|User-Agent)$"
+        match: "^(Sps-[a-zA-Z0-9-]{1,50}|Accept|Access-Control.*|Authorization|Cache-Control|Content-Disposition|Content-Language|Content-Length|Content-Type|Date|ETag|Host|If-Match|If-None-Match|Location|Origin|User-Agent)$"
 
   sps-sensitive-data-in-headers:
     description: Headers MUST NOT contain sensitive data.
