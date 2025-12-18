@@ -42,16 +42,12 @@ rules:
 
   ##### Domain References #####
   sps-ref-property-name:
-    description: Property with the name 'ref' MUST use a data type of 'string' with the format 'sps-ref'.
+    description: Property with the name 'ref' MUST use a format 'sps-ref'.
     severity: error
     formats: [oas3]
     given: '$..properties..[?((@property=== "ref" || @property === "Ref") && @.$ref == null && @.allOf == null && @.oneOf == null && @.type != null)]'
     resolved: false
     then:
-      - field: type
-        function: pattern
-        functionOptions:
-          match: "^string$"
       - field: format
         function: truthy
       - field: format
