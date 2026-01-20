@@ -100,4 +100,58 @@ describe("sps-ref-property-name", () => {
         `;
         await spectral.validateSuccess(spec, ruleName);
     });
+
+    test("Ref property fails with format containing 'sps-ref' but not exact match", async () => {
+        const spec = `
+        openapi: 3.0.1
+        paths: {}
+        components:
+            schemas:
+                MySchema:
+                    type: object
+                    properties:
+                        ref:
+                            type: string
+                            format: custom-sps-ref
+                        value:
+                            type: string
+        `;
+        await spectral.validateFailure(spec, ruleName, "Error");
+    });
+
+    test("Ref property fails with format 'sps-ref-extended'", async () => {
+        const spec = `
+        openapi: 3.0.1
+        paths: {}
+        components:
+            schemas:
+                MySchema:
+                    type: object
+                    properties:
+                        ref:
+                            type: string
+                            format: sps-ref-extended
+                        value:
+                            type: string
+        `;
+        await spectral.validateFailure(spec, ruleName, "Error");
+    });
+
+    test("Ref property fails with format 'my-sps-ref'", async () => {
+        const spec = `
+        openapi: 3.0.1
+        paths: {}
+        components:
+            schemas:
+                MySchema:
+                    type: object
+                    properties:
+                        ref:
+                            type: string
+                            format: my-sps-ref
+                        value:
+                            type: string
+        `;
+        await spectral.validateFailure(spec, ruleName, "Error");
+    });
 });
