@@ -509,7 +509,7 @@ rules:
       functionOptions:
         notMatch: "^(Access-Control-.*|Content-Type|Accept)$"
   sps-invalid-custom-header-format:
-    description: Custom headers MUST NOT be longer than 50 chars, and MUST only contain alphanumeric and dash chars, and MUST begin with SPS- not x-
+    description: Custom headers MUST NOT be longer than 50 chars, and MUST only contain alphanumeric and dash chars, and MUST begin with Sps- not X-
     severity: error
     given: "$.paths[*][*].responses[*].headers.*~"
     then:
