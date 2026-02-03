@@ -9,10 +9,10 @@ describe("sps-camel-case-properties", () => {
     spectral = new SpectralTestHarness(ruleset);
   });
 
-  
+
   test("valid property names with two capital letters in a row", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths:
         /users:
           post:
@@ -41,7 +41,7 @@ describe("sps-camel-case-properties", () => {
 
   test("invalid property names with more than two capital letters in a row", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths:
         /users:
           post:
@@ -70,7 +70,7 @@ describe("sps-camel-case-properties", () => {
 
   test("valid property names", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths:
         /users:
           post:
@@ -105,7 +105,7 @@ describe("sps-camel-case-properties", () => {
 
   test("invalid usage of camel casing in property names", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths:
         /users:
           post:
@@ -138,7 +138,7 @@ describe("sps-camel-case-properties", () => {
 
   test("invalid usage of camel casing for acronyms", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths:
         /users:
           post:

@@ -11,7 +11,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property successful with proper format and example", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -33,7 +33,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property fails without proper format", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -50,7 +50,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property fails with wrong format", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -68,7 +68,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property refers to readOnly value, and should pass", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths:
             /v1/test:
                 post:
@@ -103,7 +103,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property fails with format containing 'sps-ref' but not exact match", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -121,7 +121,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property fails with format 'sps-ref-extended'", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -139,7 +139,7 @@ describe("sps-ref-property-name", () => {
 
     test("Ref property fails with format 'my-sps-ref'", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:

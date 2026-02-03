@@ -11,7 +11,7 @@ describe("sps-fingerprint-naming", () => {
 
     test("fingerprint name succeeds", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -24,13 +24,13 @@ describe("sps-fingerprint-naming", () => {
                             type: string
                         
         `;
-    
+
         await spectral.validateSuccess(spec, ruleName);
     });
 
     test("hashkey usage fails", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -48,7 +48,7 @@ describe("sps-fingerprint-naming", () => {
 
     test("hashKey (camelCase) usage fails", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:
@@ -66,7 +66,7 @@ describe("sps-fingerprint-naming", () => {
 
     test("hash usage fails", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths: {}
         components:
             schemas:

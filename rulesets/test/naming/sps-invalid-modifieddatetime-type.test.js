@@ -11,7 +11,7 @@ describe("sps-invalid-modified-date-time-type", () => {
 
   test("modifiedDateTime with type string and format date-time is successful", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -30,7 +30,7 @@ describe("sps-invalid-modified-date-time-type", () => {
 
   test("modifiedDateTime with type number failure", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -46,7 +46,7 @@ describe("sps-invalid-modified-date-time-type", () => {
 
   test("modifiedDateTime with type string missing format failure", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -62,7 +62,7 @@ describe("sps-invalid-modified-date-time-type", () => {
 
   test("modifiedDateTime with type string and incorrect format failure", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:

@@ -11,7 +11,7 @@ describe("sps-no-keyword-conflicts", () => {
 
   test("valid property name", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -35,7 +35,7 @@ describe("sps-no-keyword-conflicts", () => {
 
   test("invalid property name for", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -59,7 +59,7 @@ describe("sps-no-keyword-conflicts", () => {
 
   test("invalid property name abstract", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -83,7 +83,7 @@ describe("sps-no-keyword-conflicts", () => {
 
   test("invalid property name assert and for", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -110,7 +110,7 @@ describe("sps-no-keyword-conflicts", () => {
 
   test("valid property name defaultName", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -134,7 +134,7 @@ describe("sps-no-keyword-conflicts", () => {
 
   test("invalid property name default", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

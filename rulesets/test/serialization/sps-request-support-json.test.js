@@ -11,7 +11,7 @@ describe("sps-request-support-json", () => {
 
     test("single application/json type successful", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths:
           /v1/users/{id}:
             post:
@@ -32,13 +32,13 @@ describe("sps-request-support-json", () => {
                     "201":
                         description: User has been successfully created.
         `;
-    
+
         await spectral.validateSuccess(spec, ruleName);
     });
 
     test("no request parameters validate", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths:
           /v1/users/{id}:
             post:
@@ -47,13 +47,13 @@ describe("sps-request-support-json", () => {
                     "201":
                         description: User has been successfully created.
         `;
-    
+
         await spectral.validateSuccess(spec, ruleName);
     });
 
     test("multiple content types works with application/json", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths:
             /v1/users:
                 post:
@@ -88,7 +88,7 @@ describe("sps-request-support-json", () => {
 
     test("no application/json media type causses error", async () => {
         const spec = `
-        openapi: 3.0.1
+        openapi: 3.1.0
         paths:
             /v1/users:
                 post:

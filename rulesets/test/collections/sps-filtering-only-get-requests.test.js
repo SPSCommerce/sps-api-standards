@@ -1,4 +1,4 @@
-    const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
+const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-filtering-only-get-requests", () => {
   let spectral = null;
@@ -11,7 +11,7 @@ describe("sps-filtering-only-get-requests", () => {
 
   test("valid - GET endpoint has a filter query parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -43,7 +43,7 @@ describe("sps-filtering-only-get-requests", () => {
 
   test("invalid - non-GET endpoints has filter query parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

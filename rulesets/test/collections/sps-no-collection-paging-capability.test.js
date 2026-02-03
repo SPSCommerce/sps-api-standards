@@ -11,7 +11,7 @@ describe("sps-no-collection-paging-capability", () => {
 
   test("valid - paging within response body", async () => {
     const spec = `
-    openapi: 3.0.0
+    openapi: 3.1.0
     info:
       title: Sample API
       version: 1.0.0
@@ -63,7 +63,7 @@ describe("sps-no-collection-paging-capability", () => {
   // Re-enable with https://atlassian.spscommerce.com/browse/DPE-286
   test("invalid - response body - missing paging object", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -99,7 +99,7 @@ describe("sps-no-collection-paging-capability", () => {
   // Re-enable with https://atlassian.spscommerce.com
   test("invalid - response body - paging element must be an object", async () => {
     const spec = `
-    openapi: 3.0.0
+    openapi: 3.1.0
     info:
       title: Sample API
       version: 1.0.0
@@ -127,7 +127,7 @@ describe("sps-no-collection-paging-capability", () => {
 
   test("valid, response body of a path with ID isn't pageable - invalid path users/{id}/foo", async () => {
     const spec = `
-    openapi: 3.0.0
+    openapi: 3.1.0
     info:
       title: Sample API
       version: 1.0.0

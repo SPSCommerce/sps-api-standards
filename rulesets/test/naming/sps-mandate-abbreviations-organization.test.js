@@ -11,7 +11,7 @@ describe("sps-mandate-abbreviations-organization", () => {
 
   test("organization with type string is successful", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -37,7 +37,7 @@ describe("sps-mandate-abbreviations-organization", () => {
 
   test("organization should warn when it is the entire field name", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -61,7 +61,7 @@ describe("sps-mandate-abbreviations-organization", () => {
 
   test("organization should warn when it is a word present in the field name", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:

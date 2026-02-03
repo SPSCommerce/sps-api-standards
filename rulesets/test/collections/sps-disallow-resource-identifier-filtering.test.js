@@ -1,4 +1,4 @@
-    const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
+const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-disallow-resource-identifier-filtering", () => {
   let spectral = null;
@@ -11,7 +11,7 @@ describe("sps-disallow-resource-identifier-filtering", () => {
 
   test("valid - resource identifier is within the path of the endpoint", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -33,7 +33,7 @@ describe("sps-disallow-resource-identifier-filtering", () => {
 
   test("invalid - resource identifier is defined as a query parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

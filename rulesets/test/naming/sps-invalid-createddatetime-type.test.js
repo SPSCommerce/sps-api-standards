@@ -11,7 +11,7 @@ describe("sps-invalid-created-date-time-type", () => {
 
   test("createdDateTime with type string and format date-time is successful", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -30,7 +30,7 @@ describe("sps-invalid-created-date-time-type", () => {
 
   test("createdDateTime with type number failure", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -46,7 +46,7 @@ describe("sps-invalid-created-date-time-type", () => {
 
   test("createdDateTime with type string missing format", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -62,7 +62,7 @@ describe("sps-invalid-created-date-time-type", () => {
 
   test("createdDateTime with type string and wrong format", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:

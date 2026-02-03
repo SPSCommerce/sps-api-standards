@@ -1,4 +1,4 @@
-    const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
+const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-hybird-filtering-exists-with-root-filter", () => {
   let spectral = null;
@@ -11,7 +11,7 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
 
   test("valid - endpoint only has root filter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -33,10 +33,10 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
 
     await spectral.validateSuccess(spec, ruleName);
   });
-  
+
   test("valid - endpoint has no filter query parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -58,10 +58,10 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
 
     await spectral.validateSuccess(spec, ruleName);
   });
-  
+
   test("valid - endpoint has no query parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -78,7 +78,7 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
 
   test("valid - endpoint has hybrid filtering", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -100,10 +100,10 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
 
     await spectral.validateSuccess(spec, ruleName);
   });
-  
+
   test("invalid - endpoint has hybrid filtering and a root filter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -128,10 +128,10 @@ describe("sps-hybird-filtering-exists-with-root-filter", () => {
 
     await spectral.validateFailure(spec, ruleName, "Error", 1);
   });
-  
+
   test("valid - endpoint has 2 hybrid filters", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

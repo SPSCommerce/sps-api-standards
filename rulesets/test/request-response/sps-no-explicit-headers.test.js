@@ -11,7 +11,7 @@ describe("sps-authorization-missing", () => {
 
   test("valid custom header", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       security:
         - token: []
       paths:
@@ -32,7 +32,7 @@ describe("sps-authorization-missing", () => {
 
   test("invalid header type in response 1", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       paths:
         /users:
           get:
@@ -51,7 +51,7 @@ describe("sps-authorization-missing", () => {
 
   test("invalid header type in response 2", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       paths:
         /users:
           get:
@@ -70,7 +70,7 @@ describe("sps-authorization-missing", () => {
 
   test("invalid header type in response 3", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       paths:
         /users:
           get:

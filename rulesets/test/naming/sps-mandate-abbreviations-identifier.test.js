@@ -11,7 +11,7 @@ describe("sps-mandate-abbreviations-identifier", () => {
 
   test("id with type string is successful", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -37,7 +37,7 @@ describe("sps-mandate-abbreviations-identifier", () => {
 
   test("identifier should warn when it is the entire field name", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -61,7 +61,7 @@ describe("sps-mandate-abbreviations-identifier", () => {
 
   test("identifier should not warn when it is a word present in the field name prefix", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -72,12 +72,12 @@ describe("sps-mandate-abbreviations-identifier", () => {
                 type: number
         `;
 
-        await spectral.validateSuccess(spec, ruleName);
+    await spectral.validateSuccess(spec, ruleName);
   });
 
   test("identifier should not warn when it is a word present in the field name suffix", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -88,6 +88,6 @@ describe("sps-mandate-abbreviations-identifier", () => {
                 type: number
         `;
 
-        await spectral.validateSuccess(spec, ruleName);
+    await spectral.validateSuccess(spec, ruleName);
   });
 });

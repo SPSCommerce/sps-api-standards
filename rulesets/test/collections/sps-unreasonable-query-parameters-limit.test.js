@@ -1,4 +1,4 @@
-    const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
+const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe.skip("sps-unreasonable-query-parameters-limit", () => {
   let spectral = null;
@@ -11,7 +11,7 @@ describe.skip("sps-unreasonable-query-parameters-limit", () => {
 
   test("valid - endpoint has 1 path parameter and zero query parameters", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -33,7 +33,7 @@ describe.skip("sps-unreasonable-query-parameters-limit", () => {
 
   test("invalid - endpoint has 13 query parameters and 1 path parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -77,7 +77,7 @@ describe.skip("sps-unreasonable-query-parameters-limit", () => {
 
   test("valid - endpoint has 12 query parameters", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -114,10 +114,10 @@ describe.skip("sps-unreasonable-query-parameters-limit", () => {
 
     await spectral.validateSuccess(spec, ruleName);
   });
-  
+
   test("invalid - endpoint has 13 query parameters", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -156,11 +156,11 @@ describe.skip("sps-unreasonable-query-parameters-limit", () => {
 
     await spectral.validateSuccess(spec, ruleName);
   });
-  
+
   // I understand this probably breaks some other rule within our standards but its testing the json schema
   test("valid - endpoint has 13 path parameters and 1 query parameter", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -214,10 +214,10 @@ describe.skip("sps-unreasonable-query-parameters-limit", () => {
 
     await spectral.validateSuccess(spec, ruleName);
   });
-  
+
   test("valid - endpoint has no parameters array in spec", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

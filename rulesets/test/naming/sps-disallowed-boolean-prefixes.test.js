@@ -11,7 +11,7 @@ describe("sps-disallowed-boolean-prefixes", () => {
 
   test("all invalid property names", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -51,7 +51,7 @@ describe("sps-disallowed-boolean-prefixes", () => {
 
   test("invalid property name isTest", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -75,7 +75,7 @@ describe("sps-disallowed-boolean-prefixes", () => {
 
   test("invalid property name hasTest", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -99,7 +99,7 @@ describe("sps-disallowed-boolean-prefixes", () => {
 
   test("valid string name with invalid boolean name", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -123,7 +123,7 @@ describe("sps-disallowed-boolean-prefixes", () => {
 
   test("invalid property name forSomething", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -147,7 +147,7 @@ describe("sps-disallowed-boolean-prefixes", () => {
 
   test("valid property name at", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

@@ -11,7 +11,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("valid property names", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -37,7 +37,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("valid property name form", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -61,7 +61,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("valid property name: name", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -85,7 +85,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("valid property name", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -110,7 +110,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("invalid property name for", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -134,7 +134,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("invalid property name forSomething", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -158,7 +158,7 @@ describe("sps-disallowed-prepositions", () => {
 
   test("invalid property name at", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -179,5 +179,5 @@ describe("sps-disallowed-prepositions", () => {
 
     await spectral.validateFailure(spec, ruleName, "Warning", 1);
   });
-  
+
 });

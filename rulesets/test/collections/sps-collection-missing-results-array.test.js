@@ -11,7 +11,7 @@ describe("sps-collection-missing-results-array", () => {
 
   test("valid - collection response with results array of objects", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -39,7 +39,7 @@ describe("sps-collection-missing-results-array", () => {
 
   test("invalid - collection response - results is not an array", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -65,7 +65,7 @@ describe("sps-collection-missing-results-array", () => {
 
   test("invalid - collection response - results is not an array of objects", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

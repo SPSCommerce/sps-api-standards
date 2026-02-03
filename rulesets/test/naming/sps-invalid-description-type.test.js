@@ -11,7 +11,7 @@ describe("sps-invalid-description-type", () => {
 
   test("description with type string is successful", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:
@@ -29,7 +29,7 @@ describe("sps-invalid-description-type", () => {
 
   test("description with type number failure", async () => {
     const spec = `
-      openapi: 3.0.1
+      openapi: 3.1.0
       paths: {}
       components:
         schemas:

@@ -1,4 +1,4 @@
-    const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
+const { SpectralTestHarness } = require("../harness/spectral-test-harness.js");
 
 describe("sps-sorting-parameters-only-get-requests", () => {
   let spectral = null;
@@ -11,7 +11,7 @@ describe("sps-sorting-parameters-only-get-requests", () => {
 
   test("valid - no errors should happen when sorting query parameter only on GET endpoints", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -55,7 +55,7 @@ describe("sps-sorting-parameters-only-get-requests", () => {
 
   test("invalid - non-GET endpoints should not have sorting parameters as query parameters", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0

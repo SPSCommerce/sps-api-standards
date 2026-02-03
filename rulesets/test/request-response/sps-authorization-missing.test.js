@@ -11,7 +11,7 @@ describe("sps-authorization-missing", () => {
 
   test("valid content type", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
@@ -31,7 +31,7 @@ describe("sps-authorization-missing", () => {
 
   test("missing security token", async () => {
     const spec = `
-      openapi: 3.0.0
+      openapi: 3.1.0
       info:
         title: Sample API
         version: 1.0.0
