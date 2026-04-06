@@ -633,6 +633,45 @@ Sps-Idempotency-Key: a                          // not enough entropy, and below
 Sps-Idempotency-Key: KG5Lxw!@#$&*()FBepaKHyUD   // non-url-safe special characters can be limiting for usage or later reference
 ```
 
+<hr />
+
+#### Sps-Signature
+
+**Type**: Request
+
+**Support**: OPTIONAL
+
+**Description**: Contains a cryptographic signature of the request payload. This signature is used to verify the authenticity and integrity of a request. The signature is typically computed using a shared secret established between the producer and consumer, typically using HMAC with SHA-256. The hash function should be specified in the header value: `SPS-Signature: sha256=<HMAC hex digest>`. The primary usage of this header is for [webhook security](webhooks.md#webhook-requests).
+
+- The header value **MUST** be a valid HMAC digest of the request payload.
+- The header value **MUST** include the hash function used to compute the signature, such as `sha256` or `sha512`, etc.
+- The header value **SHOULD** be accompanied by a timestamp to prevent replay attacks. The timestamp can be included in the `Sps-Signature-Timestamp` header.
+
+```
+// CORRECT
+Sps-Signature: sha256=4d3f8b2c1e5f6a7b8c9d0e1f2a3b4a9b0c1d2e3f4g5h6i7j8k9l0m
+Sps-Signature: sha512=4d3f8b2c7z8a9b0c1d2e3f4g5h6i7j8kg5h6i7g5h6i7g5h6i79l0m
+```
+
+<hr />
+
+#### Sps-Signature-Timestamp
+
+**Type**: Request
+
+**Support**: OPTIONAL
+
+**Description**: Used to indicate the timestamp of when the request was signed. This is used to prevent replay attacks by ensuring that the signature is only valid for a specific time window. The timestamp should be in ISO 8601 format (e.g., `2023-10-01T12:00:00Z`).
+
+- The header value **MUST** be in ISO 8601 format.
+- The header value **MUST** be included only if the `Sps-Signature` header is present.
+- The header value **MUST** be a valid UTC timestamp.
+
+```
+// CORRECT
+Sps-Signature-Timestamp: 2023-10-01T12:00:00Z
+```
+
 ## MIME Types
 
 ### Standard MIME Types
