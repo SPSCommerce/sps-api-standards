@@ -4,7 +4,7 @@
   "description": "Spectral ruleset for SPS Commerce APIs",
   "main": "src/.spectral.yml",
   "devDependencies": {
-    "@stoplight/spectral-core": "^1.21.0",
+    "@stoplight/spectral-core": "^1.23.0",
     "@stoplight/spectral-parsers": "^1.0.5",
     "@stoplight/spectral-ruleset-bundler": "^1.7.0",
     "@stoplight/spectral-runtime": "^1.1.4",
