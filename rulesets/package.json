@@ -6,7 +6,7 @@
   "devDependencies": {
     "@stoplight/spectral-core": "^1.21.0",
     "@stoplight/spectral-parsers": "^1.0.5",
-    "@stoplight/spectral-ruleset-bundler": "^1.6.3",
+    "@stoplight/spectral-ruleset-bundler": "^1.7.0",
     "@stoplight/spectral-runtime": "^1.1.4",
     "@stoplight/types": "^13.20.0",
     "@types/jest": "^30.0.0",
