@@ -7,11 +7,11 @@
     "@stoplight/spectral-core": "^1.23.0",
     "@stoplight/spectral-parsers": "^1.0.5",
     "@stoplight/spectral-ruleset-bundler": "^1.7.0",
-    "@stoplight/spectral-runtime": "^1.1.4",
+    "@stoplight/spectral-runtime": "^1.1.5",
     "@stoplight/types": "^13.20.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.10",
-    "jest": "^30.2.0"
+    "@types/node": "^24.12.4",
+    "jest": "^30.4.2"
   },
   "scripts": {
     "test": "jest"
