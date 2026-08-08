@@ -48,7 +48,7 @@ GET https://api.spscommerce.com/v1/books
 
 ```
 // CORRECT
-POST https://api.spscommerce.com/v1/books
+POST https://api.spscommerce.com/v1/books/search
 // REQUEST
 {
     ...
