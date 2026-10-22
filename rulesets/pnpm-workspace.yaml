@@ -1,0 +1,24 @@
+# pnpm-workspace.yaml
+# Require a minimum release age of 3 days (4320 minutes)
+minimumReleaseAge: 4320
+# Exclude internal packages from the minimum release age requirement
+minimumReleaseAgeExclude:
+  - '@spscommerce/*'
+  - '@sps-woodland/*'
+# Fail resolution if a package is missing a release time
+minimumReleaseAgeIgnoreMissingTime: false
+# Fail resolution if an earlier-published version has stronger trust evidence
+trustPolicy: no-downgrade
+# EXCLUDED — version already in the pre-migration lockfile, see PR description. Do not add entries without Security sign-off.
+trustPolicyExclude:
+  - 'rollup@2.80.0'
+  - 'semver@6.3.1'
+# Include tarball URLs in the lockfile to ensure reproducible builds and provide source transparency
+lockfileIncludeTarballUrl: true
+# Warn the user if the project uses a different version of pnpm instead of downloading the correct version automatically
+pmOnFail: warn
+# Warn the user if a different version of Node.js is used instead of downloading the correct version automatically
+runtimeOnFail: warn
+# Dependency build scripts: unrs-resolver's postinstall only re-fetches the native binding its optional @unrs/resolver-binding-* dependency already provides
+allowBuilds:
+  unrs-resolver: false

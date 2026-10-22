@@ -66,7 +66,7 @@ Individual spectral rulesets are available in this repository representing each 
 Getting started with Spectral linting (where `openapi.yml` is your local OpenAPI spec file):
 
 ```
-npm install -g @stoplight/spectral-cli
+npm install -g @stoplight/spectral-cli@6.17.0
 spectral lint openapi.yml --ruleset https://raw.githubusercontent.com/SPSCommerce/sps-api-standards/main/sps-api-standards.spectral.yml
 ```
 
