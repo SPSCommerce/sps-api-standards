@@ -33,34 +33,34 @@ Newly suggested API Standards will be evaluated based on the [Design Principles]
 
 ### Testing
 
-All Spectral rules added **MUST** be unit-tested with positive and negative examples demonstrating when the rule results in linting error/warning and then also succeeding. [Jest](https://jestjs.io/) is used to create tests using a custom [spectral harness](rulesets/test/harness//spectral-test-harness.js) abstracted from the [spectral-core npm packages](https://www.npmjs.com/package/@stoplight/spectral-core). A minimum version of [node.js 16 is required](https://nodejs.org/en/about/releases/).
+All Spectral rules added **MUST** be unit-tested with positive and negative examples demonstrating when the rule results in linting error/warning and then also succeeding. [Jest](https://jestjs.io/) is used to create tests using a custom [spectral harness](rulesets/test/harness//spectral-test-harness.js) abstracted from the [spectral-core npm packages](https://www.npmjs.com/package/@stoplight/spectral-core). A minimum version of [node.js 22.13 is required](https://nodejs.org/en/about/releases/), with [Corepack](https://nodejs.org/api/corepack.html) providing the [pnpm](https://pnpm.io/) version pinned in [package.json](rulesets/package.json).
 
 Each Spectral rule is placed in its own test file, in the proper designated directory defined by its documentation category. The file name convention is `sps-{your-rule-code}.test.js`. 
 
-For simplicity, `jest` should be installed globally (at version `28.1.1` at time of writing, see updated version in [package.json](rulesets/package.json)). Tests should be executed from the `rulesets` directory.
+`jest` is installed as a dev dependency (see [package.json](rulesets/package.json)). Tests should be executed from the `rulesets` directory.
 
 ```bash
-# install jest global
-/> npm install -g jest@28.1.1
+# enable corepack so the pinned pnpm version is used
+/> corepack enable
 
 # navigate inside the rulesets directory
 /> cd rulesets
 
 # install all dependencies
-/rulesets> npm install
+/rulesets> pnpm install
 
 # run all tests
-/rulesets> jest
+/rulesets> pnpm test
 
 # run a specific test based on spectral code / file
-/rulesets> jest -t sps-hosts-https-only
+/rulesets> pnpm exec jest -t sps-hosts-https-only
 ```
 
 You can also manually execute any `ruleset.yml` spectral file against the [root.openapi.yml](rulesets/test/root.openapi.yml) testing reference for manual sandboxing:
 
 ```bash
 # install spectral globally for CLI usage
-/rulesets> npm install -g @stoplight/spectral-cli
+/rulesets> npm install -g @stoplight/spectral-cli@6.17.0
 
 # execute linting (note the directory is "rulesets")
 /rulesets> spectral lint test/root.openapi.yml --ruleset src/url-structure.ruleset.yml

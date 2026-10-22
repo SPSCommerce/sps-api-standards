@@ -16,15 +16,15 @@ jobs:
       - name: use node.js 24
         uses: actions/setup-node@v3
         with:
-          cache: npm
           node-version: 24
-          cache-dependency-path: rulesets/package-lock.json
+      - name: enable corepack
+        run: corepack enable
       - run: |
-          npm install
+          pnpm install --frozen-lockfile
         working-directory: rulesets
         name: install dependencies
       - run: |
-          npm test
+          pnpm test
         working-directory: rulesets
         name: unit test validation
       - run: |
@@ -62,7 +62,7 @@ jobs:
         with:
           node-version: 24
       - name: install release plugins
-        run: npm install -g semantic-release @semantic-release/git -D
+        run: npm install -g semantic-release@25.0.9 @semantic-release/git@11.0.1 -D
       - name: semantic release
         run: npx semantic-release
         env:
